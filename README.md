@@ -15,14 +15,19 @@ Grace Ryoo:
 Technologies used:
 
 Database Name:
+
 Database Username:
+
 Database Password:
 
 Test Username #1:
+
 Test Password #1:
 
 Test Username #2:
+
 Test Password #2:
 
 Test Username #3:
+
 Test Password #3:
