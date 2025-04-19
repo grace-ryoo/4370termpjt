@@ -41,7 +41,7 @@ public class BasicRecipe {
 
 
     /**
-     * Constructs a BasicPost with specified details.
+     * Constructs a BasicRecipe with specified details.
      *
      * @param recipeId the unique identifier of the recipe
      * @param description the text content of the recipe
