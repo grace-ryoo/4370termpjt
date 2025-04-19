@@ -10,19 +10,24 @@ public class Recipe {
     private final String recipeId;
 
     /**
-     * Text content of the post.
+     * Description of the recipe.
      */
     private final String description;
 
     /**
-     * Date when the post was created.
+     * Date when the recipe was created.
      */
     private final String recipeCreateDate;
 
     /**
-     * User who created the post.
+     * User who created the recipe.
      */
     private final User user;
+
+    /**
+     * Category of the recipe.
+     */
+    private final Category category;
 
     /**
      * Time it takes to prep the recipe.
@@ -47,15 +52,17 @@ public class Recipe {
      * @param description the text content of the recipe
      * @param recipeCreateDate the creation date of the recipe
      * @param user the user who created the recipe
+     * @param category the category of the recipe
      * @param prep_time the time it takes to prep the recipe
      * @param cook_time the time it takes to prep the recipe
      * @param servings the amount of servings in the recipe
      */
-    public Recipe(String recipeId, String description, String recipeCreateDate, User user, int prep_time, int cook_time, int servings) {
+    public Recipe(String recipeId, String description, String recipeCreateDate, User user, Category category, int prep_time, int cook_time, int servings) {
         this.recipeId = recipeId;
         this.description = description;
         this.recipeCreateDate = recipeCreateDate;
         this.user = user;
+        this.category = category;
         this.prep_time = prep_time;
         this.cook_time = cook_time;
         this.servings = servings;
@@ -95,6 +102,15 @@ public class Recipe {
      */
     public User getUser() {
         return user;
+    }
+
+    /**
+     * Returns the category of the recipe.
+     *
+     * @return the category of the recipe
+     */
+    public Category getCategory() {
+        return category;
     }
 
     /**
