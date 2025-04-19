@@ -1,5 +1,8 @@
 package main.java.uga.menik.cs4370.models;
 
+/**
+ * Represents the basic structure of a review in the recipe platform. 
+ */
 public class Review {
     /**
      * Unique identifier for the review.
@@ -33,7 +36,7 @@ public class Review {
 
 
     /**
-     * Constructs a BasicPost with specified details.
+     * Constructs a Review with specified details.
      *
      * @param reviewId the unique identifier of the review
      * @param recipeId the unique identifier of the recipe that is being reviewed
@@ -57,7 +60,7 @@ public class Review {
      * @return the recipe ID
      */
     public String getReviewId() {
-        return recipeId;
+        return reviewId;
     }
 
     /**

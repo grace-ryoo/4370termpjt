@@ -3,7 +3,7 @@ package main.java.uga.menik.cs4370.models;
 /**
  * Represents the basic structure of a recipe in the recipe platform. 
  */
-public class BasicRecipe {
+public class Recipe {
     /**
      * Unique identifier for the recipe.
      */
@@ -41,7 +41,7 @@ public class BasicRecipe {
 
 
     /**
-     * Constructs a BasicRecipe with specified details.
+     * Constructs a Recipe with specified details.
      *
      * @param recipeId the unique identifier of the recipe
      * @param description the text content of the recipe
@@ -51,7 +51,7 @@ public class BasicRecipe {
      * @param cook_time the time it takes to prep the recipe
      * @param servings the amount of servings in the recipe
      */
-    public BasicRecipe(String recipeId, String description, String recipeCreateDate, User user, int prep_time, int cook_time, int servings) {
+    public Recipe(String recipeId, String description, String recipeCreateDate, User user, int prep_time, int cook_time, int servings) {
         this.recipeId = recipeId;
         this.description = description;
         this.recipeCreateDate = recipeCreateDate;
