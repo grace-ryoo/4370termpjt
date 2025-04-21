@@ -10,10 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import uga.menik.cs4370.models.Recipe;
 import uga.menik.cs4370.services.RecipeService;
 import uga.menik.cs4370.services.UserService;
-import uga.menik.cs4370.models.Recipe;
-import uga.menik.cs4370.utility.Utility;
 
 @Controller
 @RequestMapping

@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import uga.menik.cs4370.models.Recipe;
 import uga.menik.cs4370.models.User;
+import uga.menik.cs4370.models.Category;
 
 @Service
 public class BookmarkService {
