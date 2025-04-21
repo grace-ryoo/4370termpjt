@@ -1,6 +1,4 @@
-package main.java.uga.menik.cs4370.models;
-
-import uga.menik.cs4370.models.User;
+package uga.menik.cs4370.models;
 
 /**
  * Represents the basic structure of a review in the recipe platform. 
