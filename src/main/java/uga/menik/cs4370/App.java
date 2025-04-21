@@ -1,4 +1,4 @@
-package uga.menik.cs4370.utility;
+package uga.menik.cs4370;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
