@@ -1,4 +1,4 @@
-package main.java.uga.menik.cs4370.models;
+package uga.menik.cs4370.models;
 
 /**
  * Represents the basic structure of a recipe in the recipe platform. 
