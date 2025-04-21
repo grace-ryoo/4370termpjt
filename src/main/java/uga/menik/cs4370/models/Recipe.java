@@ -1,5 +1,8 @@
 package uga.menik.cs4370.models;
 
+import uga.menik.cs4370.models.User;
+import uga.menik.cs4370.models.Category;
+
 /**
  * Represents the basic structure of a recipe in the recipe platform. 
  */
@@ -8,6 +11,11 @@ public class Recipe {
      * Unique identifier for the recipe.
      */
     private final String recipeId;
+
+    /**
+     * Name of the recipe.
+     */
+    private final String recipeName;
 
     /**
      * Description of the recipe.
@@ -49,6 +57,7 @@ public class Recipe {
      * Constructs a Recipe with specified details.
      *
      * @param recipeId the unique identifier of the recipe
+     * @param name the name of the recipe
      * @param description the text content of the recipe
      * @param recipeCreateDate the creation date of the recipe
      * @param user the user who created the recipe
@@ -57,8 +66,9 @@ public class Recipe {
      * @param cook_time the time it takes to prep the recipe
      * @param servings the amount of servings in the recipe
      */
-    public Recipe(String recipeId, String description, String recipeCreateDate, User user, Category category, int prep_time, int cook_time, int servings) {
+    public Recipe(String recipeId, String recipeName, String description, String recipeCreateDate, User user, Category category, int prep_time, int cook_time, int servings) {
         this.recipeId = recipeId;
+        this.recipeName = recipeName;
         this.description = description;
         this.recipeCreateDate = recipeCreateDate;
         this.user = user;
@@ -75,6 +85,15 @@ public class Recipe {
      */
     public String getRecipeId() {
         return recipeId;
+    }
+
+    /**
+     * Returns the recipe name.
+     *
+     * @return the recipe name
+     */
+    public String getRecipeName() {
+        return recipeName;
     }
 
     /**
