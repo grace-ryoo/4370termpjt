@@ -55,6 +55,7 @@ public class BookmarkService {
 
                     Recipe recipe = new Recipe(
                         rs.getString("recipeId"),
+                        rs.getString("recipeName"),
                         rs.getString("description"),
                         convertUTCtoEST(rs.getString("recipeCreateDate")),
                         user,
