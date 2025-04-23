@@ -1,4 +1,4 @@
-package main.java.uga.menik.cs4370.components;
+package termProject.components;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

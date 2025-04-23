@@ -1,11 +1,11 @@
-package main.java.uga.menik.cs4370.config;
+package termProject.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import main.java.uga.menik.cs4370.components.AuthInterceptor;
+import termProject.components.AuthInterceptor;
 
 /**
  * This is a configuration class. See comments in AuthInterceptor.java
