@@ -1,4 +1,4 @@
-package uga.menik.cs4370.controllers;
+package termProject.controllers;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import uga.menik.cs4370.services.UserService;
+import termProject.services.UserService;
 
 @Controller
 @RequestMapping("/register")

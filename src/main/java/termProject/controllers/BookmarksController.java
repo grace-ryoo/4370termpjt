@@ -1,4 +1,4 @@
-package uga.menik.cs4370.controllers;
+package termProject.controllers;
 
 public class BookmarksController {
     
