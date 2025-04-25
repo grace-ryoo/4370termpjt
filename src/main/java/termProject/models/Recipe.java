@@ -60,14 +60,14 @@ public class Recipe {
     private final List<String> ingredientItems;
 
     /**
-     * The cuisine of the recipe.
+     * The unique identifier of the recipe cuisine.
      */
-    private final String cuisineName;
+    private final String cuisineId;
 
     /**
-     * The diet of the recipe.
+     * The unique identifier of the recipe diet.
      */
-    private final String dietName;
+    private final String dietId;
 
     /**
      * The level of difficulty of the recipe.
@@ -87,14 +87,14 @@ public class Recipe {
      * @param cook_time        the time it takes to prep the recipe
      * @param servings         the amount of servings in the recipe
      * @param ingredientItems  the list of ingredients needed for the recipe
-     * @param cuisineName      the cuisine of the recipe
-     * @param dietName         the diet of the recipe
+     * @param cuisineId        the unique identifier of the recipe cuisine
+     * @param dietId           the unique identifier of the recipe diet
      * @param cookingLevel     the level of difficulty of the recipe
      */
     public Recipe(String recipeId, String recipeName, String description,
             String recipeCreateDate, User user, String categoryName,
             int prep_time, int cook_time, int servings,
-            List<String> ingredientItems, String cuisineName, String dietName, String cookingLevel) {
+            List<String> ingredientItems, String cuisineId, String dietId, String cookingLevel) {
         this.recipeId = recipeId;
         this.recipeName = recipeName;
         this.description = description;
@@ -105,8 +105,8 @@ public class Recipe {
         this.cook_time = cook_time;
         this.servings = servings;
         this.ingredientItems = ingredientItems;
-        this.cuisineName = cuisineName;
-        this.dietName = dietName;
+        this.cuisineId = cuisineId;
+        this.dietId = dietId;
         this.cookingLevel = cookingLevel;
     }
 
@@ -201,21 +201,21 @@ public class Recipe {
     }
 
      /**
-     * Returns the diet of the recipe.
+     * Returns the unique identifier of the recipe diet.
      *
-     * @return the diet of the recipe
+     * @return the unique identifier of the recipe diet.
      */
-    public String getDietName() {
-        return dietName;
+    public String getDietId() {
+        return dietId;
     }
 
     /**
-     * Returns the cuisine of the recipe.
+     * Returns the unique identifier of the recipe cuisine.
      *
-     * @return the cuisine of the recipe
+     * @return the unique identifier of the recipe cuisine.
      */
-    public String getCuisineName() {
-        return cuisineName;
+    public String getCuisineId() {
+        return cuisineId;
     }
 
     /**
