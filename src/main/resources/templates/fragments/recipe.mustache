@@ -1,44 +1,73 @@
 <div class="recipe framed">
-    <img src="{{user.profileImagePath}}" alt="User avatar">
-    <div class="post-body">
+    <div class="recipe-body">
+        <!-- Recipe Author -->
         <div class="username">
             <a href="/profile/{{user.userId}}">{{user.firstName}} {{user.lastName}}</a>
         </div>
+        
+        <!-- Recipe Date -->
         <div class="post-date">{{postDate}}</div>
-        <div class="post-content">
+        
+        <!-- Recipe Title -->
+        <div class="recipe-title text-xl font-bold text-[#90af7b] mt-4">
+            {{title}}
+        </div>
+
+        <!-- Recipe Image -->
+        <div class="recipe-image">
+            <img src="{{imageUrl}}" alt="{{title}}" class="w-full h-64 object-cover rounded-md mt-4">
+        </div>
+        
+        <!-- Recipe Content (Description) -->
+        <div class="recipe-content mt-4">
             {{content}}
         </div>
-        <div class="post-actions">
-            <a href="/post/{{postId}}" class="far fa-comment"></a>
-            <span class="action-count">{{commentsCount}}</span>
-            <!-- show if the post is hearted by the user -->
-            {{#isHearted}}
-            <form method="get" action="/post/{{postId}}/heart/false">
-                <button class="fa fa-heart"></button>
-            </form>
-            {{/isHearted}}
-            <!-- show if the post is not hearted by the user -->
-            {{^isHearted}}
-            <form method="get" action="/post/{{postId}}/heart/true">
-                <button class="far fa-heart"></button>
-            </form>
-            {{/isHearted}}
-            <span class="action-count">{{heartsCount}}</span>
-            <!-- show if the post is bookmarked by the user -->
+        
+        <!-- Recipe Rating (Stars) -->
+        <div class="recipe-rating mt-4">
+            <span class="rating-stars">
+                <!-- Loop through stars to create the rating -->
+                {{#rating}}
+                    {{#isFullStar}}
+                        <!-- Filled Star -->
+                        <svg width="9" height="9" viewBox="0 0 9 9" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-[9px] h-[8.5px]" preserveAspectRatio="none">
+                            <path d="M6.0293 2.6084L9 3.24707L6.97461 5.49707L7.28125 8.5L4.5 7.2832L1.71875 8.5L2.02539 5.49707L0 3.24707L2.9707 2.6084L4.5 0L6.0293 2.6084Z" fill="#FFCB45"></path>
+                        </svg>
+                    {{/isFullStar}}
+                    {{#isHalfStar}}
+                        <!-- Half Filled Star -->
+                        <svg width="9" height="9" viewBox="0 0 9 9" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-[9px] h-[8.5px]" preserveAspectRatio="none">
+                            <path d="M6.0293 2.6084L9 3.24707L6.97461 5.49707L7.28125 8.5L4.5 7.2832L1.71875 8.5L2.02539 5.49707L0 3.24707L2.9707 2.6084L4.5 0L6.0293 2.6084Z" fill="#FFCB45"></path>
+                        </svg>
+                    {{/isHalfStar}}
+                    {{^isFullStar}}
+                        {{^isHalfStar}}
+                            <!-- Empty Star -->
+                            <svg width="9" height="9" viewBox="0 0 9 9" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-[9px] h-[8.5px]" preserveAspectRatio="none">
+                                <path d="M6.0293 2.6084L9 3.24707L6.97461 5.49707L7.28125 8.5L4.5 7.2832L1.71875 8.5L2.02539 5.49707L0 3.24707L2.9707 2.6084L4.5 0L6.0293 2.6084Z" fill="#D1D1D1"></path>
+                            </svg>
+                        {{/isHalfStar}}
+                    {{/isFullStar}}
+                {{/rating}}
+            </span>
+            <span class="rating-text">({{ratingCount}} votes)</span>
+        </div>
+
+        <!-- Recipe Actions (Bookmarking) -->
+        <div class="recipe-actions mt-4">
+            <!-- Show if the recipe is bookmarked by the user -->
             {{#isBookmarked}}
-            <form method="get" action="/post/{{postId}}/bookmark/false">
-                <button class="fa fa-bookmark"></button>
-            </form>
+                <form method="get" action="/recipe/{{postId}}/bookmark/false">
+                    <button class="fa fa-bookmark"></button>
+                </form>
             {{/isBookmarked}}
-            <!-- show if the post is not bookmarked by the user -->
+            
+            <!-- Show if the recipe is not bookmarked by the user -->
             {{^isBookmarked}}
-            <form method="get" action="/post/{{postId}}/bookmark/true">
-                <button class="far fa-bookmark"></button>
-            </form>
+                <form method="get" action="/recipe/{{postId}}/bookmark/true">
+                    <button class="far fa-bookmark"></button>
+                </form>
             {{/isBookmarked}}
         </div>
-        {{#isShowComents}}
-        {{> fragments/comments_container}}
-        {{/isShowComents}}
     </div>
 </div>
