@@ -46,7 +46,7 @@ public class HomeController {
         return mv;
     }
 
-    @PostMapping("/createRECIPE")
+    @PostMapping("/createrecipe")
     public String createPost(@RequestParam(name = "description") String description, @RequestParam(name = "recipeName") String recipeName) {
         System.out.println("User is creating " + recipeName + " recipe:" + description);
 
