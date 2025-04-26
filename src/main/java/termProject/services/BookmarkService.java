@@ -1,4 +1,4 @@
-package termProject.models;
+package termProject.services;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -43,8 +43,7 @@ public class BookmarkService {
                     User user = new User(
                         rs.getString("userId"), 
                         rs.getString("firstName"),
-                        rs.getString("lastName"),
-                        rs.getString("profileImagePath")
+                        rs.getString("lastName")
                     );
 
                     Category category = new Category(
