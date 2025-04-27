@@ -9,7 +9,6 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -17,7 +16,9 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import termProject.models.*;
+import termProject.models.Category;
+import termProject.models.Recipe;
+import termProject.models.User;
 
 @Service
 public class BookmarkService {
@@ -28,10 +29,15 @@ public class BookmarkService {
         this.dataSource = dataSource;
     }
 
-    public List<Recipe> getBookmarkedRecipes(String userId) {
+    public List<Recipe> getBookmarkedRecipesByType(String userId, String type) {
         List<Recipe> recipes = new ArrayList<>();
 
-        final String sql = "";
+        final String sql = "SELECT DISTINCT r.*, u.*, c.*" + 
+            "FROM bookmarks b" +
+            "JOIN recipes r ON b.recipe_id = r.recipe_id" +
+            "JOIN users u ON r.user_id = u.user_id" +
+            "JOIN categories c ON r.category_id = c.category_id" +
+            "WHERE b.user_id = ? AND b.bookmark_type = ?";
 
         try (Connection conn = dataSource.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -76,6 +82,14 @@ public class BookmarkService {
         }
 
         return recipes;
+    }
+    
+    public List<Recipe> getPastRecipes(String userId) {
+        return getBookmarkedRecipesByType(userId, "PAST");
+    }
+
+    public List<Recipe> getFutureRecipes(String userId) {
+        return getBookmarkedRecipesByType(userId, "FUTURE");
     }
 
     private String convertUTCtoEST(String utcTimestamp) {

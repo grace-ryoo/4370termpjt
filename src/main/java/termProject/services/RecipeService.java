@@ -4,23 +4,21 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-
-import java.sql.Timestamp;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import termProject.models.*;
+import termProject.models.Category;
+import termProject.models.Recipe;
+import termProject.models.User;
 
 @Service
 public class RecipeService {
@@ -35,33 +33,38 @@ public class RecipeService {
         this.reviewService = reviewService;
     }
 
-    public void bookmark(String userId, String recipeId) {
-        final String sql = "INSERT INTO bookmark (userId, recipeId) VALUES (?, ?)";
+    public void bookmark(String userId, String recipeId, String bookmark_type) {
+        final String sql = "INSERT INTO bookmark (userId, recipeId, bookmark_type) VALUES (?, ?, ?)";
         try (Connection conn = dataSource.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, userId);
             pstmt.setString(2, recipeId);
+            pstmt.setString(3, bookmark_type);
             pstmt.executeUpdate();
-            System.out.println("Success: bookmarked post");
+            System.out.println("Success: bookmarked recipe as " + bookmark_type);
         } catch (SQLException e) {
-            throw new RuntimeException("Error bookmarking post: ", e);
+            throw new RuntimeException("Error bookmarking recipe: ", e);
         }
     }
 
-    public void unBookmark(String userId, String recipeId) {
-        final String sql = "DELETE from bookmark WHERE userId = ? AND recipeId = ?";
+    public void unBookmark(String userId, String recipeId, String bookmark_type) {
+        final String sql = "DELETE from bookmark WHERE userId = ? AND recipeId = ? AND bookmark_type = ?";
         try (Connection conn = dataSource.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, userId);
             pstmt.setString(2, recipeId);
+            pstmt.setString(3, bookmark_type);
             pstmt.executeUpdate();
-            System.out.println("Success: bookmarked post");
+            System.out.println("Success: unbookmarked recipe");
         } catch (SQLException e) {
-            throw new RuntimeException("Error bookmarking post: ", e);
+            throw new RuntimeException("Error unbookmarking recipe: ", e);
         }
     }
 
+    /** NEED UPDATE */
+    /**
     public void addReview() {
        
     }
+    */
 
     public boolean createRecipe(String recipeName, String description,
     String userId, String categoryId, int prep_time, int cook_time, int servings, String cuisineId, String dietId, String cookingLevel) {

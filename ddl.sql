@@ -43,7 +43,7 @@ create table if not exists recipe (
 create table if not exists bookmark (
     recipeId INT NOT NULL,  -- Foreign key referencing recipe(id)
     userId INT NOT NULL,  -- Foreign key referencing user(userId)
-
+    bookmark_type ENUM('PAST', 'FUTURE'),
     PRIMARY KEY (recipeId, userId),  -- Composite primary key (ensures unique bookmarks)
     CONSTRAINT fk_bookmark_recipe FOREIGN KEY (recipeId) REFERENCES recipe(recipeId) ON DELETE CASCADE,
     CONSTRAINT fk_bookmark_user FOREIGN KEY (userId) REFERENCES user(userId) ON DELETE CASCADE

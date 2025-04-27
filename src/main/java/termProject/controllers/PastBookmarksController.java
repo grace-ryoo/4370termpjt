@@ -15,14 +15,14 @@ import termProject.services.UserService;
 
 
 @Controller
-@RequestMapping("/bookmarks")
-public class BookmarksController {
+@RequestMapping("/cookedChronicles")
+public class PastBookmarksController {
 
     private final UserService userService;
     private final BookmarkService bookmarkService;
     
     @Autowired
-    public BookmarksController(UserService userService, BookmarkService bookmarkService) {
+    public PastBookmarksController(UserService userService, BookmarkService bookmarkService) {
         this.userService = userService;
         this.bookmarkService = bookmarkService;
     }
@@ -48,7 +48,7 @@ public class BookmarksController {
         }
         String loggedInUserId = loggedInUser.getUserId();
         try {
-            List<Recipe> recipes = bookmarkService.getBookmarkedRecipes(loggedInUserId);
+            List<Recipe> recipes = bookmarkService.getPastRecipes(loggedInUserId);
             if (recipes.isEmpty()) {
                 // Enable the following line if you want to show no content message.
                 // Do that if your content list is empty.
@@ -57,7 +57,7 @@ public class BookmarksController {
                 mv.addObject("recipes", recipes);
             }
         } catch (Exception e) {
-            String errorMessage = "An error occurred while fetching recipes.";
+            String errorMessage = "An error occurred while fetching past recipes.";
             e.printStackTrace();
             mv.addObject("errorMessage", errorMessage);
             return mv;
