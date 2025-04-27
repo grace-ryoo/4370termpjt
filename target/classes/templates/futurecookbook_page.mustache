@@ -19,13 +19,30 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
             {{#cookbook}}
                 <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
-                    <img src="{{imageUrl}}" alt="{{title}}" class="w-full h-48 object-cover">
+                    <img src="{{imageUrl}}" alt="{{title}}" class="w-full h-48 object-cover" onerror="this.onerror=null;this.src='/static/img/placeholder.jpg';">
                     <div class="p-4">
                         <h2 class="text-xl font-semibold text-[#90af7b] mb-2">{{title}}</h2>
                         <p class="text-gray-500 mb-4">By {{author}}</p>
+                        <p class="text-gray-600 mb-4">{{description}}</p>
+                        
+                        <!-- Star Rating Section -->
+                        <div class="flex justify-start items-center gap-1 mb-4">
+                            {{#rating}}
+                                <!-- Dynamically create stars based on rating -->
+                                {{#each this}}
+                                    <svg width="9" height="9" viewBox="0 0 9 9" fill="none" xmlns="http://www.w3.org/2000/svg" class="flex-grow-0 flex-shrink-0 w-[9px] h-[8.5px]" preserveAspectRatio="none">
+                                        <path d="M6.0293 2.6084L9 3.24707L6.97461 5.49707L7.28125 8.5L4.5 7.2832L1.71875 8.5L2.02539 5.49707L0 3.24707L2.9707 2.6084L4.5 0L6.0293 2.6084Z" fill="#FFCB45"></path>
+                                    </svg>
+                                {{/each}}
+                            {{/rating}}
+                        </div>
+
+                        <!-- Cooked Status -->
                         <div class="flex justify-between text-sm text-gray-400">
-                            <span>{{likes}} likes</span>
                             <span>{{category}}</span>
+                            {{#isCooked}}
+                                <span class="text-green-500 text-xs">Cooked</span>
+                            {{/isCooked}}
                         </div>
                     </div>
                 </div>
@@ -35,6 +52,7 @@
         {{^cookbook}}
             <div class="text-center text-gray-500 mt-10">
                 <p>No recipes saved yet. Start exploring and bookmarking!</p>
+                <a href="/explore" class="text-green-500 hover:underline">Explore Recipes</a>
             </div>
         {{/cookbook}}
     </section>
