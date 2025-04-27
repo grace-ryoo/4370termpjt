@@ -78,25 +78,26 @@ public class RecipeController {
     }
 
 
-    @GetMapping("/{recipeId}/bookmark/{isAdd}")
+    @GetMapping("/{recipeId}/bookmark/{isAdd}/{bookmarkType}")
     public String addOrRemoveBookmark(@PathVariable("recipeId") String recipeId,
-            @PathVariable("isAdd") Boolean isAdd) {
+            @PathVariable("isAdd") Boolean isAdd, @PathVariable("bookmarkType") String bookmarkType) {
         System.out.println("The user is attempting add or remove a bookmark:");
         System.out.println("\trecipeId: " + recipeId);
         System.out.println("\tisAdd: " + isAdd);
+        System.out.println("\tbookmarkType: " + bookmarkType);
 
         // Redirect the user if the comment adding is a success.
         try {
             String currUserId = userService.getLoggedInUser().getUserId();
             if (isAdd) {
-                recipeService.bookmark(currUserId, recipeId);
+                recipeService.bookmark(currUserId, recipeId, bookmarkType);
             } else {
-                recipeService.unBookmark(currUserId, recipeId);
+                recipeService.unBookmark(currUserId, recipeId, bookmarkType);
             }
             return "redirect:/recipe/" + recipeId;
         } catch (Exception e) {
             // Redirect the user with an error message if there was an error.
-            String message = URLEncoder.encode("Failed to (un)bookmark the post. Please try again.",
+            String message = URLEncoder.encode("Failed to (un)bookmark the recipe. Please try again.",
                     StandardCharsets.UTF_8);
             return "redirect:/recipe/" + recipeId + "?error=" + message;
         }
