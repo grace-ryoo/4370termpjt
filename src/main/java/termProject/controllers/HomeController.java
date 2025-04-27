@@ -52,7 +52,7 @@ public class HomeController {
 
         String currentUserId = userService.getLoggedInUser().getUserId();
 
-        if (recipeName == null || recipeName.trim().isEmpty() || description == null || description.trim().isEmpty()) {
+        if (recipeName == null || recipeName.trim().isEmpty() || description == null || description.trim().isEmpty() || currentUserId == null || currentUserId.isEmpty() || categoryId == null || categoryId.isEmpty() || prep_time <= 0 || cook_time <= 0 || servings <= 0 || cuisineId == null || cuisineId.isEmpty() || dietId == null || dietId.isEmpty() || cookingLevel == null || cookingLevel.trim().isEmpty()) {
             return "redirect:/?error=Recipe cannot be empty";
         }
 
