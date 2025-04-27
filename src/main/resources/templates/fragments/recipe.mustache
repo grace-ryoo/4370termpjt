@@ -54,20 +54,30 @@
         </div>
 
         <!-- Recipe Actions (Bookmarking) -->
-        <div class="recipe-actions mt-4">
-            <!-- Show if the recipe is bookmarked by the user -->
-            {{#isBookmarked}}
-                <form method="get" action="/recipe/{{postId}}/bookmark/false">
-                    <button class="fa fa-bookmark"></button>
+        <div class="recipe-actions mt-4 flex gap-2">
+            <!-- If already bookmarked, show the type -->
+            {{#bookmarkType}}
+                <form method="post" action="/recipe/{{recipeId}}/unbookmark">
+                    <button class="px-3 py-1 bg-red-200 text-red-800 rounded text-sm">
+                        Remove {{bookmarkType}}
+                    </button>
                 </form>
-            {{/isBookmarked}}
-            
-            <!-- Show if the recipe is not bookmarked by the user -->
-            {{^isBookmarked}}
-                <form method="get" action="/recipe/{{postId}}/bookmark/true">
+            {{/bookmarkType}}
+
+            <!-- If not bookmarked, allow choosing a type -->
+            {{^bookmarkType}}
+                <form method="post" action="/chroniclesToCook/recipe/{{recipeId}}/bookmark">
+                    <input type="hidden" name="type" value="TRY">
                     <button class="far fa-bookmark"></button>
                 </form>
-            {{/isBookmarked}}
+
+                <form method="post" action="/cookedChronicles/recipe/{{recipeId}}/bookmark">
+                    <input type="hidden" name="type" value="PAST">
+                    <button class="fa fa-bookmark"></button>
+                </form>
+
+            {{/bookmarkType}}
         </div>
+
     </div>
 </div>

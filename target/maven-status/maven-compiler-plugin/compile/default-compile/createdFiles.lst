@@ -1,6 +1,7 @@
+termProject\controllers\PastBookmarksController.class
 termProject\config\WebConfig.class
-termProject\controllers\BookmarksController.class
 termProject\models\Review.class
+termProject\controllers\FutureBookmarksController.class
 termProject\services\ReviewService.class
 termProject\utility\Utility.class
 termProject\services\BookmarkService.class
