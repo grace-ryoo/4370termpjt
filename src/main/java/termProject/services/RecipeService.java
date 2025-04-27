@@ -8,7 +8,12 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+
+import java.sql.Timestamp;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.sql.DataSource;
 
@@ -31,10 +36,10 @@ public class RecipeService {
     }
 
     public void bookmark(String userId, String recipeId) {
-        final String sql = "INSERT INTO bookmark (userId, postId) VALUES (?, ?)";
+        final String sql = "INSERT INTO bookmark (userId, recipeId) VALUES (?, ?)";
         try (Connection conn = dataSource.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, userId);
-            pstmt.setString(2, postId);
+            pstmt.setString(2, recipeId);
             pstmt.executeUpdate();
             System.out.println("Success: bookmarked post");
         } catch (SQLException e) {
@@ -42,11 +47,11 @@ public class RecipeService {
         }
     }
 
-    public void unBookmark(String userId, String postId) {
-        final String sql = "DELETE from bookmark WHERE userId = ? AND postId = ?";
+    public void unBookmark(String userId, String recipeId) {
+        final String sql = "DELETE from bookmark WHERE userId = ? AND recipeId = ?";
         try (Connection conn = dataSource.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, userId);
-            pstmt.setString(2, postId);
+            pstmt.setString(2, recipeId);
             pstmt.executeUpdate();
             System.out.println("Success: bookmarked post");
         } catch (SQLException e) {
@@ -102,9 +107,17 @@ public class RecipeService {
                     formattedDate = sdf.format(timestamp);
                 }
 
+                List<String> ingredientItems = rs.getArray("ingredientItems") != null ? Arrays.asList((String[]) rs.getArray("ingredientItems").getArray()) : new ArrayList<>();
+                List<String> ingredients = new ArrayList<>();
+
+                for (String ingredient : ingredientItems) {
+                    ingredients.add(ingredient);  // Add each item from ingredientItems to ingredients
+                }
+
                 Category category = new Category(
                     rs.getString("categoryId"),
-                    rs.getString("categoryName")
+                    rs.getString("categoryName"),
+                    rs.getString("categoryImageUrl")
                 );
 
                 recipe = new Recipe(
@@ -116,7 +129,11 @@ public class RecipeService {
                     category,
                     rs.getInt("prep_time"),
                     rs.getInt("cook_time"),
-                    rs.getInt("servings")
+                    rs.getInt("servings"),
+                    ingredients,
+                    rs.getString("cuisineId"),
+                    rs.getString("dietId"),
+                    rs.getString("cookingLevel")
                 );
             }
 

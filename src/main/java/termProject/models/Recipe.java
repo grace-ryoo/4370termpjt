@@ -35,9 +35,9 @@ public class Recipe {
     private final User user;
 
     /**
-     * Category of the recipe.
+     * The recipe category.
      */
-    private final String categoryName;
+    private final Category category;
 
     /**
      * Time it takes to prep the recipe.
@@ -82,7 +82,7 @@ public class Recipe {
      * @param description      the text content of the recipe
      * @param recipeCreateDate the creation date of the recipe
      * @param user             the user who created the recipe
-     * @param categoryName     the category of the recipe
+     * @param category         the recipe category
      * @param prep_time        the time it takes to prep the recipe
      * @param cook_time        the time it takes to prep the recipe
      * @param servings         the amount of servings in the recipe
@@ -92,7 +92,7 @@ public class Recipe {
      * @param cookingLevel     the level of difficulty of the recipe
      */
     public Recipe(String recipeId, String recipeName, String description,
-            String recipeCreateDate, User user, String categoryName,
+            String recipeCreateDate, User user, Category category,
             int prep_time, int cook_time, int servings,
             List<String> ingredientItems, String cuisineId, String dietId, String cookingLevel) {
         this.recipeId = recipeId;
@@ -100,7 +100,7 @@ public class Recipe {
         this.description = description;
         this.recipeCreateDate = recipeCreateDate;
         this.user = user;
-        this.categoryName = categoryName;
+        this.category = category;
         this.prep_time = prep_time;
         this.cook_time = cook_time;
         this.servings = servings;

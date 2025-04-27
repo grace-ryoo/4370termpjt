@@ -9,6 +9,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -46,9 +47,17 @@ public class BookmarkService {
                         rs.getString("lastName")
                     );
 
+                    List<String> ingredientItems = rs.getArray("ingredientItems") != null ? Arrays.asList((String[]) rs.getArray("ingredientItems").getArray()) : new ArrayList<>();
+                    List<String> ingredients = new ArrayList<>();
+
+                    for (String ingredient : ingredientItems) {
+                        ingredients.add(ingredient);  // Add each item from ingredientItems to ingredients
+                    }
+
                     Category category = new Category(
                         rs.getString("categoryId"),
-                        rs.getString("categoryName")
+                        rs.getString("categoryName"),
+                        rs.getString("categoryImageUrl")
                     );
 
                     Recipe recipe = new Recipe(
@@ -60,7 +69,11 @@ public class BookmarkService {
                         category,
                         rs.getInt("prep_time"),
                         rs.getInt("cook_time"),
-                        rs.getInt("servings")
+                        rs.getInt("servings"),
+                        ingredients,
+                        rs.getString("cuisineId"),
+                        rs.getString("dietId"),
+                        rs.getString("cookingLevel")
                     );
                     recipes.add(recipe);
                     
