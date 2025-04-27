@@ -1,4 +1,4 @@
-package termProject.models
+package termProject.services;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

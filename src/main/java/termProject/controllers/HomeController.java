@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import termProject.models.Category;
 import termProject.models.Recipe;
 import termProject.services.RecipeService;
 import termProject.services.UserService;
@@ -17,11 +18,8 @@ import termProject.services.UserService;
 @Controller
 @RequestMapping
 public class HomeController {
-    @Autowired
-    private RecipeService recipeService;
-
-    @Autowired
-    private UserService userService;
+    private final RecipeService recipeService;
+    private final UserService userService;
 
     @Autowired
     public HomeController(RecipeService recipeService, UserService userService) {
@@ -30,15 +28,27 @@ public class HomeController {
     }
 
     @GetMapping
-    public ModelAndView webpage(@RequestParam(name = "error", required = false) String error) {
+    public ModelAndView homepage(@RequestParam(name = "error", required = false) String error) {
         ModelAndView mv = new ModelAndView("home_page");
 
+        // Get current user
         String currentUserId = userService.getLoggedInUser().getUserId();
-        
-        List<Recipe> recipes = null;
-        mv.addObject("recipes", recipes); /** NEED ADD HERE */
+        String username = userService.getLoggedInUser().getUsername();
+        mv.addObject("username", username);
 
-        if (recipes.isEmpty()) {
+        // Get recipe categories
+        List<Category> categories = recipeService.getAllCategories();
+        mv.addObject("categories", categories);
+
+        // Get trending recipes
+        List<Recipe> trendingRecipes = recipeService.getTrendingRecipes();
+        mv.addObject("trendingRecipes", trendingRecipes);
+
+        // Get all recipes
+        List<Recipe> allRecipes = recipeService.getAllRecipes();
+        mv.addObject("recipes", allRecipes);
+
+        if (allRecipes.isEmpty()) {
             mv.addObject("isNoContent", true);
         }
 
@@ -46,17 +56,33 @@ public class HomeController {
         return mv;
     }
 
-    @PostMapping("/createRECIPE")
-    public String createPost(@RequestParam(name = "description") String description, @RequestParam(name = "recipeName") String recipeName) {
-        System.out.println("User is creating " + recipeName + " recipe:" + description);
+    @PostMapping("/createRecipe")
+    public String createRecipe(
+            @RequestParam("recipeName") String recipeName,
+            @RequestParam("description") String description,
+            @RequestParam("category") String category,
+            @RequestParam("ingredients") List<String> ingredients,
+            @RequestParam("prepTime") int prepTime,
+            @RequestParam("cookTime") int cookTime,
+            @RequestParam("servings") int servings) {
 
         String currentUserId = userService.getLoggedInUser().getUserId();
 
-        if (recipeName == null || recipeName.trim().isEmpty() || description == null || description.trim().isEmpty()) {
-            return "redirect:/?error=Recipe cannot be empty";
+        // Validation
+        if (recipeName == null || recipeName.trim().isEmpty() ||
+                description == null || description.trim().isEmpty()) {
+            return "redirect:/?error=Recipe details cannot be empty";
         }
 
-        boolean success = recipeService.createRecipe(recipeName, description, currentUserId);
+        boolean success = recipeService.createRecipe(
+                recipeName,
+                description,
+                currentUserId,
+                category,
+                ingredients,
+                prepTime,
+                cookTime,
+                servings);
 
         if (!success) {
             return "redirect:/?error=Failed to create the recipe. Please try again.";
