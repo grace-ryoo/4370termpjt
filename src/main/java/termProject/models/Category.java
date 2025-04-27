@@ -18,7 +18,7 @@ public class Category {
     /**
      * Category Image
      */
-    // private final String cateogryImageUrl;
+    private final String categoryImageUrl;
 
     /**
      * Constructs a new Category with the specified ID and name.
@@ -27,10 +27,10 @@ public class Category {
      * @param categoryName the name of the category
      * @param cateogryImageUrl the URL of the category image
      */
-    public Category(String categoryId, String categoryName) {
+    public Category(String categoryId, String categoryName, String categoryImageUrl) {
         this.categoryId = categoryId;
         this.categoryName = categoryName;
-        // this.cateogryImageUrl = cateogryImageUrl;
+        this.categoryImageUrl = categoryImageUrl;
     }
 
     /**
@@ -56,8 +56,8 @@ public class Category {
      *
      * @return the category image URL
      */
-    // public String getCateogryImageUrl() {
-    //     return cateogryImageUrl;
-    // }
+    public String getCategoryImageUrl() {
+        return categoryImageUrl;
+    }
 
 }

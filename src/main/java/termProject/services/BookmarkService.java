@@ -16,7 +16,9 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import termProject.models.*;
+import termProject.models.Category;
+import termProject.models.Recipe;
+import termProject.models.User;
 
 @Service
 public class BookmarkService {
@@ -27,10 +29,15 @@ public class BookmarkService {
         this.dataSource = dataSource;
     }
 
-    public List<Recipe> getBookmarkedRecipes(String userId) {
+    public List<Recipe> getBookmarkedRecipesByType(String userId, String type) {
         List<Recipe> recipes = new ArrayList<>();
 
-        final String sql = "";
+        final String sql = "SELECT DISTINCT r.*, u.*, c.*" + 
+            "FROM bookmarks b" +
+            "JOIN recipes r ON b.recipe_id = r.recipe_id" +
+            "JOIN users u ON r.user_id = u.user_id" +
+            "JOIN categories c ON r.category_id = c.category_id" +
+            "WHERE b.user_id = ? AND b.bookmark_type = ?";
 
         try (Connection conn = dataSource.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -43,13 +50,13 @@ public class BookmarkService {
                     User user = new User(
                         rs.getString("userId"), 
                         rs.getString("firstName"),
-                        rs.getString("lastName"),
-                        rs.getString("profileImagePath")
+                        rs.getString("lastName")
                     );
 
                     Category category = new Category(
                         rs.getString("categoryId"),
-                        rs.getString("categoryName")
+                        rs.getString("categoryName"),
+                        rs.getString("categoryImageUrl")
                     );
 
                     Recipe recipe = new Recipe(
@@ -61,7 +68,10 @@ public class BookmarkService {
                         category,
                         rs.getInt("prep_time"),
                         rs.getInt("cook_time"),
-                        rs.getInt("servings")
+                        rs.getInt("servings"),
+                        rs.getString("cuisineId"),
+                        rs.getString("dietId"),
+                        rs.getString("cookingLevel")
                     );
                     recipes.add(recipe);
                     
@@ -72,6 +82,14 @@ public class BookmarkService {
         }
 
         return recipes;
+    }
+    
+    public List<Recipe> getPastRecipes(String userId) {
+        return getBookmarkedRecipesByType(userId, "PAST");
+    }
+
+    public List<Recipe> getFutureRecipes(String userId) {
+        return getBookmarkedRecipesByType(userId, "FUTURE");
     }
 
     private String convertUTCtoEST(String utcTimestamp) {

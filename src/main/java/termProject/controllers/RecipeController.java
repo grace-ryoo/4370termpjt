@@ -15,8 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+
+import termProject.models.Review;
 import termProject.models.Recipe;
 import termProject.services.RecipeService;
+import termProject.services.ReviewService;
 import termProject.services.UserService;
 
 @Controller
@@ -24,12 +27,14 @@ import termProject.services.UserService;
 public class RecipeController {
     @Autowired
     private RecipeService recipeService;
+    private ReviewService reviewService;
     private UserService userService;
 
     @Autowired
-    public RecipeController(RecipeService recipeService, UserService userService) {
+    public RecipeController(RecipeService recipeService, UserService userService, ReviewService reviewService) {
         this.recipeService = recipeService;
         this.userService = userService;
+        this.reviewService = reviewService;
     }
 
     /**
@@ -58,11 +63,12 @@ public class RecipeController {
         }
 
         // Fetch the reviews for the recipe
-        List<Review> reviews = reviewService.getReviewById(reviewId);
+        /* List<Review> reviews = reviewService.getReviewById(reviewId);
         System.out.println("Review list: " + reviews);
 
         // Pass the recipe and reviews directly to the view
-        mv.addObject("recipes", reviews); /** NEED CHANGE */
+        mv.addObject("recipes", reviews); */
+        /** NEED CHANGE */
 
         // If an error occurred, you can set the following property with the error message
         String errorMessage = error;
@@ -72,25 +78,26 @@ public class RecipeController {
     }
 
 
-    @GetMapping("/{recipeId}/bookmark/{isAdd}")
+    @GetMapping("/{recipeId}/bookmark/{isAdd}/{bookmarkType}")
     public String addOrRemoveBookmark(@PathVariable("recipeId") String recipeId,
-            @PathVariable("isAdd") Boolean isAdd) {
+            @PathVariable("isAdd") Boolean isAdd, @PathVariable("bookmarkType") String bookmarkType) {
         System.out.println("The user is attempting add or remove a bookmark:");
         System.out.println("\trecipeId: " + recipeId);
         System.out.println("\tisAdd: " + isAdd);
+        System.out.println("\tbookmarkType: " + bookmarkType);
 
         // Redirect the user if the comment adding is a success.
         try {
             String currUserId = userService.getLoggedInUser().getUserId();
             if (isAdd) {
-                recipeService.bookmark(currUserId, recipeId);
+                recipeService.bookmark(currUserId, recipeId, bookmarkType);
             } else {
-                recipeService.unBookmark(currUserId, recipeId);
+                recipeService.unBookmark(currUserId, recipeId, bookmarkType);
             }
             return "redirect:/recipe/" + recipeId;
         } catch (Exception e) {
             // Redirect the user with an error message if there was an error.
-            String message = URLEncoder.encode("Failed to (un)bookmark the post. Please try again.",
+            String message = URLEncoder.encode("Failed to (un)bookmark the recipe. Please try again.",
                     StandardCharsets.UTF_8);
             return "redirect:/recipe/" + recipeId + "?error=" + message;
         }

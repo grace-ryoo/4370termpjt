@@ -35,7 +35,7 @@ public class Recipe {
     private final User user;
 
     /**
-     * Category of the recipe.
+     * The recipe category.
      */
     private final Category category;
 
@@ -55,28 +55,39 @@ public class Recipe {
     private final int servings;
 
     /**
-     * List of ingredients in the recipe.
+     * The unique identifier of the recipe cuisine.
      */
-    private final List<String> ingredients;
+    private final String cuisineId;
+
+    /**
+     * The unique identifier of the recipe diet.
+     */
+    private final String dietId;
+
+    /**
+     * The level of difficulty of the recipe.
+     */
+    private final String cookingLevel;
 
     /**
      * Constructs a Recipe with specified details.
      *
      * @param recipeId         the unique identifier of the recipe
-     * @param name             the name of the recipe
+     * @param recipeName       the name of the recipe
      * @param description      the text content of the recipe
      * @param recipeCreateDate the creation date of the recipe
      * @param user             the user who created the recipe
-     * @param category         the category of the recipe
+     * @param category         the recipe category
      * @param prep_time        the time it takes to prep the recipe
      * @param cook_time        the time it takes to prep the recipe
      * @param servings         the amount of servings in the recipe
-     * @param ingredients      the list of ingredients needed for the recipe
+     * @param cuisineId        the unique identifier of the recipe cuisine
+     * @param dietId           the unique identifier of the recipe diet
+     * @param cookingLevel     the level of difficulty of the recipe
      */
     public Recipe(String recipeId, String recipeName, String description,
             String recipeCreateDate, User user, Category category,
-            int prep_time, int cook_time, int servings,
-            List<String> ingredients) {
+            int prep_time, int cook_time, int servings, String cuisineId, String dietId, String cookingLevel) {
         this.recipeId = recipeId;
         this.recipeName = recipeName;
         this.description = description;
@@ -86,7 +97,9 @@ public class Recipe {
         this.prep_time = prep_time;
         this.cook_time = cook_time;
         this.servings = servings;
-        this.ingredients = new ArrayList<>(ingredients); // Create a defensive copy
+        this.cuisineId = cuisineId;
+        this.dietId = dietId;
+        this.cookingLevel = cookingLevel;
     }
 
     /**
@@ -171,11 +184,30 @@ public class Recipe {
     }
 
     /**
-     * Returns the list of ingredients in the recipe.
+     * Returns the unique identifier of the recipe diet.
      *
-     * @return an unmodifiable list of ingredients
+     * @return the unique identifier of the recipe diet.
      */
-    public List<String> getIngredients() {
-        return new ArrayList<>(ingredients); // Return a defensive copy
+    public String getDietId() {
+        return dietId;
     }
+
+    /**
+     * Returns the unique identifier of the recipe cuisine.
+     *
+     * @return the unique identifier of the recipe cuisine.
+     */
+    public String getCuisineId() {
+        return cuisineId;
+    }
+
+    /**
+     * Returns the level of difficulty of the recipe.
+     *
+     * @return the level of difficulty of the recipe
+     */
+    public String getCookingLevel() {
+        return cookingLevel;
+    }
+
 }

@@ -1,0 +1,83 @@
+<div class="recipe framed">
+    <div class="recipe-body">
+        <!-- Recipe Author -->
+        <div class="username">
+            <a href="/profile/{{user.userId}}">{{user.firstName}} {{user.lastName}}</a>
+        </div>
+        
+        <!-- Recipe Date -->
+        <div class="post-date">{{postDate}}</div>
+        
+        <!-- Recipe Title -->
+        <div class="recipe-title text-xl font-bold text-[#90af7b] mt-4">
+            {{title}}
+        </div>
+
+        <!-- Recipe Image -->
+        <div class="recipe-image">
+            <img src="{{imageUrl}}" alt="{{title}}" class="w-full h-64 object-cover rounded-md mt-4">
+        </div>
+        
+        <!-- Recipe Content (Description) -->
+        <div class="recipe-content mt-4">
+            {{content}}
+        </div>
+        
+        <!-- Recipe Rating (Stars) -->
+        <div class="recipe-rating mt-4">
+            <span class="rating-stars">
+                <!-- Loop through stars to create the rating -->
+                {{#rating}}
+                    {{#isFullStar}}
+                        <!-- Filled Star -->
+                        <svg width="9" height="9" viewBox="0 0 9 9" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-[9px] h-[8.5px]" preserveAspectRatio="none">
+                            <path d="M6.0293 2.6084L9 3.24707L6.97461 5.49707L7.28125 8.5L4.5 7.2832L1.71875 8.5L2.02539 5.49707L0 3.24707L2.9707 2.6084L4.5 0L6.0293 2.6084Z" fill="#FFCB45"></path>
+                        </svg>
+                    {{/isFullStar}}
+                    {{#isHalfStar}}
+                        <!-- Half Filled Star -->
+                        <svg width="9" height="9" viewBox="0 0 9 9" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-[9px] h-[8.5px]" preserveAspectRatio="none">
+                            <path d="M6.0293 2.6084L9 3.24707L6.97461 5.49707L7.28125 8.5L4.5 7.2832L1.71875 8.5L2.02539 5.49707L0 3.24707L2.9707 2.6084L4.5 0L6.0293 2.6084Z" fill="#FFCB45"></path>
+                        </svg>
+                    {{/isHalfStar}}
+                    {{^isFullStar}}
+                        {{^isHalfStar}}
+                            <!-- Empty Star -->
+                            <svg width="9" height="9" viewBox="0 0 9 9" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-[9px] h-[8.5px]" preserveAspectRatio="none">
+                                <path d="M6.0293 2.6084L9 3.24707L6.97461 5.49707L7.28125 8.5L4.5 7.2832L1.71875 8.5L2.02539 5.49707L0 3.24707L2.9707 2.6084L4.5 0L6.0293 2.6084Z" fill="#D1D1D1"></path>
+                            </svg>
+                        {{/isHalfStar}}
+                    {{/isFullStar}}
+                {{/rating}}
+            </span>
+            <span class="rating-text">({{ratingCount}} votes)</span>
+        </div>
+
+        <!-- Recipe Actions (Bookmarking) -->
+        <div class="recipe-actions mt-4 flex gap-2">
+            <!-- If already bookmarked, show the type -->
+            {{#bookmarkType}}
+                <form method="post" action="/recipe/{{recipeId}}/unbookmark">
+                    <button class="px-3 py-1 bg-red-200 text-red-800 rounded text-sm">
+                        Remove {{bookmarkType}}
+                    </button>
+                </form>
+            {{/bookmarkType}}
+
+            <!-- If not bookmarked, allow choosing a type -->
+            {{^bookmarkType}}
+                <form method="post" action="/chroniclesToCook/recipe/{{recipeId}}/bookmark">
+                    <input type="hidden" name="type" value="TRY">
+                    <button class="far fa-bookmark"></button>
+                </form>
+
+                <form method="post" action="/cookedChronicles/recipe/{{recipeId}}/bookmark">
+                    <input type="hidden" name="type" value="PAST">
+                    <button class="fa fa-bookmark"></button>
+                </form>
+
+            {{/bookmarkType}}
+        </div>
+
+    </div>
+</div>
