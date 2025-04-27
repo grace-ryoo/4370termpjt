@@ -55,11 +55,6 @@ public class Recipe {
     private final int servings;
 
     /**
-     * List of ingredients in the recipe.
-     */
-    private final List<String> ingredientItems;
-
-    /**
      * The unique identifier of the recipe cuisine.
      */
     private final String cuisineId;
@@ -86,15 +81,13 @@ public class Recipe {
      * @param prep_time        the time it takes to prep the recipe
      * @param cook_time        the time it takes to prep the recipe
      * @param servings         the amount of servings in the recipe
-     * @param ingredientItems  the list of ingredients needed for the recipe
      * @param cuisineId        the unique identifier of the recipe cuisine
      * @param dietId           the unique identifier of the recipe diet
      * @param cookingLevel     the level of difficulty of the recipe
      */
     public Recipe(String recipeId, String recipeName, String description,
             String recipeCreateDate, User user, Category category,
-            int prep_time, int cook_time, int servings,
-            List<String> ingredientItems, String cuisineId, String dietId, String cookingLevel) {
+            int prep_time, int cook_time, int servings, String cuisineId, String dietId, String cookingLevel) {
         this.recipeId = recipeId;
         this.recipeName = recipeName;
         this.description = description;
@@ -104,7 +97,6 @@ public class Recipe {
         this.prep_time = prep_time;
         this.cook_time = cook_time;
         this.servings = servings;
-        this.ingredientItems = ingredientItems;
         this.cuisineId = cuisineId;
         this.dietId = dietId;
         this.cookingLevel = cookingLevel;
@@ -192,15 +184,6 @@ public class Recipe {
     }
 
     /**
-     * Returns the list of ingredients in the recipe.
-     *
-     * @return the list of ingredients
-     */
-    public List<String> getIngredientItems() {
-        return ingredientItems; 
-    }
-
-     /**
      * Returns the unique identifier of the recipe diet.
      *
      * @return the unique identifier of the recipe diet.

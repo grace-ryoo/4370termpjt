@@ -63,7 +63,8 @@ public class RecipeService {
        
     }
 
-    public boolean createRecipe(String recipeName, String description, String userId) {
+    public boolean createRecipe(String recipeName, String description,
+    String userId, String categoryId, int prep_time, int cook_time, int servings, String cuisineId, String dietId, String cookingLevel) {
         if (userId == null || userId.isEmpty()) {
             throw new RuntimeException("User ID is required to create a recipe.");
         }
@@ -72,12 +73,51 @@ public class RecipeService {
             throw new RuntimeException("Recipe content cannot be empty.");
         }
 
-        final String sql = "INSERT INTO review (recipeName, description, userId) VALUES (?, ?, ?)";
+        if (recipeName == null || recipeName.trim().isEmpty()) {
+            throw new RuntimeException("Recipe name cannot be empty.");
+        }
+
+        if (categoryId == null || categoryId.isEmpty()) {
+            throw new RuntimeException("CategoryId cannot be empty.");
+        }
+
+        if (prep_time <= 0) {
+            throw new RuntimeException("Preparation time cannot be less than or equal to 0.");
+        }
+
+        if (cook_time <= 0) {
+            throw new RuntimeException("Cooking time cannot be less than or equal to 0.");
+        }
+
+        if (servings <= 0) {
+            throw new RuntimeException("Servings cannot be less than or equal to 0.");
+        }
+
+        if (cuisineId == null || cuisineId.isEmpty()) {
+            throw new RuntimeException("CuisineId cannot be empty.");
+        }
+
+        if (dietId == null || dietId.isEmpty()) {
+            throw new RuntimeException("DietId cannot be empty.");
+        }
+
+        if (cookingLevel == null || cookingLevel.trim().isEmpty()) {
+            throw new RuntimeException("Cooking level cannot be empty.");
+        }
+
+        final String sql = "INSERT INTO recipe (recipeName, description, userId, categoryId, prep_time, cook_time, servings, cuisineId, dietId, cookingLevel) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = dataSource.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, recipeName);
             pstmt.setString(2, description);
             pstmt.setString(3, userId);
+            pstmt.setString(4, categoryId);
+            pstmt.setInt(5, prep_time);
+            pstmt.setInt(6, cook_time);
+            pstmt.setInt(7, servings);
+            pstmt.setString(8, cuisineId);
+            pstmt.setString(9, dietId);
+            pstmt.setString(10, cookingLevel);
 
             int rowsAffected = pstmt.executeUpdate();
             return rowsAffected > 0;
@@ -107,13 +147,6 @@ public class RecipeService {
                     formattedDate = sdf.format(timestamp);
                 }
 
-                List<String> ingredientItems = rs.getArray("ingredientItems") != null ? Arrays.asList((String[]) rs.getArray("ingredientItems").getArray()) : new ArrayList<>();
-                List<String> ingredients = new ArrayList<>();
-
-                for (String ingredient : ingredientItems) {
-                    ingredients.add(ingredient);  // Add each item from ingredientItems to ingredients
-                }
-
                 Category category = new Category(
                     rs.getString("categoryId"),
                     rs.getString("categoryName"),
@@ -130,7 +163,6 @@ public class RecipeService {
                     rs.getInt("prep_time"),
                     rs.getInt("cook_time"),
                     rs.getInt("servings"),
-                    ingredients,
                     rs.getString("cuisineId"),
                     rs.getString("dietId"),
                     rs.getString("cookingLevel")

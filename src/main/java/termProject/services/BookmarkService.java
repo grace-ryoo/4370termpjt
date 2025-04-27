@@ -47,13 +47,6 @@ public class BookmarkService {
                         rs.getString("lastName")
                     );
 
-                    List<String> ingredientItems = rs.getArray("ingredientItems") != null ? Arrays.asList((String[]) rs.getArray("ingredientItems").getArray()) : new ArrayList<>();
-                    List<String> ingredients = new ArrayList<>();
-
-                    for (String ingredient : ingredientItems) {
-                        ingredients.add(ingredient);  // Add each item from ingredientItems to ingredients
-                    }
-
                     Category category = new Category(
                         rs.getString("categoryId"),
                         rs.getString("categoryName"),
@@ -70,7 +63,6 @@ public class BookmarkService {
                         rs.getInt("prep_time"),
                         rs.getInt("cook_time"),
                         rs.getInt("servings"),
-                        ingredients,
                         rs.getString("cuisineId"),
                         rs.getString("dietId"),
                         rs.getString("cookingLevel")

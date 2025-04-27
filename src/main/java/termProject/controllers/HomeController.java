@@ -47,7 +47,7 @@ public class HomeController {
     }
 
     @PostMapping("/createrecipe")
-    public String createPost(@RequestParam(name = "description") String description, @RequestParam(name = "recipeName") String recipeName) {
+    public String createPost(@RequestParam(name = "description") String description, @RequestParam(name = "recipeName") String recipeName, @RequestParam(name = "userId") String userId, @RequestParam(name = "categoryId") String categoryId, @RequestParam(name = "prep_time") int prep_time, @RequestParam(name = "cook_time") int cook_time, @RequestParam(name = "servings") int servings, @RequestParam(name = "cuisineId") String cuisineId, @RequestParam(name = "dietId") String dietId, @RequestParam(name = "cookingLevel") String cookingLevel) {
         System.out.println("User is creating " + recipeName + " recipe:" + description);
 
         String currentUserId = userService.getLoggedInUser().getUserId();
@@ -56,7 +56,7 @@ public class HomeController {
             return "redirect:/?error=Recipe cannot be empty";
         }
 
-        boolean success = recipeService.createRecipe(recipeName, description, currentUserId);
+        boolean success = recipeService.createRecipe(recipeName, description, userId, categoryId, prep_time, cook_time, servings, cuisineId, dietId, cookingLevel);
 
         if (!success) {
             return "redirect:/?error=Failed to create the recipe. Please try again.";
