@@ -48,3 +48,12 @@ create table if not exists bookmark (
     CONSTRAINT fk_bookmark_recipe FOREIGN KEY (recipeId) REFERENCES recipe(recipeId) ON DELETE CASCADE,
     CONSTRAINT fk_bookmark_user FOREIGN KEY (userId) REFERENCES user(userId) ON DELETE CASCADE
 );
+
+create table if not exists rating (
+    recipeId INT NOT NULL,  -- Foreign key referencing recipe(id)
+    userId INT NOT NULL,  -- Foreign key referencing user(userId)
+    PRIMARY KEY (recipeId, userId),  -- Composite primary key (ensures unique bookmarks)
+    CONSTRAINT fk_rating_recipe FOREIGN KEY (recipeId) REFERENCES recipe(recipeId) ON DELETE CASCADE,
+    CONSTRAINT fk_rating_user FOREIGN KEY (userId) REFERENCES user(userId) ON DELETE CASCADE
+);
+
