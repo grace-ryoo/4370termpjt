@@ -190,5 +190,37 @@ public class RecipeService {
     }
 
 
+    public void addRating(String userId, String recipeId) {
+        final String sql = "INSERT INTO rating (userId, postId) VALUES (?, ?)";
+        try (Connection conn = dataSource.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, userId);
+            pstmt.setString(2, recipeId);
+            pstmt.executeUpdate();
+            System.out.println("Success: rated recipe");
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error rating recipe: ", e);
+        }
+    }
+
+    public void undoRating(String userId, String recipeId) {
+        final String sql = "DELETE FROM rating WHERE userId = ? AND recipeId = ?";
+
+        try (Connection conn = dataSource.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, userId);
+            pstmt.setString(2, recipeId);
+            pstmt.executeUpdate();
+            System.out.println("Success: undid rating for recipe");
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error undoing recipe: ", e);
+        }
+    }
+
+    
+
+
 
 }
