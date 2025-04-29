@@ -9,6 +9,7 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.sql.Timestamp;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -61,7 +62,16 @@ public class RecipeService {
     }
     */
 
-    public boolean createRecipe(String recipeName, String description, String userId) {
+    public boolean createRecipe(String recipeName, 
+                String description, 
+                String userId, 
+                List<String> ingredients,
+                int prepTime,
+                int cookTime,
+                int servings,
+                String category,
+                String dietId,
+                String cookLevel) {
         if (userId == null || userId.isEmpty()) {
             throw new RuntimeException("User ID is required to create a recipe.");
         }
@@ -71,6 +81,8 @@ public class RecipeService {
         }
 
         final String sql = "INSERT INTO review (recipeName, description, userId) VALUES (?, ?, ?)";
+
+    
 
         try (Connection conn = dataSource.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, recipeName);
@@ -89,10 +101,6 @@ public class RecipeService {
 
                 conn.commit();
                 return rowsAffected > 0;
-            } catch (SQLException e) {
-                conn.rollback();
-                throw e;
-            }
         } catch (SQLException e) {
             throw new RuntimeException("Error creating recipe", e);
         }
@@ -119,7 +127,7 @@ public class RecipeService {
         try (Connection conn = dataSource.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, recipeId);
             stmt.setString(2, userId);
-            ResultSet rs = stmt.executeQuery();
+            ResultSet  rs = stmt.executeQuery();
             System.out.println(" Fetching post for recipeId: " + recipeId + " using userId: " + userId);
             if (rs.next()) {
                 User user = new User(rs.getString("userId"), rs.getString("firstName"), rs.getString("lastName"));
@@ -134,7 +142,8 @@ public class RecipeService {
 
                 Category category = new Category(
                     rs.getString("categoryId"),
-                    rs.getString("categoryName")
+                    rs.getString("categoryName"),
+                    rs.getString("categoryImageUrl")
                 );
 
                 recipe = new Recipe(
@@ -146,7 +155,11 @@ public class RecipeService {
                     category,
                     rs.getInt("prep_time"),
                     rs.getInt("cook_time"),
-                    rs.getInt("servings")
+                    rs.getInt("servings"),
+                    rs.getString("cuisineId"),
+                    rs.getString("dietId"),
+                    rs.getString("cookingLevel"),
+                    getIngredientsForRecipe(recipeId)
                 );
             }
 
@@ -165,7 +178,8 @@ public class RecipeService {
 
         Category category = new Category(
                 rs.getString("categoryId"),
-                rs.getString("categoryName"));
+                rs.getString("categoryName"),
+                rs.getString("categoryImageUrl"));
 
         String recipeId = rs.getString("recipeId");
         List<String> ingredients = getIngredientsForRecipe(recipeId);
@@ -180,7 +194,10 @@ public class RecipeService {
                 rs.getInt("prep_time"),
                 rs.getInt("cook_time"),
                 rs.getInt("servings"),
-                ingredients); // Add ingredients to constructor
+                rs.getString("cuisineId"),
+                rs.getString("dietId"),
+                rs.getString("cookingLevel"),
+                ingredients); 
     }
 
     private List<String> getIngredientsForRecipe(String recipeId) throws SQLException {
