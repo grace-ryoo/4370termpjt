@@ -32,12 +32,16 @@ public class BookmarkService {
     public List<Recipe> getBookmarkedRecipesByType(String userId, String type) {
         List<Recipe> recipes = new ArrayList<>();
 
-        final String sql = "SELECT DISTINCT r.*, u.*, c.*" + 
-            "FROM bookmarks b" +
-            "JOIN recipes r ON b.recipe_id = r.recipe_id" +
-            "JOIN users u ON r.user_id = u.user_id" +
-            "JOIN categories c ON r.category_id = c.category_id" +
-            "WHERE b.user_id = ? AND b.bookmark_type = ?";
+        final String sql =  "SELECT r.*, u.firstName, u.lastName, c.categoryId, c.categoryName, c.categoryImageUrl, " +
+            "COALESCE(AVG(rt.stars), 0) AS averageRating, " +
+            "COUNT(rt.userId) AS countRatings " +
+            "FROM bookmarks b " +
+            "JOIN recipes r ON b.recipe_id = r.recipe_id " +
+            "JOIN users u ON r.user_id = u.user_id " +
+            "JOIN categories c ON r.category_id = c.category_id " +
+            "LEFT JOIN rating rt ON r.recipe_id = rt.recipe_id " +
+            "WHERE b.user_id = ? AND b.bookmark_type = ? " +
+            "GROUP BY r.recipe_id, u.user_id, u.firstName, u.lastName, c.categoryId, c.categoryName, c.categoryImageUrl";
 
         try (Connection conn = dataSource.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -59,6 +63,9 @@ public class BookmarkService {
                         rs.getString("categoryImageUrl")
                     );
 
+                    int avgRating = (int) Math.round(rs.getDouble("averageRating"));
+                    int numRatings = rs.getInt("countRatings");
+
                     Recipe recipe = new Recipe(
                         rs.getString("recipeId"),
                         rs.getString("recipeName"),
@@ -71,7 +78,9 @@ public class BookmarkService {
                         rs.getInt("servings"),
                         rs.getString("cuisineId"),
                         rs.getString("dietId"),
-                        rs.getString("cookingLevel")
+                        rs.getString("cookingLevel"),
+                        avgRating,
+                        numRatings
                     );
                     recipes.add(recipe);
                     

@@ -1,10 +1,5 @@
 package termProject.models;
 
-import termProject.models.User;
-import termProject.models.Category;
-import java.util.List;
-import java.util.ArrayList;
-
 /**
  * Represents the basic structure of a recipe in the recipe platform.
  */
@@ -70,6 +65,17 @@ public class Recipe {
     private final String cookingLevel;
 
     /**
+     * The average number of ratings for the recipe.
+     */
+    private final int averageRating; 
+
+    /**
+     * The count of ratings for the recipe.
+     */
+    private final int countRatings; 
+
+
+    /**
      * Constructs a Recipe with specified details.
      *
      * @param recipeId         the unique identifier of the recipe
@@ -84,10 +90,12 @@ public class Recipe {
      * @param cuisineId        the unique identifier of the recipe cuisine
      * @param dietId           the unique identifier of the recipe diet
      * @param cookingLevel     the level of difficulty of the recipe
+     * @param averageRating    the average number of ratings for the recipe
+     * @param countRatings     the count of ratings for the recipe
      */
     public Recipe(String recipeId, String recipeName, String description,
             String recipeCreateDate, User user, Category category,
-            int prep_time, int cook_time, int servings, String cuisineId, String dietId, String cookingLevel) {
+            int prep_time, int cook_time, int servings, String cuisineId, String dietId, String cookingLevel, int averageRating, int countRatings) {
         this.recipeId = recipeId;
         this.recipeName = recipeName;
         this.description = description;
@@ -100,6 +108,8 @@ public class Recipe {
         this.cuisineId = cuisineId;
         this.dietId = dietId;
         this.cookingLevel = cookingLevel;
+        this.averageRating = averageRating;
+        this.countRatings = countRatings;
     }
 
     /**
@@ -208,6 +218,24 @@ public class Recipe {
      */
     public String getCookingLevel() {
         return cookingLevel;
+    }
+
+    /**
+     * Returns the average number of ratings for the recipe.
+     *
+     * @return the average number of ratings for the recipe
+     */
+    public int getAverageRating() {
+        return servings;
+    }
+
+    /**
+     * Returns the count of ratings for the recipe.
+     *
+     * @return the count of ratings for the recipe
+     */
+    public int getCountRatings() {
+        return servings;
     }
 
 }

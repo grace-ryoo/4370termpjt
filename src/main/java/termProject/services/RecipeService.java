@@ -132,7 +132,15 @@ public class RecipeService {
     public Recipe getRecipeById(String recipeId, String userId) {
         Recipe recipe = null;
 
-        String sql = "";
+        String sql = "SELECT r.*, u.firstName, u.lastName, c.categoryId, c.categoryName, c.categoryImageUrl, " +
+            "COALESCE(AVG(rt.stars), 0) AS averageRating, " +
+            "COUNT(rt.userId) AS countRatings " +
+            "FROM recipe r " + 
+            "JOIN user u ON r.userId = u.userId " +
+            "JOIN category c ON r.categoryId = c.categoryId " +
+            "LEFT JOIN rating rt ON r.recipeId = rt.recipeId" +
+            "WHERE r.recipeId = ? " +
+            "GROUP BY r.recipeId, u.userId, u.firstName, u.lastName, c.categoryId, c.categoryName, c.categoryImageUrl\";";
 
         try (Connection conn = dataSource.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, recipeId); 
@@ -156,6 +164,9 @@ public class RecipeService {
                     rs.getString("categoryImageUrl")
                 );
 
+                int avgRating = (int) Math.round(rs.getDouble("averageRating"));
+                int numRatings = rs.getInt("countRatings");
+
                 recipe = new Recipe(
                     rs.getString("recipeId"),
                     rs.getString("recipeName"),
@@ -168,7 +179,9 @@ public class RecipeService {
                     rs.getInt("servings"),
                     rs.getString("cuisineId"),
                     rs.getString("dietId"),
-                    rs.getString("cookingLevel")
+                    rs.getString("cookingLevel"),
+                    avgRating,
+                    numRatings
                 );
             }
 
