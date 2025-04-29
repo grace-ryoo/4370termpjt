@@ -122,7 +122,15 @@ public class RecipeService {
     public Recipe getRecipeById(String recipeId, String userId) {
         Recipe recipe = null;
 
-        String sql = "";
+        String sql = "SELECT r.*, u.firstName, u.lastName, c.categoryId, c.categoryName, c.categoryImageUrl, " +
+            "COALESCE(AVG(rt.stars), 0) AS averageRating, " +
+            "COUNT(rt.userId) AS countRatings " +
+            "FROM recipe r " + 
+            "JOIN user u ON r.userId = u.userId " +
+            "JOIN category c ON r.categoryId = c.categoryId " +
+            "LEFT JOIN rating rt ON r.recipeId = rt.recipeId" +
+            "WHERE r.recipeId = ? " +
+            "GROUP BY r.recipeId, u.userId, u.firstName, u.lastName, c.categoryId, c.categoryName, c.categoryImageUrl\";";
 
         try (Connection conn = dataSource.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, recipeId);
@@ -146,6 +154,9 @@ public class RecipeService {
                     rs.getString("categoryImageUrl")
                 );
 
+                int avgRating = (int) Math.round(rs.getDouble("averageRating"));
+                int numRatings = rs.getInt("countRatings");
+
                 recipe = new Recipe(
                     rs.getString("recipeId"),
                     rs.getString("recipeName"),
@@ -159,7 +170,9 @@ public class RecipeService {
                     rs.getString("cuisineId"),
                     rs.getString("dietId"),
                     rs.getString("cookingLevel"),
-                    getIngredientsForRecipe(recipeId)
+                    getIngredientsForRecipe(recipeId),
+                    avgRating,
+                    numRatings
                 );
             }
 
@@ -224,4 +237,39 @@ public class RecipeService {
         ZonedDateTime estZoned = utcZoned.withZoneSameInstant(ZoneId.of("America/New_York"));
         return estZoned.format(outputFormatter);
     }
+
+
+    public void addRating(String userId, String recipeId) {
+        final String sql = "INSERT INTO rating (userId, postId) VALUES (?, ?)";
+        try (Connection conn = dataSource.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, userId);
+            pstmt.setString(2, recipeId);
+            pstmt.executeUpdate();
+            System.out.println("Success: rated recipe");
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error rating recipe: ", e);
+        }
+    }
+
+    public void undoRating(String userId, String recipeId) {
+        final String sql = "DELETE FROM rating WHERE userId = ? AND recipeId = ?";
+
+        try (Connection conn = dataSource.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, userId);
+            pstmt.setString(2, recipeId);
+            pstmt.executeUpdate();
+            System.out.println("Success: undid rating for recipe");
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error undoing recipe: ", e);
+        }
+    }
+
+    
+
+
+
 }

@@ -1,3 +1,4 @@
+com\example\demo\controller\DemoController.class
 termProject\controllers\PastBookmarksController.class
 termProject\config\WebConfig.class
 termProject\models\Review.class

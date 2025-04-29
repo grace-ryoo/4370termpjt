@@ -74,6 +74,15 @@ public class Recipe {
      * List of ingredients in the recipe.
      */
     private final List<String> ingredients;
+     * The average number of ratings for the recipe.
+     */
+    private final int averageRating; 
+
+    /**
+     * The count of ratings for the recipe.
+     */
+    private final int countRatings; 
+
 
     /**
      * Constructs a Recipe with specified details.
@@ -95,7 +104,7 @@ public class Recipe {
     public Recipe(String recipeId, String recipeName, String description,
             String recipeCreateDate, User user, Category category,
             int prep_time, int cook_time, int servings, String cuisineId,
-            String dietId, String cookingLevel, List<String> ingredients) {
+            String dietId, String cookingLevel, List<String> ingredients, int averageRating, int countRatings) {
         this.recipeId = recipeId;
         this.recipeName = recipeName;
         this.description = description;
@@ -109,6 +118,8 @@ public class Recipe {
         this.dietId = dietId;
         this.cookingLevel = cookingLevel;
         this.ingredients = ingredients != null ? new ArrayList<>(ingredients) : new ArrayList<>();
+        this.averageRating = averageRating;
+        this.countRatings = countRatings;
     }
 
     /**
@@ -226,6 +237,24 @@ public class Recipe {
      */
     public List<String> getIngredients() {
         return Collections.unmodifiableList(ingredients);
+    }
+    
+    /**
+     * Returns the average number of ratings for the recipe.
+     * 
+     * @return the average number of ratings for the recipe
+     */
+    public int getAverageRating() {
+        return servings;
+    }
+
+    /**
+     * Returns the count of ratings for the recipe.
+     *
+     * @return the count of ratings for the recipe
+     */
+    public int getCountRatings() {
+        return servings;
     }
 
 }
