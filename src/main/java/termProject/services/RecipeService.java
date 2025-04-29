@@ -210,7 +210,9 @@ public class RecipeService {
                 rs.getString("cuisineId"),
                 rs.getString("dietId"),
                 rs.getString("cookingLevel"),
-                ingredients); 
+                ingredients, 
+                (int) Math.round(rs.getDouble("averageRating")),
+                rs.getInt("countRatings")); 
     }
 
     private List<String> getIngredientsForRecipe(String recipeId) throws SQLException {
