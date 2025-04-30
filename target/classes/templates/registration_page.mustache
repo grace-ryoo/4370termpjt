@@ -1,34 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Register</title>
-    <link rel="stylesheet" href="/css/styles.css">
-</head>
-<body>
-    <header class="welcome-section">
-        <h1>Register for Recipe Share</h1>
-        {{#errorMessage}}
-            <p class="error">{{errorMessage}}</p>
-        {{/errorMessage}}
-    </header>
-
-    <section class="register-form">
-        <form method="POST" action="/register">
-            <label>First Name:
-                <input type="text" name="firstName" required />
-            </label><br/>
-            <label>Last Name:
-                <input type="text" name="lastName" required />
-            </label><br/>
-            <label>Username:
-                <input type="text" name="username" required />
-            </label><br/>
-            <label>Password:
-                <input type="password" name="password" required />
-            </label><br/>
-            <button type="submit">Create Account</button>
-        </form>
-    </section>
-</body>
-</html>
+ <html lang="en">
+ {{> fragments/header}}
+ 
+ <body>
+ 
+     <div class="container center-align narrow">
+         {{> fragments/error_message}}
+         <form method="post" action="/register">
+             <input name="firstName" class="short-input full" type="text" placeholder="First Name">
+             <input name="lastName" class="short-input full" type="text" placeholder="Last Name">
+             <input name="username" class="short-input full" type="text" placeholder="Username">
+             <input name="password" class="short-input full" type="password" placeholder="Password">
+             <button type="submit" class="action-button">Register</button>
+         </form>
+     </div>
+ 
+     {{> fragments/footer}}
+ 
+ </body>
+ 
+ </html>

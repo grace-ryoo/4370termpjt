@@ -190,3 +190,11 @@ body {
     cursor: pointer;
     margin-bottom: 1rem;
 }
+.username {
+    font-weight: bold;
+    display: block;
+}
+.error-message {
+    margin: 24pt 0;
+    color: #d61111;
+}
