@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-
 import termProject.models.Review;
 import termProject.models.Recipe;
 import termProject.services.RecipeService;
 import termProject.services.ReviewService;
 import termProject.services.UserService;
+import termProject.services.CategoryService;
 
 @Controller
 @RequestMapping("/recipe")
@@ -29,6 +29,7 @@ public class RecipeController {
     private RecipeService recipeService;
     private ReviewService reviewService;
     private UserService userService;
+    private CategoryService categoryService;
 
     @Autowired
     public RecipeController(RecipeService recipeService, UserService userService, ReviewService reviewService) {
@@ -59,24 +60,36 @@ public class RecipeController {
         if (recipe == null) {
             System.out.println("No recipe found for the given recipeId: " + recipeId);
         } else {
-            System.out.println("Recipe retrieved: " + recipe.getRecipeId() + "with name: " +  recipe.getRecipeName() + "with description: " + recipe.getDescription());
+            System.out.println("Recipe retrieved: " + recipe.getRecipeId() + "with name: " + recipe.getRecipeName()
+                    + "with description: " + recipe.getDescription());
         }
 
         // Fetch the reviews for the recipe
-        /* List<Review> reviews = reviewService.getReviewById(reviewId);
-        System.out.println("Review list: " + reviews);
-
-        // Pass the recipe and reviews directly to the view
-        mv.addObject("recipes", reviews); */
+        /*
+         * List<Review> reviews = reviewService.getReviewById(reviewId);
+         * System.out.println("Review list: " + reviews);
+         * 
+         * // Pass the recipe and reviews directly to the view
+         * mv.addObject("recipes", reviews);
+         */
         /** NEED CHANGE */
 
-        // If an error occurred, you can set the following property with the error message
+        // If an error occurred, you can set the following property with the error
+        // message
         String errorMessage = error;
         mv.addObject("errorMessage", errorMessage);
-
         return mv;
     }
 
+    @GetMapping("/new")
+    public ModelAndView showRecipeForm() {
+        ModelAndView mv = new ModelAndView("recipe_form");
+        mv.addObject("categories", categoryService.getAllCategories());
+        if (userService.isAuthenticated()) {
+            mv.addObject("username", userService.getLoggedInUser().getFirstName());
+        }
+        return mv;
+    }
 
     @PostMapping("/{recipeId}/bookmark/{isAdd}/{bookmarkType}")
     public String addOrRemoveBookmark(@PathVariable("recipeId") String recipeId,
