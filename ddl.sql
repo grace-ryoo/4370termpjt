@@ -40,6 +40,15 @@ create table if not exists recipe (
     FOREIGN KEY (categoryId) REFERENCES category(categoryId)
 );
 
+CREATE TABLE if not exists recipe_ingredients (
+    recipeId INT NOT NULL,
+    ingredientName VARCHAR(255) NOT NULL,
+    ingredientAmount VARCHAR(255) NOT NULL,
+    ingredientUnit VARCHAR(255) NOT NULL,
+    PRIMARY KEY (recipeId, ingredientName),
+    CONSTRAINT fk_recipe_ingredients_recipe FOREIGN KEY (recipeId) REFERENCES recipe(recipeId) ON DELETE CASCADE
+)
+
 create table if not exists bookmark (
     recipeId INT NOT NULL,  -- Foreign key referencing recipe(id)
     userId INT NOT NULL,  -- Foreign key referencing user(userId)

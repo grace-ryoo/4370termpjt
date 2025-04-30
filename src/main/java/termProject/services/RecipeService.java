@@ -240,7 +240,6 @@ public class RecipeService {
         return estZoned.format(outputFormatter);
     }
 
-
     public void addRating(String userId, String recipeId) {
         final String sql = "INSERT INTO rating (userId, postId) VALUES (?, ?)";
         try (Connection conn = dataSource.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -270,8 +269,46 @@ public class RecipeService {
         }
     }
 
-    
+    public List<Recipe> getAllRecipes() {
+        List<Recipe> recipes = new ArrayList<>();
+        final String sql = "SELECT r.*, u.*, c.*, " +
+                          "COALESCE(AVG(rt.stars), 0) AS averageRating, " +
+                          "COUNT(rt.userId) AS countRatings " +
+                          "FROM recipe r " +
+                          "JOIN user u ON r.userId = u.userId " +
+                          "JOIN category c ON r.categoryId = c.categoryId " +
+                          "LEFT JOIN rating rt ON r.recipeId = rt.recipeId " +
+                          "GROUP BY r.recipeId";
+        
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                recipes.add(mapRecipeFromResultSet(rs));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error fetching recipes", e);
+        }
+        return recipes;
+    }
 
-
-
+    public List<Recipe> getRecipesByCategory(String categoryId) {
+        List<Recipe> recipes = new ArrayList<>();
+        final String sql = "SELECT r.*, u.*, c.* FROM recipe r " +
+                          "JOIN user u ON r.userId = u.userId " +
+                          "JOIN category c ON r.categoryId = c.categoryId " +
+                          "WHERE r.categoryId = ?";
+        
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, categoryId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                recipes.add(mapRecipeFromResultSet(rs));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error fetching recipes by category", e);
+        }
+        return recipes;
+    }
 }
