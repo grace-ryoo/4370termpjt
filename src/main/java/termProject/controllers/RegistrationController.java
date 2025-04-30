@@ -16,11 +16,12 @@ import termProject.services.UserService;
 @Controller
 @RequestMapping("/register")
 public class RegistrationController {
+
     private final UserService userService;
 
     /**
-     * See notes in AuthInterceptor.java regarding how this works 
-     * through dependency injection and inversion of control.
+     * See notes in AuthInterceptor.java regarding how this works through
+     * dependency injection and inversion of control.
      */
     @Autowired
     public RegistrationController(UserService userService) {
@@ -28,8 +29,8 @@ public class RegistrationController {
     }
 
     /**
-     * This function serves the /register page.
-     * See notes from LoginController.java.
+     * This function serves the /register page. See notes from
+     * LoginController.java.
      */
     @GetMapping
     public ModelAndView webpage(@RequestParam(name = "error", required = false) String error) {
@@ -43,8 +44,8 @@ public class RegistrationController {
     }
 
     /**
-     * This handles user registration form submissions.
-     * See notes from LoginController.java.
+     * This handles user registration form submissions. See notes from
+     * LoginController.java.
      */
     @PostMapping
     public String register(@RequestParam("username") String username,
