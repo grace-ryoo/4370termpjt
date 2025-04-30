@@ -2,46 +2,75 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Recipe Share</title>
-    <link rel="stylesheet" href="/css/styles.css">
+    <title>Miso Hungry</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <!-- Welcome Section -->
-    <header class="welcome-section">
-        <h1>Hello</h1>
-        <p>Share and discover amazing recipes!</p>
-    </header>
+    <!-- Navigation Bar -->
+    <nav class="nav-bar">
+        <div class="logo">Miso Hungry</div>
+        <div class="nav-right">
+            {{#username}}
+                <span>Hello, {{username}}</span>
+            {{/username}}
+            {{^username}}
+                <a href="/login" class="btn-login">Login</a>
+            {{/username}}
+        </div>
+    </nav>
 
-    <!-- Recipe Categories -->
-    <section class="categories">
-        <h2>Recipe Categories</h2>
-        <div class="category-container">
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1>Hello, {{username}}</h1>
+            <p>Get FREE delivery on every weekend.</p>
+            <button class="btn-primary">Check Menu</button>
+        </div>
+        <div class="hero-image">
+            <!-- Add your hero image here -->
+        </div>
+    </section>
+
+    <!-- Menu Categories -->
+    <section class="menu-category">
+        <div class="section-header">
+            <h2>Menu category</h2>
+            <a href="/categories" class="view-all">View All</a>
+        </div>
+        <div class="category-icons">
             {{#categories}}
-                <div class="category-card">
+            <div class="category-item">
+                <div class="category-icon">
                     <img src="{{imageUrl}}" alt="{{name}}">
-                    <h3>{{name}}</h3>
-                    <span class="recipe-count">{{recipeCount}} recipes</span>
                 </div>
+                <span>{{name}}</span>
+                <span class="recipe-count">{{recipeCount}}</span>
+            </div>
             {{/categories}}
         </div>
     </section>
 
-    <!-- Trending Recipes -->
-    <section class="trending">
-        <h2>Trending Recipes</h2>
+    <!-- Popular Recipes -->
+    <section class="popular-recipes">
+        <div class="section-header">
+            <h2>Popular Recipes</h2>
+            <a href="/recipes" class="view-all">View All</a>
+        </div>
         <div class="recipe-grid">
             {{#trendingRecipes}}
-                <div class="recipe-card">
-                    <img src="{{imageUrl}}" alt="{{title}}">
+            <div class="recipe-card">
+                <img src="{{imageUrl}}" alt="{{title}}">
+                <div class="recipe-details">
                     <h3>{{title}}</h3>
-                    <div class="recipe-info">
-                        <span>By {{author}}</span>
-                        <span>{{likes}} likes</span>
+                    <div class="rating">
+                        <span class="stars">★★★★★</span>
+                        <span class="price">${{price}}</span>
                     </div>
+                    <button class="btn-add">+</button>
                 </div>
+            </div>
             {{/trendingRecipes}}
         </div>
     </section>
-    <!-- Login -->
 </body>
 </html>

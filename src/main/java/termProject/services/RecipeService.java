@@ -302,12 +302,12 @@ public class RecipeService {
     public List<Recipe> getRecipesByCategory(String categoryId) {
         List<Recipe> recipes = new ArrayList<>();
         final String sql = "SELECT r.*, u.*, c.* FROM recipe r " +
-                          "JOIN user u ON r.userId = u.userId " +
-                          "JOIN category c ON r.categoryId = c.categoryId " +
-                          "WHERE r.categoryId = ?";
-        
+                "JOIN user u ON r.userId = u.userId " +
+                "JOIN category c ON r.categoryId = c.categoryId " +
+                "WHERE r.categoryId = ?";
+
         try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, categoryId);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
@@ -315,6 +315,29 @@ public class RecipeService {
             }
         } catch (SQLException e) {
             throw new RuntimeException("Error fetching recipes by category", e);
+        }
+        return recipes;
+    }
+    
+    public List<Recipe> getTrendingRecipes() {
+        List<Recipe> recipes = new ArrayList<>();
+        final String sql = "SELECT r.*, u.*, c.*, " +
+                "COALESCE(AVG(rt.stars), 0) AS averageRating, " +
+                "COUNT(rt.userId) AS countRatings " +
+                "FROM recipe r " +
+                "JOIN user u ON r.userId = u.userId " +
+                "JOIN category c ON r.categoryId = c.categoryId " +
+                "LEFT JOIN rating rt ON r.recipeId = rt.recipeId " +
+                "GROUP BY r.recipeId ORDER BY COUNT(rt.userId) DESC LIMIT 10";
+
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                recipes.add(mapRecipeFromResultSet(rs));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error fetching trending recipes", e);
         }
         return recipes;
     }

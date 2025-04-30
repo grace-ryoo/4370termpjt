@@ -78,7 +78,7 @@ public class RecipeController {
     }
 
 
-    @GetMapping("/{recipeId}/bookmark/{isAdd}/{bookmarkType}")
+    @PostMapping("/{recipeId}/bookmark/{isAdd}/{bookmarkType}")
     public String addOrRemoveBookmark(@PathVariable("recipeId") String recipeId,
             @PathVariable("isAdd") Boolean isAdd, @PathVariable("bookmarkType") String bookmarkType) {
         System.out.println("The user is attempting add or remove a bookmark:");
@@ -102,5 +102,4 @@ public class RecipeController {
             return "redirect:/recipe/" + recipeId + "?error=" + message;
         }
     }
-
 }

@@ -12,6 +12,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import termProject.services.RecipeService;
 import termProject.services.UserService;
+import termProject.services.CategoryService;
+
+import termProject.models.Category;
+import termProject.models.Recipe;
 
 @Controller
 @RequestMapping
@@ -19,9 +23,11 @@ public class HomeController {
 
     private final RecipeService recipeService;
     private final UserService userService;
+    private final CategoryService categoryService;
 
     @Autowired
-    public HomeController(RecipeService recipeService, UserService userService) {
+    public HomeController(RecipeService recipeService, UserService userService, CategoryService categoryService) {
+        this.categoryService = categoryService;
         this.recipeService = recipeService;
         this.userService = userService;
     }
@@ -31,26 +37,31 @@ public class HomeController {
         ModelAndView mv = new ModelAndView("home_page");
 
         // Get current user
-//        String name = userService.getLoggedInUser().getFirstName();
-//        mv.addObject("username", name);
-        // Get recipe categories
-        // List<Category> categories = recipeService.getAllCategories();
-        // mv.addObject("categories", categories);
-        // Get trending recipes
-        // List<Recipe> trendingRecipes = recipeService.getTrendingRecipes();
-        // mv.addObject("trendingRecipes", trendingRecipes);
-        // // Get all recipes
-        // List<Recipe> allRecipes = recipeService.getAllRecipes();
-        // mv.addObject("recipes", allRecipes);
-        // if (allRecipes.isEmpty()) {
-        //     mv.addObject("isNoContent", true);
-        // }
-//        mv.addObject("errorMessage", error);
         if (userService.isAuthenticated()) {
             String name = userService.getLoggedInUser().getFirstName();
             mv.addObject("username", name);
+        } else {
+            mv.addObject("username", "Guest");
         }
+
+        // Get recipe categories 
+        List<Category> categories = categoryService.getAllCategories();
+        mv.addObject("categories", categories); // Changed from "category" to "categories"
+
+        // Get trending recipes
+        List<Recipe> trendingRecipes = recipeService.getTrendingRecipes();
+        mv.addObject("trendingRecipes", trendingRecipes);
+
+        // Get all recipes
+        List<Recipe> allRecipes = recipeService.getAllRecipes();
+        mv.addObject("recipes", allRecipes);
+        if (allRecipes.isEmpty()) {
+            mv.addObject("isNoContent", true);
+        }
+
+        // Add error message if present
         mv.addObject("errorMessage", error);
+
         return mv;
     }
 
@@ -80,7 +91,8 @@ public class HomeController {
 
         // Validation
         if (recipeName == null || recipeName.trim().isEmpty()
-                || description == null || description.trim().isEmpty() || currentUserId == null || currentUserId.isEmpty()
+                || description == null || description.trim().isEmpty() || currentUserId == null
+                || currentUserId.isEmpty()
                 || category == null || category.isEmpty() || prepTime <= 0 || cookTime <= 0 || servings <= 0
                 || dietId == null || dietId.isEmpty()
                 || cookLevel == null || cookLevel.trim().isEmpty()) {

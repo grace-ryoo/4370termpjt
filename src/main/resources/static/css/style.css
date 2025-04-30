@@ -1,3 +1,10 @@
+:root {
+    --primary-color: #FF6B35;
+    --secondary-color: #2B2B2B;
+    --background-color: #FFF5EC;
+    --text-color: #333;
+}
+
 .welcome-section {
     text-align: center;
     padding: 2rem;
@@ -29,4 +36,47 @@
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Logo Styling */
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+/* Price Styling */
+.price {
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+/* Recipe Card Hover Effect */
+.recipe-card:hover {
+    transform: translateY(-5px);
+    transition: transform 0.3s ease;
+}
+
+/* Category Icon Hover Effect */
+.category-icon:hover {
+    background-color: var(--primary-color);
+    color: white;
+    transition: all 0.3s ease;
+}
+
+/* Hero Section Image */
+.hero-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 1rem;
+}
+
+/* Recipe Count Badge */
+.recipe-count {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.2rem 0.5rem;
+    border-radius: 1rem;
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
 }
