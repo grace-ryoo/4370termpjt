@@ -30,3 +30,11 @@
     overflow: hidden;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
+.username {
+    font-weight: bold;
+    display: block;
+}
+.error-message {
+    margin: 24pt 0;
+    color: #d61111;
+}

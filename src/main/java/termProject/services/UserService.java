@@ -11,9 +11,12 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.annotation.SessionScope;
+
 import termProject.models.User;
 
 @Service
+@SessionScope
 public class UserService {
     private final DataSource dataSource;
     private final BCryptPasswordEncoder passwordEncoder;

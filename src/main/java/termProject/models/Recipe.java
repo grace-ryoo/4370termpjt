@@ -1,10 +1,8 @@
 package termProject.models;
 
-import termProject.models.User;
-import termProject.models.Category;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Represents the basic structure of a recipe in the recipe platform.
@@ -74,6 +72,7 @@ public class Recipe {
      * List of ingredients in the recipe.
      */
     private final List<String> ingredients;
+    /** 
      * The average number of ratings for the recipe.
      */
     private final int averageRating; 
