@@ -11,17 +11,19 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import termProject.models.User;
 
 @Service
 public class UserService {
+
     private final DataSource dataSource;
     private final BCryptPasswordEncoder passwordEncoder;
     private User loggedInUser = null;
 
     /**
-     * See AuthInterceptor notes regarding dependency injection and
-     * inversion of control.
+     * See AuthInterceptor notes regarding dependency injection and inversion of
+     * control.
      */
     @Autowired
     public UserService(DataSource dataSource) {
@@ -30,14 +32,13 @@ public class UserService {
     }
 
     /**
-     * Authenticate user given the username and the password and
-     * stores user object for the logged in user in session scope.
-     * Returns true if authentication is succesful. False otherwise.
+     * Authenticate user given the username and the password and stores user
+     * object for the logged in user in session scope. Returns true if
+     * authentication is succesful. False otherwise.
      */
     public boolean authenticate(String username, String password) throws SQLException {
         final String sql = "select * from user where username = ?";
-        try (Connection conn = dataSource.getConnection();
-                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, username);
 
@@ -73,6 +74,7 @@ public class UserService {
      * Checks if a user is currently authenticated.
      */
     public boolean isAuthenticated() {
+        System.out.println("Checking if user is logged in: " + (loggedInUser != null));
         return loggedInUser != null;
     }
 
@@ -84,17 +86,16 @@ public class UserService {
     }
 
     /**
-     * Registers a new user with the given details.
-     * Returns true if registration is successful. If the username already exists,
-     * a SQLException is thrown due to the unique constraint violation, which should
-     * be handled by the caller.
+     * Registers a new user with the given details. Returns true if registration
+     * is successful. If the username already exists, a SQLException is thrown
+     * due to the unique constraint violation, which should be handled by the
+     * caller.
      */
     public boolean registerUser(String username, String password, String firstName, String lastName)
             throws SQLException {
         final String registerSql = "insert into user (username, password, firstName, lastName) values (?, ?, ?, ?)";
 
-        try (Connection conn = dataSource.getConnection();
-                PreparedStatement registerStmt = conn.prepareStatement(registerSql, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement registerStmt = conn.prepareStatement(registerSql, Statement.RETURN_GENERATED_KEYS)) {
             registerStmt.setString(1, username);
             registerStmt.setString(2, passwordEncoder.encode(password));
             registerStmt.setString(3, firstName);

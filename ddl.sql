@@ -66,3 +66,12 @@ create table if not exists rating (
     CONSTRAINT fk_rating_user FOREIGN KEY (userId) REFERENCES user(userId) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS groceryList (
+    itemId INT NOT NULL auto_increment,
+    userId INT NOT NULL,
+    itemName VARCHAR(255) NOT NULL,
+    itemQuantity INT NOT NULL,
+    PRIMARY KEY (itemId, userId)
+    FOREIGN KEY (userId) REFERENCES users(userId)
+);
+

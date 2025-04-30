@@ -1,6 +1,5 @@
 package termProject.controllers;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,14 +10,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import termProject.models.Category;
-import termProject.models.Recipe;
 import termProject.services.RecipeService;
 import termProject.services.UserService;
 
 @Controller
 @RequestMapping
 public class HomeController {
+
     private final RecipeService recipeService;
     private final UserService userService;
 
@@ -33,25 +31,25 @@ public class HomeController {
         ModelAndView mv = new ModelAndView("home_page");
 
         // Get current user
-        String name = userService.getLoggedInUser().getFirstName();
-        mv.addObject("name", name);
-
+//        String name = userService.getLoggedInUser().getFirstName();
+//        mv.addObject("username", name);
         // Get recipe categories
         // List<Category> categories = recipeService.getAllCategories();
         // mv.addObject("categories", categories);
-
         // Get trending recipes
         // List<Recipe> trendingRecipes = recipeService.getTrendingRecipes();
         // mv.addObject("trendingRecipes", trendingRecipes);
-
         // // Get all recipes
         // List<Recipe> allRecipes = recipeService.getAllRecipes();
         // mv.addObject("recipes", allRecipes);
-
         // if (allRecipes.isEmpty()) {
         //     mv.addObject("isNoContent", true);
         // }
-
+//        mv.addObject("errorMessage", error);
+        if (userService.isAuthenticated()) {
+            String name = userService.getLoggedInUser().getFirstName();
+            mv.addObject("username", name);
+        }
         mv.addObject("errorMessage", error);
         return mv;
     }
@@ -76,15 +74,13 @@ public class HomeController {
             @RequestParam("cookTime") int cookTime,
             @RequestParam("servings") int servings,
             @RequestParam("dietId") String dietId,
-            @RequestParam("cookingLevel") String cookLevel)
-
-    {
+            @RequestParam("cookingLevel") String cookLevel) {
 
         String currentUserId = userService.getLoggedInUser().getUserId();
 
         // Validation
-        if (recipeName == null || recipeName.trim().isEmpty() ||
-                description == null || description.trim().isEmpty() || currentUserId == null || currentUserId.isEmpty()
+        if (recipeName == null || recipeName.trim().isEmpty()
+                || description == null || description.trim().isEmpty() || currentUserId == null || currentUserId.isEmpty()
                 || category == null || category.isEmpty() || prepTime <= 0 || cookTime <= 0 || servings <= 0
                 || dietId == null || dietId.isEmpty()
                 || cookLevel == null || cookLevel.trim().isEmpty()) {
