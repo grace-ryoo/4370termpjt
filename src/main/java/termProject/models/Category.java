@@ -25,7 +25,7 @@ public class Category {
      *
      * @param categoryId   the unique identifier for the category
      * @param categoryName the name of the category
-     * @param cateogryImageUrl the URL of the category image
+     * @param categoryImageUrl the URL of the category image
      */
     public Category(String categoryId, String categoryName, String categoryImageUrl) {
         this.categoryId = categoryId;
