@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Chronicles to Cook</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/main.js" defer></script>
 </head>
 <body>
     <!-- Navigation Bar -->
@@ -30,9 +32,34 @@
             {{#futureCookbook}}
                 <div class="recipe-card">
                     <div class="recipe-details">
-                        <h3>{{recipeName}}</h3>
+                        <div class="recipe-header">
+                            <h3>{{recipeName}}</h3>
+                            <div class="rating-stars">
+                                <!-- Rating stars (add functionality with JS later) -->
+                                <button class="star" data-rating="1">&#9733;</button>
+                                <button class="star" data-rating="2">&#9733;</button>
+                                <button class="star" data-rating="3">&#9733;</button>
+                                <button class="star" data-rating="4">&#9733;</button>
+                                <button class="star" data-rating="5">&#9733;</button>
+                            </div>
+                        </div>
                         <p>{{description}}</p>
-                        <a href="/recipe/{{recipeId}}" class="btn-view">View Recipe</a>
+                        
+                        <!-- Bookmarking functionality -->
+                        {{#isBookmarked}}
+                            <!-- If the recipe is already bookmarked, it needs to send "false" for unbookmark and the bookmark type -->
+                            <form method="get" action="/recipe/{{recipeId}}/bookmark/false/{{bookmark_type}}">
+                                <button class="fa fa-bookmark" type="submit"></button>
+                            </form>
+                        {{/isBookmarked}}
+
+                        {{^isBookmarked}}
+                            <!-- If the recipe is not bookmarked, it needs to send "true" for bookmark and the bookmark type -->
+                            <form method="get" action="/recipe/{{recipeId}}/bookmark/true/{{bookmark_type}}">
+                                <button class="far fa-bookmark" type="submit"></button>
+                            </form>
+                        {{/isBookmarked}}
+
                     </div>
                 </div>
             {{/futureCookbook}}
@@ -45,6 +72,7 @@
             {{/futureCookbook}}
         </div>
     </section>
+
 
     <!-- Error Message -->
     {{#errorMessage}}

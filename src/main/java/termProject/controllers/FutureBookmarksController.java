@@ -45,6 +45,7 @@ public class FutureBookmarksController {
         }
         String loggedInUserId = loggedInUser.getUserId();
         mv.addObject("username", loggedInUser.getFirstName());
+        mv.addObject("bookmark_type", "FUTURE");
         try {
             List<Recipe> recipes = bookmarkService.getFutureRecipes(loggedInUserId);
             if (recipes.isEmpty()) {

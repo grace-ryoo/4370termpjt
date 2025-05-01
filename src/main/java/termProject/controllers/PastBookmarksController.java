@@ -48,6 +48,8 @@ public class PastBookmarksController {
             return mv;
         }
         String loggedInUserId = loggedInUser.getUserId();
+        mv.addObject("username", loggedInUser.getFirstName());
+        mv.addObject("bookmark_type", "FUTURE");
         try {
             List<Recipe> recipes = bookmarkService.getPastRecipes(loggedInUserId);
             if (recipes.isEmpty()) {
