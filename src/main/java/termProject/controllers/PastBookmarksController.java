@@ -36,7 +36,7 @@ public class PastBookmarksController {
         // posts_page is a mustache template from src/main/resources/templates.
         // ModelAndView class enables initializing one and populating placeholders
         // in the template using Java objects assigned to named properties.
-        ModelAndView mv = new ModelAndView("posts_page");
+        ModelAndView mv = new ModelAndView("pastcookbook_page");
         
 
         /** Modified code starts here */

@@ -35,13 +35,13 @@ public class BookmarkService {
         final String sql =  "SELECT r.*, u.firstName, u.lastName, c.categoryId, c.categoryName, c.categoryImageUrl, " +
             "COALESCE(AVG(rt.stars), 0) AS averageRating, " +
             "COUNT(rt.userId) AS countRatings " +
-            "FROM bookmarks b " +
-            "JOIN recipes r ON b.recipe_id = r.recipe_id " +
-            "JOIN users u ON r.user_id = u.user_id " +
-            "JOIN categories c ON r.category_id = c.category_id " +
-            "LEFT JOIN rating rt ON r.recipe_id = rt.recipe_id " +
-            "WHERE b.user_id = ? AND b.bookmark_type = ? " +
-            "GROUP BY r.recipe_id, u.user_id, u.firstName, u.lastName, c.categoryId, c.categoryName, c.categoryImageUrl";
+            "FROM bookmark b " +
+            "JOIN recipe r ON b.recipeId = r.recipeId " +
+            "JOIN user u ON r.userId = u.userId " +
+            "JOIN category c ON r.categoryId = c.categoryId " +
+            "LEFT JOIN rating rt ON r.recipeId = rt.recipeId " +
+            "WHERE b.userId = ? AND b.bookmark_type = ? " +
+            "GROUP BY r.recipeId, u.userId, u.firstName, u.lastName, c.categoryId, c.categoryName, c.categoryImageUrl";
 
         try (Connection conn = dataSource.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql)) {

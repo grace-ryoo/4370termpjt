@@ -7,7 +7,7 @@
 </head>
 <body>
     <!-- Navbar -->
-    {{> components/navbar }}
+    {{> fragments/navbar }}
 
     <!-- Cookbook Header -->
     <header class="text-center py-8">
@@ -29,11 +29,9 @@
                         <div class="flex justify-start items-center gap-1 mb-4">
                             {{#rating}}
                                 <!-- Dynamically create stars based on rating -->
-                                {{#each this}}
-                                    <svg width="9" height="9" viewBox="0 0 9 9" fill="none" xmlns="http://www.w3.org/2000/svg" class="flex-grow-0 flex-shrink-0 w-[9px] h-[8.5px]" preserveAspectRatio="none">
-                                        <path d="M6.0293 2.6084L9 3.24707L6.97461 5.49707L7.28125 8.5L4.5 7.2832L1.71875 8.5L2.02539 5.49707L0 3.24707L2.9707 2.6084L4.5 0L6.0293 2.6084Z" fill="#FFCB45"></path>
-                                    </svg>
-                                {{/each}}
+                                <svg width="9" height="9" viewBox="0 0 9 9" fill="none" xmlns="http://www.w3.org/2000/svg" class="flex-grow-0 flex-shrink-0 w-[9px] h-[8.5px]" preserveAspectRatio="none">
+                                    <path d="M6.0293 2.6084L9 3.24707L6.97461 5.49707L7.28125 8.5L4.5 7.2832L1.71875 8.5L2.02539 5.49707L0 3.24707L2.9707 2.6084L4.5 0L6.0293 2.6084Z" fill="#FFCB45"></path>
+                                </svg>
                             {{/rating}}
                         </div>
 
