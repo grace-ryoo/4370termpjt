@@ -24,6 +24,7 @@ import termProject.models.User;
 
 @Service
 public class RecipeService {
+
     @Autowired
     private DataSource dataSource;
     private UserService userService;
@@ -61,54 +62,62 @@ public class RecipeService {
         }
     }
 
-    /** NEED UPDATE */
     /**
-    public void addReview() {
-
-    }
-    */
-
-    public boolean createRecipe(String recipeName, 
-                String description, 
-                String userId, 
-                List<String> ingredients,
-                int prepTime,
-                int cookTime,
-                int servings,
-                String category,
-                String dietId,
-                String cookLevel) {
+     * NEED UPDATE
+     */
+    /**
+     * public void addReview() {
+     *
+     *      *}
+     */
+    public String createRecipe(String recipeName,
+            String description,
+            String userId,
+            List<String> ingredients,
+            int prepTime,
+            int cookTime,
+            int servings,
+            String category,
+            String dietId,
+            String cookLevel) {
         if (userId == null || userId.isEmpty()) {
-            throw new RuntimeException("User ID is required to create a recipe.");
+            return "-1";
         }
 
         if (description == null || description.trim().isEmpty()) {
-            throw new RuntimeException("Recipe content cannot be empty.");
+            return "-1";
         }
 
-        final String sql = "INSERT INTO review (recipeName, description, userId) VALUES (?, ?, ?)";
+        final String sql = "INSERT INTO recipe (recipeName, description, userId, prep_time, cook_time, servings, categoryId, dietId, cookingLevel) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-    
-
-        try (Connection conn = dataSource.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
             pstmt.setString(1, recipeName);
             pstmt.setString(2, description);
             pstmt.setString(3, userId);
+            pstmt.setInt(4, prepTime);
+            pstmt.setInt(5, cookTime);
+            pstmt.setInt(6, servings);
+            pstmt.setString(7, category);
+            pstmt.setString(8, dietId);
+            pstmt.setString(9, cookLevel);
 
-                int rowsAffected = pstmt.executeUpdate();
+            int rowsAffected = pstmt.executeUpdate();
 
-                if (rowsAffected > 0 && ingredients != null && !ingredients.isEmpty()) {
-                    ResultSet rs = pstmt.getGeneratedKeys();
-                    if (rs.next()) {
-                        String recipeId = rs.getString(1);
+            if (rowsAffected > 0) {
+                ResultSet rs = pstmt.getGeneratedKeys();
+                if (rs.next()) {
+                    String recipeId = rs.getString(1);
+                    if (ingredients != null && !ingredients.isEmpty()) {
                         saveIngredients(conn, recipeId, ingredients);
                     }
+                    return recipeId;
                 }
-
-                conn.commit();
-                return rowsAffected > 0;
+            }
+            return "-1";
         } catch (SQLException e) {
-            throw new RuntimeException("Error creating recipe", e);
+            System.err.println("Error creating recipe: " + e.getMessage());
+            return "-1";
         }
     }
 
@@ -128,20 +137,20 @@ public class RecipeService {
     public Recipe getRecipeById(String recipeId, String userId) {
         Recipe recipe = null;
 
-        String sql = "SELECT r.*, u.firstName, u.lastName, c.categoryId, c.categoryName, c.categoryImageUrl, " +
-            "COALESCE(AVG(rt.stars), 0) AS averageRating, " +
-            "COUNT(rt.userId) AS countRatings " +
-            "FROM recipe r " + 
-            "JOIN user u ON r.userId = u.userId " +
-            "JOIN category c ON r.categoryId = c.categoryId " +
-            "LEFT JOIN rating rt ON r.recipeId = rt.recipeId" +
-            "WHERE r.recipeId = ? " +
-            "GROUP BY r.recipeId, u.userId, u.firstName, u.lastName, c.categoryId, c.categoryName, c.categoryImageUrl\";";
+        String sql = "SELECT r.*, u.firstName, u.lastName, c.categoryId, c.categoryName, c.categoryImageUrl, "
+                + "COALESCE(AVG(rt.stars), 0) AS averageRating, "
+                + "COUNT(rt.userId) AS countRatings "
+                + "FROM recipe r "
+                + "JOIN user u ON r.userId = u.userId "
+                + "JOIN category c ON r.categoryId = c.categoryId "
+                + "LEFT JOIN rating rt ON r.recipeId = rt.recipeId"
+                + "WHERE r.recipeId = ? "
+                + "GROUP BY r.recipeId, u.userId, u.firstName, u.lastName, c.categoryId, c.categoryName, c.categoryImageUrl\";";
 
         try (Connection conn = dataSource.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, recipeId);
             stmt.setString(2, userId);
-            ResultSet  rs = stmt.executeQuery();
+            ResultSet rs = stmt.executeQuery();
             System.out.println(" Fetching post for recipeId: " + recipeId + " using userId: " + userId);
             if (rs.next()) {
                 User user = new User(rs.getString("userId"), rs.getString("userName"),rs.getString("firstName"), rs.getString("lastName"));
@@ -155,30 +164,32 @@ public class RecipeService {
                 }
 
                 Category category = new Category(
-                    rs.getString("categoryId"),
-                    rs.getString("categoryName"),
-                    rs.getString("categoryImageUrl")
+                        rs.getString("categoryId"),
+                        rs.getString("categoryName"),
+                        rs.getString("categoryImageUrl")
                 );
 
                 int avgRating = (int) Math.round(rs.getDouble("averageRating"));
                 int numRatings = rs.getInt("countRatings");
 
                 recipe = new Recipe(
-                    rs.getString("recipeId"),
-                    rs.getString("recipeName"),
-                    rs.getString("description"),
-                    convertUTCtoEST(rs.getString("recipeCreateDate")),
-                    user,
-                    category,
-                    rs.getInt("prep_time"),
-                    rs.getInt("cook_time"),
-                    rs.getInt("servings"),
-                    rs.getString("cuisineId"),
-                    rs.getString("dietId"),
-                    rs.getString("cookingLevel"),
-                    getIngredientsForRecipe(recipeId),
-                    avgRating,
-                    numRatings
+                        rs.getString("recipeId"),
+                        rs.getString("recipeName"),
+                        rs.getString("description"),
+                        convertUTCtoEST(rs.getString("recipeCreateDate")),
+                        user,
+                        category,
+                        rs.getInt("prep_time"),
+                        rs.getInt("cook_time"),
+                        rs.getInt("servings"),
+                        rs.getString("cuisineId"),
+                        rs.getString("dietId"),
+                        rs.getString("cookingLevel"),
+                        getIngredientsForRecipe(recipeId),
+                        rs.getInt("averageRating"),
+                        rs.getInt("countRatings")
+                //avgRating,
+                //numRatings
                 );
             }
 
@@ -229,8 +240,7 @@ public class RecipeService {
         List<String> ingredients = new ArrayList<>();
         final String sql = "SELECT ingredient FROM recipe_ingredients WHERE recipeId = ?";
 
-        try (Connection conn = dataSource.getConnection();
-                PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, recipeId);
             ResultSet rs = stmt.executeQuery();
 
@@ -249,7 +259,6 @@ public class RecipeService {
         ZonedDateTime estZoned = utcZoned.withZoneSameInstant(ZoneId.of("America/New_York"));
         return estZoned.format(outputFormatter);
     }
-
 
     public void addRating(String userId, String recipeId) {
         final String sql = "INSERT INTO rating (userId, postId) VALUES (?, ?)";
@@ -305,6 +314,47 @@ public class RecipeService {
 
     
 
+    public List<Recipe> getRecipesByCategory(String categoryId) {
+        List<Recipe> recipes = new ArrayList<>();
+        final String sql = "SELECT r.*, u.*, c.* FROM recipe r " +
+                "JOIN user u ON r.userId = u.userId " +
+                "JOIN category c ON r.categoryId = c.categoryId " +
+                "WHERE r.categoryId = ?";
 
+        try (Connection conn = dataSource.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, categoryId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                recipes.add(mapRecipeFromResultSet(rs));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error fetching recipes by category", e);
+        }
+        return recipes;
+    }
+    
+    public List<Recipe> getTrendingRecipes() {
+        List<Recipe> recipes = new ArrayList<>();
+        final String sql = "SELECT r.*, u.*, c.*, " +
+                "COALESCE(AVG(rt.stars), 0) AS averageRating, " +
+                "COUNT(rt.userId) AS countRatings " +
+                "FROM recipe r " +
+                "JOIN user u ON r.userId = u.userId " +
+                "JOIN category c ON r.categoryId = c.categoryId " +
+                "LEFT JOIN rating rt ON r.recipeId = rt.recipeId " +
+                "GROUP BY r.recipeId ORDER BY COUNT(rt.userId) DESC LIMIT 10";
 
+        try (Connection conn = dataSource.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                recipes.add(mapRecipeFromResultSet(rs));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error fetching trending recipes", e);
+        }
+        return recipes;
+    }
+    
 }

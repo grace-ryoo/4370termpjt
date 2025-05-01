@@ -8,6 +8,7 @@ import java.util.List;
  * Represents the basic structure of a recipe in the recipe platform.
  */
 public class Recipe {
+
     /**
      * Unique identifier for the recipe.
      */
@@ -72,33 +73,32 @@ public class Recipe {
      * List of ingredients in the recipe.
      */
     private final List<String> ingredients;
-    /** 
+    /*
      * The average number of ratings for the recipe.
      */
-    private final int averageRating; 
+    private final int averageRating;
 
     /**
      * The count of ratings for the recipe.
      */
-    private final int countRatings; 
-
+    private final int countRatings;
 
     /**
      * Constructs a Recipe with specified details.
      *
-     * @param recipeId         the unique identifier of the recipe
-     * @param recipeName       the name of the recipe
-     * @param description      the text content of the recipe
+     * @param recipeId the unique identifier of the recipe
+     * @param recipeName the name of the recipe
+     * @param description the text content of the recipe
      * @param recipeCreateDate the creation date of the recipe
-     * @param user             the user who created the recipe
-     * @param category         the recipe category
-     * @param prep_time        the time it takes to prep the recipe
-     * @param cook_time        the time it takes to prep the recipe
-     * @param servings         the amount of servings in the recipe
-     * @param cuisineId        the unique identifier of the recipe cuisine
-     * @param dietId           the unique identifier of the recipe diet
-     * @param cookingLevel     the level of difficulty of the recipe
-     * @param ingredients      the list of ingredients needed for the recipe
+     * @param user the user who created the recipe
+     * @param category the recipe category
+     * @param prep_time the time it takes to prep the recipe
+     * @param cook_time the time it takes to prep the recipe
+     * @param servings the amount of servings in the recipe
+     * @param cuisineId the unique identifier of the recipe cuisine
+     * @param dietId the unique identifier of the recipe diet
+     * @param cookingLevel the level of difficulty of the recipe
+     * @param ingredients the list of ingredients needed for the recipe
      */
     public Recipe(String recipeId, String recipeName, String description,
             String recipeCreateDate, User user, Category category,
@@ -237,10 +237,10 @@ public class Recipe {
     public List<String> getIngredients() {
         return Collections.unmodifiableList(ingredients);
     }
-    
+
     /**
      * Returns the average number of ratings for the recipe.
-     * 
+     *
      * @return the average number of ratings for the recipe
      */
     public int getAverageRating() {

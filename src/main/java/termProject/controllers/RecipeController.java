@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-
 import termProject.models.Review;
 import termProject.models.Recipe;
 import termProject.services.RecipeService;
 import termProject.services.ReviewService;
 import termProject.services.UserService;
+import termProject.services.CategoryService;
 
 @Controller
 @RequestMapping("/recipe")
@@ -29,12 +29,17 @@ public class RecipeController {
     private RecipeService recipeService;
     private ReviewService reviewService;
     private UserService userService;
+    private CategoryService categoryService;
 
     @Autowired
-    public RecipeController(RecipeService recipeService, UserService userService, ReviewService reviewService) {
+    public RecipeController(RecipeService recipeService,
+            UserService userService,
+            ReviewService reviewService,
+            CategoryService categoryService) {
         this.recipeService = recipeService;
         this.userService = userService;
         this.reviewService = reviewService;
+        this.categoryService = categoryService;
     }
 
     /**
@@ -48,45 +53,50 @@ public class RecipeController {
     @GetMapping("/{recipeId}")
     public ModelAndView webpage(@PathVariable("recipeId") String recipeId,
             @RequestParam(name = "error", required = false) String error) {
-        System.out.println("The user is attempting to view recipe with id: " + recipeId);
+        ModelAndView mv = new ModelAndView("recipe_detail"); // Change to recipe_detail instead of recipes_page
 
-        ModelAndView mv = new ModelAndView("recipes_page");
+        try {
+            String currUserId = userService.getLoggedInUser().getUserId();
+            Recipe recipe = recipeService.getRecipeById(recipeId, currUserId);
 
-        String currUserId = userService.getLoggedInUser().getUserId();
-        // Fetch the post from the database
-        Recipe recipe = recipeService.getRecipeById(recipeId, currUserId); // Fetch the recipe by ID
+            if (recipe == null) {
+                throw new RuntimeException("Recipe not found");
+            }
 
-        if (recipe == null) {
-            System.out.println("No recipe found for the given recipeId: " + recipeId);
-        } else {
-            System.out.println("Recipe retrieved: " + recipe.getRecipeId() + "with name: " +  recipe.getRecipeName() + "with description: " + recipe.getDescription());
+            mv.addObject("recipe", recipe); // Add recipe object
+            // mv.addObject("reviews", reviewService.getReviewsByRecipeId(recipeId)); // Add reviews
+            mv.addObject("errorMessage", error);
+
+            if (userService.isAuthenticated()) {
+                mv.addObject("username", userService.getLoggedInUser().getFirstName());
+            }
+
+            return mv;
+        } catch (Exception e) {
+            mv.addObject("errorMessage", "Failed to load recipe: " + e.getMessage());
+            return mv;
         }
+    }
 
-        // Fetch the reviews for the recipe
-        /* List<Review> reviews = reviewService.getReviewById(reviewId);
-        System.out.println("Review list: " + reviews);
-
-        // Pass the recipe and reviews directly to the view
-        mv.addObject("recipes", reviews); */
-        /** NEED CHANGE */
-
-        // If an error occurred, you can set the following property with the error message
-        String errorMessage = error;
-        mv.addObject("errorMessage", errorMessage);
-
+    @GetMapping("/new")
+    public ModelAndView showRecipeForm() {
+        ModelAndView mv = new ModelAndView("recipe_form");
+        mv.addObject("categories", categoryService.getAllCategories());
+        if (userService.isAuthenticated()) {
+            mv.addObject("username", userService.getLoggedInUser().getFirstName());
+        }
         return mv;
     }
 
-
-    @GetMapping("/{recipeId}/bookmark/{isAdd}/{bookmarkType}")
+    @PostMapping("/{recipeId}/bookmark/{isAdd}/{bookmarkType}")
     public String addOrRemoveBookmark(@PathVariable("recipeId") String recipeId,
-            @PathVariable("isAdd") Boolean isAdd, @PathVariable("bookmarkType") String bookmarkType) {
-        System.out.println("The user is attempting add or remove a bookmark:");
-        System.out.println("\trecipeId: " + recipeId);
-        System.out.println("\tisAdd: " + isAdd);
-        System.out.println("\tbookmarkType: " + bookmarkType);
+            @PathVariable("isAdd") Boolean isAdd,
+            @PathVariable("bookmarkType") String bookmarkType) {
 
-        // Redirect the user if the comment adding is a success.
+        if (!userService.isAuthenticated()) {
+            return "redirect:/login";
+        }
+
         try {
             String currUserId = userService.getLoggedInUser().getUserId();
             if (isAdd) {
@@ -96,11 +106,36 @@ public class RecipeController {
             }
             return "redirect:/recipe/" + recipeId;
         } catch (Exception e) {
-            // Redirect the user with an error message if there was an error.
-            String message = URLEncoder.encode("Failed to (un)bookmark the recipe. Please try again.",
+            String message = URLEncoder.encode("Failed to update bookmark: " + e.getMessage(),
                     StandardCharsets.UTF_8);
             return "redirect:/recipe/" + recipeId + "?error=" + message;
         }
     }
 
+    @PostMapping("/create")
+    public String createRecipe(@RequestParam("recipeName") String recipeName,
+                             @RequestParam("description") String description,
+                             @RequestParam("categoryId") String categoryId,
+                             @RequestParam("prep_time") int prepTime,
+                             @RequestParam("cook_time") int cookTime,
+                             @RequestParam("servings") int servings,
+                             @RequestParam("ingredients[]") List<String> ingredients,
+                             @RequestParam("dietId") String dietId,
+                             @RequestParam("cookingLevel") String cookingLevel) {
+        
+        if (!userService.isAuthenticated()) {
+            return "redirect:/login";
+        }
+        
+        try {
+            String userId = userService.getLoggedInUser().getUserId();
+            String recipeId = recipeService.createRecipe(recipeName, description, userId, 
+                ingredients, prepTime, cookTime, servings, categoryId, dietId, cookingLevel);
+            return "redirect:/recipe/" + recipeId;
+        } catch (Exception e) {
+            String message = URLEncoder.encode("Failed to create recipe: " + e.getMessage(), 
+                StandardCharsets.UTF_8);
+            return "redirect:/recipe/new?error=" + message;
+        }
+    }
 }
