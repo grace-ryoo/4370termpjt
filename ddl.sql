@@ -5,14 +5,15 @@ create database if not exists cs4370_miso_hungry;
 use cs4370_miso_hungry;
 
 -- Create the user table.
-create table if not exists user (
-    userId int auto_increment,
-    password varchar(255) not null,
-    firstName varchar(255) not null,
-    lastName varchar(255) not null,
-    primary key (userId),
-    constraint firstName_min_length check (char_length(trim(firstName)) >= 2),
-    constraint lastName_min_length check (char_length(trim(lastName)) >= 2)
+CREATE TABLE IF NOT EXISTS user (
+    userId INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    firstName VARCHAR(255) NOT NULL,
+    lastName VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    CONSTRAINT firstName_min_length CHECK (CHAR_LENGTH(TRIM(firstName)) >= 2),
+    CONSTRAINT lastName_min_length CHECK (CHAR_LENGTH(TRIM(lastName)) >= 2)
 );
 
 create table if not exists category (

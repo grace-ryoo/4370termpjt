@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+ <html lang="en">
+ {{> fragments/header}}
+ 
+ <body>
+ 
+     <div class="container center-align narrow">
+         {{> fragments/error_message}}
+             <form action="/register" method="POST">
+                <input name="username" type="text" />
+                <input name="password" type="password" />
+                <input name="firstName" type="text" />
+                <input name="lastName" type="text" />
+                <input name="email" type="email" />
+                <button type="submit">Register</button>
+            </form>
+     </div>
+ 
+     {{> fragments/footer}}
+ 
+ </body>
+ 
+ </html>

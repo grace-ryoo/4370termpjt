@@ -1,4 +1,4 @@
-com\example\demo\controller\DemoController.class
+termProject\controllers\ProfileController.class
 termProject\controllers\PastBookmarksController.class
 termProject\config\WebConfig.class
 termProject\models\Review.class
@@ -18,3 +18,5 @@ termProject\models\Diet.class
 termProject\controllers\RecipeController.class
 termProject\controllers\RegistrationController.class
 termProject\controllers\HomeController.class
+termProject\controllers\LoginController.class
+termProject\services\ProfileService.class

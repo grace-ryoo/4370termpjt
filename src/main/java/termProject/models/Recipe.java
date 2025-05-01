@@ -1,5 +1,9 @@
 package termProject.models;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Represents the basic structure of a recipe in the recipe platform.
  */
@@ -65,6 +69,10 @@ public class Recipe {
     private final String cookingLevel;
 
     /**
+     * List of ingredients in the recipe.
+     */
+    private final List<String> ingredients;
+    /** 
      * The average number of ratings for the recipe.
      */
     private final int averageRating; 
@@ -90,12 +98,12 @@ public class Recipe {
      * @param cuisineId        the unique identifier of the recipe cuisine
      * @param dietId           the unique identifier of the recipe diet
      * @param cookingLevel     the level of difficulty of the recipe
-     * @param averageRating    the average number of ratings for the recipe
-     * @param countRatings     the count of ratings for the recipe
+     * @param ingredients      the list of ingredients needed for the recipe
      */
     public Recipe(String recipeId, String recipeName, String description,
             String recipeCreateDate, User user, Category category,
-            int prep_time, int cook_time, int servings, String cuisineId, String dietId, String cookingLevel, int averageRating, int countRatings) {
+            int prep_time, int cook_time, int servings, String cuisineId,
+            String dietId, String cookingLevel, List<String> ingredients, int averageRating, int countRatings) {
         this.recipeId = recipeId;
         this.recipeName = recipeName;
         this.description = description;
@@ -108,6 +116,7 @@ public class Recipe {
         this.cuisineId = cuisineId;
         this.dietId = dietId;
         this.cookingLevel = cookingLevel;
+        this.ingredients = ingredients != null ? new ArrayList<>(ingredients) : new ArrayList<>();
         this.averageRating = averageRating;
         this.countRatings = countRatings;
     }
@@ -221,8 +230,17 @@ public class Recipe {
     }
 
     /**
-     * Returns the average number of ratings for the recipe.
+     * Returns the list of ingredients in the recipe.
      *
+     * @return an unmodifiable list of ingredients
+     */
+    public List<String> getIngredients() {
+        return Collections.unmodifiableList(ingredients);
+    }
+    
+    /**
+     * Returns the average number of ratings for the recipe.
+     * 
      * @return the average number of ratings for the recipe
      */
     public int getAverageRating() {

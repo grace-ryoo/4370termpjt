@@ -79,6 +79,7 @@ public class BookmarkService {
                         rs.getString("cuisineId"),
                         rs.getString("dietId"),
                         rs.getString("cookingLevel"),
+                        new ArrayList<>(List.of(rs.getString("ingredients").split(","))),
                         avgRating,
                         numRatings
                     );
