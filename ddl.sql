@@ -41,6 +41,15 @@ create table if not exists recipe (
     FOREIGN KEY (categoryId) REFERENCES category(categoryId)
 );
 
+CREATE TABLE if not exists recipe_ingredients (
+    recipeId INT NOT NULL,
+    ingredientName VARCHAR(255) NOT NULL,
+    ingredientAmount VARCHAR(255) NOT NULL,
+    ingredientUnit VARCHAR(255) NOT NULL,
+    PRIMARY KEY (recipeId, ingredientName),
+    CONSTRAINT fk_recipe_ingredients_recipe FOREIGN KEY (recipeId) REFERENCES recipe(recipeId) ON DELETE CASCADE
+);
+
 create table if not exists bookmark (
     recipeId INT NOT NULL,  -- Foreign key referencing recipe(id)
     userId INT NOT NULL,  -- Foreign key referencing user(userId)
@@ -51,10 +60,20 @@ create table if not exists bookmark (
 );
 
 create table if not exists rating (
-    recipeId INT NOT NULL,  -- Foreign key referencing recipe(id)
-    userId INT NOT NULL,  -- Foreign key referencing user(userId)
-    PRIMARY KEY (recipeId, userId),  -- Composite primary key (ensures unique bookmarks)
+    recipeId INT NOT NULL,
+    userId INT NOT NULL,
+    stars INT NOT NULL CHECK (stars BETWEEN 1 AND 5),
+    PRIMARY KEY (recipeId, userId),
     CONSTRAINT fk_rating_recipe FOREIGN KEY (recipeId) REFERENCES recipe(recipeId) ON DELETE CASCADE,
     CONSTRAINT fk_rating_user FOREIGN KEY (userId) REFERENCES user(userId) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS groceryList (
+    itemId INT NOT NULL auto_increment,
+    userId INT NOT NULL,
+    itemName VARCHAR(255) NOT NULL,
+    itemQuantity INT NOT NULL,
+    PRIMARY KEY (itemId, userId),
+    FOREIGN KEY (userId) REFERENCES user(userId)
 );
 
