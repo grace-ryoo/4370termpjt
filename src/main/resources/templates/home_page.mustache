@@ -23,27 +23,24 @@
     <section class="hero-section">
         <div class="hero-content">
             <h1>Hello, {{username}}</h1>
-            <button class="btn-primary">Check Menu</button>
         </div>
         <div class="hero-image">
             <!-- Add your hero image here -->
         </div>
     </section>
 
-    <!-- Menu Categories -->
-    <section class="menu-category">
+    <!-- Recipe Categories -->
+    <section class="recipe-category">
         <div class="section-header">
-            <h2>Menu category</h2>
-            <a href="/categories" class="view-all">View All</a>
+            <h2>Recipe category</h2>
         </div>
         <div class="category-icons">
             {{#categories}}
             <div class="category-item">
                 <div class="category-icon">
-                    <img src="{{imageUrl}}" alt="{{name}}">
+                    <img src="{{categoryImageUrl}}" alt="{{categoryName}}">
                 </div>
-                <span>{{name}}</span>
-                <span class="recipe-count">{{recipeCount}}</span>
+                <span>{{categoryName}}</span>
             </div>
             {{/categories}}
         </div>
@@ -53,7 +50,6 @@
     <section class="popular-recipes">
         <div class="section-header">
             <h2>Popular Recipes</h2>
-            <a href="/recipes" class="view-all">View All</a>
         </div>
         <div class="recipe-grid">
             {{#trendingRecipes}}

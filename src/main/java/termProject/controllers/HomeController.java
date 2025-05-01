@@ -46,7 +46,7 @@ public class HomeController {
 
         // Get recipe categories
         List<Category> categories = categoryService.getAllCategories();
-        mv.addObject("categories", categories); // Changed from "category" to "categories"
+        mv.addObject("categories", categories); 
 
         // Get trending recipes
         List<Recipe> trendingRecipes = recipeService.getTrendingRecipes();
