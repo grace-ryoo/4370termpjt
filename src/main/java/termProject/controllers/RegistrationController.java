@@ -61,7 +61,7 @@ public class RegistrationController {
         }
         try {
             boolean registrationSuccess = userService.registerUser(username,
-                    password, firstName, lastName);
+                    password, firstName, lastName, email);
             if (registrationSuccess) {
                 // If the registration worked redirect to the login page.
                 return "redirect:/login";
