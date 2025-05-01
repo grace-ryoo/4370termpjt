@@ -49,10 +49,10 @@ public class RegistrationController {
      */
     @PostMapping
     public String register(@RequestParam("username") String username,
-            @RequestParam("password") String password,
-            @RequestParam("passwordRepeat") String passwordRepeat,
-            @RequestParam("firstName") String firstName,
-            @RequestParam("lastName") String lastName) throws UnsupportedEncodingException {
+    @RequestParam("password") String password,
+    @RequestParam("firstName") String firstName,
+    @RequestParam("lastName") String lastName,
+    @RequestParam("email") String email) throws UnsupportedEncodingException {
         // Passwords should have at least 3 chars.
         if (password.trim().length() < 3) {
             // If the password is too short redirect to the registration page
@@ -60,17 +60,9 @@ public class RegistrationController {
             String message = URLEncoder.encode("Passwords should have at least 3 nonempty letters.", "UTF-8");
             return "redirect:/register?error=" + message;
         }
-
-        if (!password.equals(passwordRepeat)) {
-            // If the password repeat does not match the password redirect to the registration page
-            // with an error message.
-            String message = URLEncoder.encode("Passwords do not match.", "UTF-8");
-            return "redirect:/register?error=" + message;
-        }
-
         try {
             boolean registrationSuccess = userService.registerUser(username,
-                    password, firstName, lastName);
+                    password, firstName, lastName, email);
             if (registrationSuccess) {
                 // If the registration worked redirect to the login page.
                 return "redirect:/login";

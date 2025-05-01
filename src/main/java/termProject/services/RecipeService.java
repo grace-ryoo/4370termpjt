@@ -153,7 +153,7 @@ public class RecipeService {
             ResultSet rs = stmt.executeQuery();
             System.out.println(" Fetching post for recipeId: " + recipeId + " using userId: " + userId);
             if (rs.next()) {
-                User user = new User(rs.getString("userId"), rs.getString("firstName"), rs.getString("lastName"));
+                User user = new User(rs.getString("userId"), rs.getString("userName"),rs.getString("firstName"), rs.getString("lastName"));
 
                 // Format the date
                 String formattedDate = "Never";
@@ -203,6 +203,7 @@ public class RecipeService {
     private Recipe mapRecipeFromResultSet(ResultSet rs) throws SQLException {
         User user = new User(
                 rs.getString("userId"),
+                rs.getString("userName"),
                 rs.getString("firstName"),
                 rs.getString("lastName"));
 
@@ -213,6 +214,9 @@ public class RecipeService {
 
         String recipeId = rs.getString("recipeId");
         List<String> ingredients = getIngredientsForRecipe(recipeId);
+
+        int avgRating = (int) Math.round(rs.getDouble("averageRating"));
+        int numRatings = rs.getInt("countRatings");
 
         return new Recipe(
                 recipeId,
@@ -227,9 +231,9 @@ public class RecipeService {
                 rs.getString("cuisineId"),
                 rs.getString("dietId"),
                 rs.getString("cookingLevel"),
-                ingredients, 
-                (int) Math.round(rs.getDouble("averageRating")),
-                rs.getInt("countRatings")); 
+                ingredients,
+                avgRating,
+                numRatings); 
     }
 
     private List<String> getIngredientsForRecipe(String recipeId) throws SQLException {
@@ -308,6 +312,8 @@ public class RecipeService {
         return recipes;
     }
 
+    
+
     public List<Recipe> getRecipesByCategory(String categoryId) {
         List<Recipe> recipes = new ArrayList<>();
         final String sql = "SELECT r.*, u.*, c.* FROM recipe r " +
@@ -351,5 +357,4 @@ public class RecipeService {
         return recipes;
     }
     
-    public 
 }

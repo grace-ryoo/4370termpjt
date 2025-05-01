@@ -53,6 +53,7 @@ public class BookmarkService {
                 while (rs.next()) {
                     User user = new User(
                         rs.getString("userId"), 
+                        rs.getString("userName"), 
                         rs.getString("firstName"),
                         rs.getString("lastName")
                     );

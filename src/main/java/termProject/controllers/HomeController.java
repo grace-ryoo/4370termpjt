@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import termProject.models.User;
 import termProject.services.RecipeService;
 import termProject.services.UserService;
 import termProject.services.CategoryService;
@@ -37,12 +38,8 @@ public class HomeController {
         ModelAndView mv = new ModelAndView("home_page");
 
         // Get current user
-        if (userService.isAuthenticated()) {
-            String name = userService.getLoggedInUser().getFirstName();
-            mv.addObject("username", name);
-        } else {
-            mv.addObject("username", "Guest");
-        }
+        User user = userService.getLoggedInUser();
+        mv.addObject("name", user);
 
         // Get recipe categories
         List<Category> categories = categoryService.getAllCategories();
