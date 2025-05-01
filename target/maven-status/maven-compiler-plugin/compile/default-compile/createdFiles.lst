@@ -1,8 +1,5 @@
-termProject/services/GroceryListService.class
-termProject/controllers/GroceryController.class
-termProject/controllers/TestController.class
-termProject/models/GroceryItem.class
 termProject\controllers\ProfileController.class
+termProject\controllers\GroceryController.class
 termProject\controllers\PastBookmarksController.class
 termProject\config\WebConfig.class
 termProject\models\Review.class
@@ -10,6 +7,7 @@ termProject\controllers\FutureBookmarksController.class
 termProject\services\ReviewService.class
 termProject\utility\Utility.class
 termProject\services\BookmarkService.class
+termProject\services\CategoryService.class
 termProject\services\RecipeService.class
 termProject\models\Cuisine.class
 termProject\components\AuthInterceptor.class
@@ -18,7 +16,9 @@ termProject\App.class
 termProject\models\Recipe.class
 termProject\models\User.class
 termProject\services\UserService.class
+termProject\models\GroceryItem.class
 termProject\models\Diet.class
+termProject\services\GroceryListService.class
 termProject\controllers\RecipeController.class
 termProject\controllers\RegistrationController.class
 termProject\controllers\HomeController.class
