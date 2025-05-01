@@ -222,7 +222,7 @@ public class RecipeService {
                 recipeId,
                 rs.getString("recipeName"),
                 rs.getString("description"),
-                convertUTCtoEST(rs.getString("created_at")),
+                convertUTCtoEST(rs.getString("recipeCreateDate")),
                 user,
                 category,
                 rs.getInt("prep_time"),
@@ -236,16 +236,16 @@ public class RecipeService {
                 numRatings); 
     }
 
-    private List<String> getIngredientsForRecipe(String recipeId) throws SQLException {
+    public List<String> getIngredientsForRecipe(String recipeId) throws SQLException {
         List<String> ingredients = new ArrayList<>();
-        final String sql = "SELECT ingredient FROM recipe_ingredients WHERE recipeId = ?";
+        final String sql = "SELECT ingredientName FROM recipe_ingredients WHERE recipeId = ?";
 
         try (Connection conn = dataSource.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, recipeId);
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                ingredients.add(rs.getString("ingredient"));
+                ingredients.add(rs.getString("ingredientName"));
             }
         }
         return ingredients;

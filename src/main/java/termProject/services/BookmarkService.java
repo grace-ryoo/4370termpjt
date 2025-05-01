@@ -20,19 +20,24 @@ import termProject.models.Category;
 import termProject.models.Recipe;
 import termProject.models.User;
 
+import termProject.services.RecipeService;
+
 @Service
 public class BookmarkService {
     @Autowired
     private DataSource dataSource;
 
-    public BookmarkService(DataSource dataSource) {
+    private RecipeService recipeService;
+
+    public BookmarkService(DataSource dataSource, RecipeService recipeService) {
         this.dataSource = dataSource;
+        this.recipeService = recipeService;
     }
 
     public List<Recipe> getBookmarkedRecipesByType(String userId, String type) {
         List<Recipe> recipes = new ArrayList<>();
 
-        final String sql =  "SELECT r.*, u.firstName, u.lastName, c.categoryId, c.categoryName, c.categoryImageUrl, " +
+        final String sql =  "SELECT r.*, u.username, u.firstName, u.lastName, c.categoryId, c.categoryName, c.categoryImageUrl, " +
             "COALESCE(AVG(rt.stars), 0) AS averageRating, " +
             "COUNT(rt.userId) AS countRatings " +
             "FROM bookmark b " +
@@ -41,19 +46,19 @@ public class BookmarkService {
             "JOIN category c ON r.categoryId = c.categoryId " +
             "LEFT JOIN rating rt ON r.recipeId = rt.recipeId " +
             "WHERE b.userId = ? AND b.bookmark_type = ? " +
-            "GROUP BY r.recipeId, u.userId, u.firstName, u.lastName, c.categoryId, c.categoryName, c.categoryImageUrl";
+            "GROUP BY r.recipeId, u.userId, u.username, u.firstName, u.lastName, c.categoryId, c.categoryName, c.categoryImageUrl";
 
         try (Connection conn = dataSource.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setString(1, userId); // For is_hearted check
-            pstmt.setString(2, userId); // For user's bookmarks
+            pstmt.setString(1, userId); 
+            pstmt.setString(2, type); 
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
                     User user = new User(
                         rs.getString("userId"), 
-                        rs.getString("userName"), 
+                        rs.getString("username"), 
                         rs.getString("firstName"),
                         rs.getString("lastName")
                     );
@@ -66,9 +71,11 @@ public class BookmarkService {
 
                     int avgRating = (int) Math.round(rs.getDouble("averageRating"));
                     int numRatings = rs.getInt("countRatings");
+                    String recipeId = rs.getString("recipeId");
+                    List<String> ingredients = recipeService.getIngredientsForRecipe(recipeId);
 
                     Recipe recipe = new Recipe(
-                        rs.getString("recipeId"),
+                        recipeId,
                         rs.getString("recipeName"),
                         rs.getString("description"),
                         convertUTCtoEST(rs.getString("recipeCreateDate")),
@@ -80,7 +87,7 @@ public class BookmarkService {
                         rs.getString("cuisineId"),
                         rs.getString("dietId"),
                         rs.getString("cookingLevel"),
-                        new ArrayList<>(List.of(rs.getString("ingredients").split(","))),
+                        ingredients,
                         avgRating,
                         numRatings
                     );

@@ -44,6 +44,7 @@ public class FutureBookmarksController {
             return new ModelAndView("redirect:/login");
         }
         String loggedInUserId = loggedInUser.getUserId();
+        mv.addObject("username", loggedInUser.getFirstName());
         try {
             List<Recipe> recipes = bookmarkService.getFutureRecipes(loggedInUserId);
             if (recipes.isEmpty()) {
@@ -51,7 +52,7 @@ public class FutureBookmarksController {
                 // Do that if your content list is empty.
                 mv.addObject("isNoContent", true);
             } else {
-                mv.addObject("recipes", recipes);
+                mv.addObject("futureCookbook", recipes);
             }
         } catch (Exception e) {
             String errorMessage = "An error occurred while fetching future recipes.";

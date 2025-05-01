@@ -30,20 +30,18 @@
         </div>
     </section>
 
-    <!-- Menu Categories -->
-    <section class="menu-category">
+    <!-- Recipe Categories -->
+    <section class="recipe-category">
         <div class="section-header">
-            <h2>Menu category</h2>
-            <a href="/categories" class="view-all">View All</a>
+            <h2>Recipe category</h2>
         </div>
         <div class="category-icons">
             {{#categories}}
             <div class="category-item">
                 <div class="category-icon">
-                    <img src="{{imageUrl}}" alt="{{name}}">
+                    <img src="{{categoryImageUrl}}" alt="{{categoryName}}">
                 </div>
-                <span>{{name}}</span>
-                <span class="recipe-count">{{recipeCount}}</span>
+                <span>{{categoryName}}</span>
             </div>
             {{/categories}}
         </div>
@@ -53,17 +51,14 @@
     <section class="popular-recipes">
         <div class="section-header">
             <h2>Popular Recipes</h2>
-            <a href="/recipes" class="view-all">View All</a>
         </div>
         <div class="recipe-grid">
             {{#trendingRecipes}}
             <div class="recipe-card">
-                <img src="{{imageUrl}}" alt="{{title}}">
                 <div class="recipe-details">
-                    <h3>{{title}}</h3>
+                    <h3>{{recipeName}}</h3>
                     <div class="rating">
                         <span class="stars">★★★★★</span>
-                        <span class="price">${{price}}</span>
                     </div>
                     <button class="btn-add">+</button>
                 </div>
