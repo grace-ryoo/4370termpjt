@@ -70,7 +70,7 @@ public class RecipeService {
      *
      *      *}
      */
-    public boolean createRecipe(String recipeName,
+    public String createRecipe(String recipeName,
             String description,
             String userId,
             List<String> ingredients,
@@ -81,34 +81,43 @@ public class RecipeService {
             String dietId,
             String cookLevel) {
         if (userId == null || userId.isEmpty()) {
-            throw new RuntimeException("User ID is required to create a recipe.");
+            return "-1";
         }
 
         if (description == null || description.trim().isEmpty()) {
-            throw new RuntimeException("Recipe content cannot be empty.");
+            return "-1";
         }
 
-        final String sql = "INSERT INTO review (recipeName, description, userId) VALUES (?, ?, ?)";
+        final String sql = "INSERT INTO recipe (recipeName, description, userId, prep_time, cook_time, servings, categoryId, dietId, cookingLevel) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        try (Connection conn = dataSource.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
             pstmt.setString(1, recipeName);
             pstmt.setString(2, description);
             pstmt.setString(3, userId);
+            pstmt.setInt(4, prepTime);
+            pstmt.setInt(5, cookTime);
+            pstmt.setInt(6, servings);
+            pstmt.setString(7, category);
+            pstmt.setString(8, dietId);
+            pstmt.setString(9, cookLevel);
 
             int rowsAffected = pstmt.executeUpdate();
 
-            if (rowsAffected > 0 && ingredients != null && !ingredients.isEmpty()) {
+            if (rowsAffected > 0) {
                 ResultSet rs = pstmt.getGeneratedKeys();
                 if (rs.next()) {
                     String recipeId = rs.getString(1);
-                    saveIngredients(conn, recipeId, ingredients);
+                    if (ingredients != null && !ingredients.isEmpty()) {
+                        saveIngredients(conn, recipeId, ingredients);
+                    }
+                    return recipeId;
                 }
             }
-
-            conn.commit();
-            return rowsAffected > 0;
+            return "-1";
         } catch (SQLException e) {
-            throw new RuntimeException("Error creating recipe", e);
+            System.err.println("Error creating recipe: " + e.getMessage());
+            return "-1";
         }
     }
 
@@ -331,7 +340,7 @@ public class RecipeService {
                 "GROUP BY r.recipeId ORDER BY COUNT(rt.userId) DESC LIMIT 10";
 
         try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 recipes.add(mapRecipeFromResultSet(rs));
@@ -341,4 +350,6 @@ public class RecipeService {
         }
         return recipes;
     }
+    
+    public 
 }
