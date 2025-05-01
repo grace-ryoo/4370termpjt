@@ -56,7 +56,7 @@ public class UserService {
                         String firstName = rs.getString("firstName");
                         String lastName = rs.getString("lastName");
 
-                        loggedInUser = new User(userId, firstName, lastName);
+                        loggedInUser = new User(userId, username, firstName, lastName);
                     }
                     return isPassMatch;
                 }

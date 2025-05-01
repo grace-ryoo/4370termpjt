@@ -9,6 +9,8 @@ public class User {
      */
     private final String userId;
 
+    private final String username;
+
     /**
      * First name of the user.
      */
@@ -27,8 +29,9 @@ public class User {
      * @param lastName the last name of the user
      * @param profileImagePath the path of the profile image file for the user
      */
-    public User(String userId, String firstName, String lastName) {
+    public User(String userId, String username, String firstName, String lastName) {
         this.userId = userId;
+        this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
     }
@@ -40,6 +43,15 @@ public class User {
      */
     public String getUserId() {
         return userId;
+    }
+
+    /**
+     * Returns the username of the user.
+     *
+     * @return the username of the user
+     */
+    public String getUsername() {
+        return firstName;
     }
 
     /**
