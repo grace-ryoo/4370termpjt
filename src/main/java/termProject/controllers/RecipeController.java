@@ -64,7 +64,7 @@ public class RecipeController {
             }
 
             mv.addObject("recipe", recipe); // Add recipe object
-            mv.addObject("reviews", reviewService.getReviewsByRecipeId(recipeId)); // Add reviews
+            // mv.addObject("reviews", reviewService.getReviewsByRecipeId(recipeId)); // Add reviews
             mv.addObject("errorMessage", error);
 
             if (userService.isAuthenticated()) {

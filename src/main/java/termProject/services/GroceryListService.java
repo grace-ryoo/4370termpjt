@@ -39,7 +39,7 @@ public class GroceryListService {
                     String itemName = rs.getString("itemName");
                     int itemQuantity = rs.getInt("itemQuantity");
 
-                    User user = new User(userId, "", ""); // Assuming firstName and lastName are not needed here
+                    User user = new User(userId, "", "", ""); // Assuming firstName and lastName are not needed here
                     GroceryItem item = new GroceryItem(itemId, itemName, itemQuantity, user);
                     items.add(item);
                 }

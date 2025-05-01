@@ -38,8 +38,11 @@ public class HomeController {
         ModelAndView mv = new ModelAndView("home_page");
 
         // Get current user
+        if (userService.getLoggedInUser() == null) {
+            return new ModelAndView("redirect:/login");
+        }
         User user = userService.getLoggedInUser();
-        mv.addObject("name", user);
+        mv.addObject("username", user);
 
         // Get recipe categories
         List<Category> categories = categoryService.getAllCategories();
