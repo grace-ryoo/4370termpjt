@@ -4,17 +4,23 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.time.*;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.sql.Timestamp;
+
 import javax.sql.DataSource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import termProject.models.*;
+import termProject.models.Category;
+import termProject.models.Recipe;
+import termProject.models.User;
 
 @Service
 public class RecipeService {
@@ -197,6 +203,9 @@ public class RecipeService {
         String recipeId = rs.getString("recipeId");
         List<String> ingredients = getIngredientsForRecipe(recipeId);
 
+        int avgRating = (int) Math.round(rs.getDouble("averageRating"));
+        int numRatings = rs.getInt("countRatings");
+
         return new Recipe(
                 recipeId,
                 rs.getString("recipeName"),
@@ -210,7 +219,9 @@ public class RecipeService {
                 rs.getString("cuisineId"),
                 rs.getString("dietId"),
                 rs.getString("cookingLevel"),
-                ingredients); 
+                ingredients,
+                avgRating,
+                numRatings); 
     }
 
     private List<String> getIngredientsForRecipe(String recipeId) throws SQLException {
