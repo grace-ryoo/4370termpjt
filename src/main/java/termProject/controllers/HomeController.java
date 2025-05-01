@@ -42,7 +42,7 @@ public class HomeController {
             return new ModelAndView("redirect:/login");
         }
         User user = userService.getLoggedInUser();
-        mv.addObject("username", user);
+        mv.addObject("username", user.getFirstName());
 
         // Get recipe categories
         List<Category> categories = categoryService.getAllCategories();
