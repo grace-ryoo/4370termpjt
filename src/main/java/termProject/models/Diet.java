@@ -1,42 +1,25 @@
 package termProject.models;
-
 public class Diet {
-    /**
-     * Unique identifier for the diet.
-     */
-    private final String dietId;
+    private int dietId;
+    private String dietName;
+    private String dietDescription;
 
-    /**
-     * Name of the diet.
-     */
-    private final String dietName;
-
-    /**
-     * Constructs a new Diet with the specified ID and name.
-     *
-     * @param dietId   the unique identifier for the diet
-     * @param dietName the name of the diet
-     */
-    public Diet(String dietId, String dietName) {
+    public Diet(int dietId, String dietName, String dietDescription) {
         this.dietId = dietId;
         this.dietName = dietName;
+        this.dietDescription = dietDescription;
     }
 
-    /**
-     * Returns the diet ID.
-     *
-     * @return the diet ID
-     */
-    public String getDietId() {
+    // Getters
+    public int getDietId() {
         return dietId;
     }
 
-    /**
-     * Returns the diet name.
-     *
-     * @return the diet name
-     */
     public String getDietName() {
         return dietName;
+    }
+
+    public String getDietDescription() {
+        return dietDescription;
     }
 }

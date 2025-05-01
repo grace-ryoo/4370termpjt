@@ -11,7 +11,8 @@
         <div class="logo">Miso Hungry</div>
         <div class="nav-right">
             {{#username}}
-                <span>Hello, {{username}}</span>
+                <a href="/recipe/new" class="btn-add-recipe">Add Recipe</a>
+                <span class="username">Hello, {{username}}</span>
             {{/username}}
             {{^username}}
                 <a href="/login" class="btn-login">Login</a>
