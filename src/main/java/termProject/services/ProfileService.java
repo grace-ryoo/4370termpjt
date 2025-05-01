@@ -51,6 +51,7 @@ import java.util.List;
              try (ResultSet rs = pstmt.executeQuery()) {
                  while (rs.next()) {
                      User user = new User(rs.getString("userId"), 
+                        rs.getString("userName"),
                          rs.getString("firstName"),
                          rs.getString("lastName")
                      );
@@ -62,6 +63,7 @@ import java.util.List;
                          convertUTCtoEST(rs.getString("recipeCreateDate")),
                          new User(
                              rs.getString("userId"),
+                             rs.getString("userName"),
                              rs.getString("firstName"),
                              rs.getString("lastName")
                          ),

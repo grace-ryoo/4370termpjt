@@ -144,7 +144,7 @@ public class RecipeService {
             ResultSet  rs = stmt.executeQuery();
             System.out.println(" Fetching post for recipeId: " + recipeId + " using userId: " + userId);
             if (rs.next()) {
-                User user = new User(rs.getString("userId"), rs.getString("firstName"), rs.getString("lastName"));
+                User user = new User(rs.getString("userId"), rs.getString("userName"),rs.getString("firstName"), rs.getString("lastName"));
 
                 // Format the date
                 String formattedDate = "Never";
@@ -192,6 +192,7 @@ public class RecipeService {
     private Recipe mapRecipeFromResultSet(ResultSet rs) throws SQLException {
         User user = new User(
                 rs.getString("userId"),
+                rs.getString("userName"),
                 rs.getString("firstName"),
                 rs.getString("lastName"));
 
@@ -277,6 +278,29 @@ public class RecipeService {
         } catch (SQLException e) {
             throw new RuntimeException("Error undoing recipe: ", e);
         }
+    }
+
+    public List<Recipe> getAllRecipes() {
+        List<Recipe> recipes = new ArrayList<>();
+        final String sql = "SELECT r.*, u.*, c.*, " +
+                          "COALESCE(AVG(rt.stars), 0) AS averageRating, " +
+                          "COUNT(rt.userId) AS countRatings " +
+                          "FROM recipe r " +
+                          "JOIN user u ON r.userId = u.userId " +
+                          "JOIN category c ON r.categoryId = c.categoryId " +
+                          "LEFT JOIN rating rt ON r.recipeId = rt.recipeId " +
+                          "GROUP BY r.recipeId";
+        
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                recipes.add(mapRecipeFromResultSet(rs));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error fetching recipes", e);
+        }
+        return recipes;
     }
 
     

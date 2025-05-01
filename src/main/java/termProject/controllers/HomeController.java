@@ -1,6 +1,5 @@
 package termProject.controllers;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import termProject.models.Category;
-import termProject.models.Recipe;
+import termProject.models.User;
 import termProject.services.RecipeService;
 import termProject.services.UserService;
 
@@ -33,8 +31,8 @@ public class HomeController {
         ModelAndView mv = new ModelAndView("home_page");
 
         // Get current user
-        String name = userService.getLoggedInUser().getFirstName();
-        mv.addObject("name", name);
+        User user = userService.getLoggedInUser();
+        mv.addObject("name", user);
 
         // Get recipe categories
         // List<Category> categories = recipeService.getAllCategories();
