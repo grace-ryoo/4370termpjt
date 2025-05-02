@@ -311,7 +311,8 @@ public class RecipeService {
                 "JOIN user u ON r.userId = u.userId " +
                 "JOIN category c ON r.categoryId = c.categoryId " +
                 "LEFT JOIN rating rt ON r.recipeId = rt.recipeId " +
-                "GROUP BY r.recipeId";
+                "GROUP BY r.recipeId ";
+                // "ORDER BY r.recipeCreateDate DESC";
 
         try (Connection conn = dataSource.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql)) {

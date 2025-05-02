@@ -144,9 +144,31 @@ public class RecipeController {
             String recipeId = recipeService.createRecipe(recipeName, description, userId,
                     ingredients, amounts, units, prepTime, cookTime, servings,
                     categoryId, dietId, cookingLevel, cuisineId);
-            return "redirect:/recipe/" + recipeId;
+
+            // Redirect to the recipes page after successful creation
+            return "redirect:/recipe/recipes";
         } catch (Exception e) {
             return "redirect:/recipe/new?error=" + URLEncoder.encode(e.getMessage(), StandardCharsets.UTF_8);
+        }
+    }
+
+    @GetMapping("/recipes")
+    public ModelAndView showAllRecipes() {
+        ModelAndView mv = new ModelAndView("recipes");
+        try {
+            List<Recipe> allRecipes = recipeService.getAllRecipes();
+            System.out.println("DEBUG: Found " + allRecipes.size() + " recipes"); // Debug log
+            mv.addObject("recipes", allRecipes);
+
+            if (userService.isAuthenticated()) {
+                mv.addObject("username", userService.getLoggedInUser().getFirstName());
+            }
+
+            return mv;
+        } catch (Exception e) {
+            System.err.println("Error fetching recipes: " + e.getMessage());
+            e.printStackTrace();
+            throw e;
         }
     }
 }

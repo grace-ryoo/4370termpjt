@@ -6,19 +6,7 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <!-- Navigation Bar -->
-    <nav class="nav-bar">
-        <div class="logo">Miso Hungry</div>
-        <div class="nav-right">
-            {{#username}}
-                <a href="/recipe/new" class="btn-add-recipe">Add Recipe</a>
-                <span class="username">Hello, {{username}}</span>
-            {{/username}}
-            {{^username}}
-                <a href="/login" class="btn-login">Login</a>
-            {{/username}}
-        </div>
-    </nav>
+    {{> fragments/navbar}}
 
     <!-- Hero Section -->
     <section class="hero-section">
