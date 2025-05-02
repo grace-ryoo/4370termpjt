@@ -66,16 +66,19 @@ import java.util.List;
                         rs.getString("recipeName"),
                         rs.getString("description"),
                         rs.getString("userId"),
-                        rs.getString("categoryId"),
+                        rs.getString(
+                                "categoryId"),
                         rs.getString("dietId"),
                         rs.getInt("prep_time"),
                         rs.getInt("cook_time"),
                         rs.getInt("servings"),
                         rs.getString("cookingLevel"),
                         rs.getInt("cuisineId"),
-                        Arrays.asList(rs.getString("ingredients").split(","))
+                        Arrays.asList(rs.getString("ingredients").split(",")),
+                                rs.getString("imageUrl")
+                // avgRating,
+                // numRatings
                 );
-    
                 recipesByUser.add(recipe);
             }
         } catch (SQLException e) {
