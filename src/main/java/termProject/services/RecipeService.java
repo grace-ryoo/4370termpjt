@@ -356,4 +356,54 @@ public class RecipeService {
         return recipes;
     }
 
+    public List<Recipe> getFilteredRecipes(String categoryId, Integer dietId, Integer cuisineId, String cookingLevel) {
+        List<Recipe> recipes = new ArrayList<>();
+        StringBuilder sql = new StringBuilder(
+                "SELECT r.*, u.*, c.*, " +
+                        "COALESCE(AVG(rt.stars), 0) AS averageRating, " +
+                        "COUNT(rt.userId) AS countRatings " +
+                        "FROM recipe r " +
+                        "JOIN user u ON r.userId = u.userId " +
+                        "JOIN category c ON r.categoryId = c.categoryId " +
+                        "LEFT JOIN rating rt ON r.recipeId = rt.recipeId " +
+                        "WHERE 1=1 ");
+
+        List<Object> params = new ArrayList<>();
+
+        if (categoryId != null && !categoryId.isEmpty()) {
+            sql.append("AND r.categoryId = ? ");
+            params.add(categoryId);
+        }
+        if (dietId != null) {
+            sql.append("AND r.dietId = ? ");
+            params.add(dietId);
+        }
+        if (cuisineId != null) {
+            sql.append("AND r.cuisineId = ? ");
+            params.add(cuisineId);
+        }
+        if (cookingLevel != null && !cookingLevel.isEmpty()) {
+            sql.append("AND r.cookingLevel = ? ");
+            params.add(cookingLevel);
+        }
+
+        sql.append("GROUP BY r.recipeId, u.userId, c.categoryId ORDER BY r.recipeCreateDate DESC");
+
+        try (Connection conn = dataSource.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
+
+            for (int i = 0; i < params.size(); i++) {
+                stmt.setObject(i + 1, params.get(i));
+            }
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                recipes.add(mapRecipeFromResultSet(rs));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error fetching filtered recipes", e);
+        }
+        return recipes;
+    }
+
 }

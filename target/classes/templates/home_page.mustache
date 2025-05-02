@@ -21,16 +21,16 @@
     <!-- Recipe Categories -->
     <section class="recipe-category">
         <div class="section-header">
-            <h2>Recipe category</h2>
+            <h2>Categories</h2>
         </div>
         <div class="category-icons">
             {{#categories}}
-            <div class="category-item">
+            <a href="/recipe/recipes?categoryId={{categoryId}}" class="category-item">
                 <div class="category-icon">
                     <img src="{{categoryImageUrl}}" alt="{{categoryName}}">
                 </div>
                 <span>{{categoryName}}</span>
-            </div>
+            </a>
             {{/categories}}
         </div>
     </section>
