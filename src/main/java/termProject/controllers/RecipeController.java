@@ -1,13 +1,11 @@
 package termProject.controllers;
 
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.stream.Collectors;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,14 +16,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import termProject.models.Review;
 import termProject.models.Recipe;
+import termProject.services.CategoryService;
+import termProject.services.CuisineService;
+import termProject.services.DietService;
 import termProject.services.RecipeService;
 import termProject.services.ReviewService;
 import termProject.services.UserService;
-import termProject.services.CategoryService;
-import termProject.services.DietService;
-import termProject.services.CuisineService;
 
 @Controller
 @RequestMapping("/recipe")

@@ -9,6 +9,9 @@ public class User {
      */
     private final String userId;
 
+    /**
+     * Username of the user.
+     */
     private final String username;
 
     /**
@@ -25,6 +28,7 @@ public class User {
      * Constructs a User with specified details.
      *
      * @param userId the unique identifier of the user
+     * @param username the username of the user
      * @param firstName the first name of the user
      * @param lastName the last name of the user
      * @param profileImagePath the path of the profile image file for the user
@@ -51,7 +55,7 @@ public class User {
      * @return the username of the user
      */
     public String getUsername() {
-        return firstName;
+        return username;
     }
 
     /**

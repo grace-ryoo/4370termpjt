@@ -154,7 +154,7 @@ body {
     height: 140px;
     object-fit: contain;
 }
-
+/* 
 .recipe-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -173,7 +173,7 @@ body {
 .recipe-card:hover {
     transform: translateY(-5px);
 }
-
+ */
 /* Price Styling */
 .price {
     font-weight: bold;
@@ -603,4 +603,34 @@ body {
 
 .btn-filter:hover {
     background: #7a9867;
+}
+
+/* Cookbooks */
+.cookbook-header h1 {
+    text-align: center;
+    color: #333;
+    margin: 0 auto;
+    padding: 2rem;
+    font-size: 2rem;
+}
+.no-recipes {
+    text-align: center;
+}
+.explore-link {
+    text-align: center;
+    text-decoration: none;
+}
+.explore-link:hover {
+    text-decoration: underline;
+}
+
+/* Login Page */
+.login-logo {
+    color: #90af7b;
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+    padding: 1rem 2rem;
+    background-color: #f1e5a6;
+    border-bottom: 2px solid #f1e5a6;
 }

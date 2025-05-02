@@ -26,35 +26,38 @@ public class BookmarkService {
     @Autowired
     private DataSource dataSource;
 
-    public BookmarkService(DataSource dataSource) {
+    private RecipeService recipeService;
+
+    public BookmarkService(DataSource dataSource, RecipeService recipeService) {
         this.dataSource = dataSource;
+        this.recipeService = recipeService;
     }
 
     public List<Recipe> getBookmarkedRecipesByType(String userId, String type) {
         List<Recipe> recipes = new ArrayList<>();
 
-        final String sql =  "SELECT r.*, u.firstName, u.lastName, c.categoryId, c.categoryName, c.categoryImageUrl, " +
+        final String sql =  "SELECT r.*, u.username, u.firstName, u.lastName, c.categoryId, c.categoryName, c.categoryImageUrl, " +
             "COALESCE(AVG(rt.stars), 0) AS averageRating, " +
             "COUNT(rt.userId) AS countRatings " +
-            "FROM bookmarks b " +
-            "JOIN recipes r ON b.recipe_id = r.recipe_id " +
-            "JOIN users u ON r.user_id = u.user_id " +
-            "JOIN categories c ON r.category_id = c.category_id " +
-            "LEFT JOIN rating rt ON r.recipe_id = rt.recipe_id " +
-            "WHERE b.user_id = ? AND b.bookmark_type = ? " +
-            "GROUP BY r.recipe_id, u.user_id, u.firstName, u.lastName, c.categoryId, c.categoryName, c.categoryImageUrl";
+            "FROM bookmark b " +
+            "JOIN recipe r ON b.recipeId = r.recipeId " +
+            "JOIN user u ON r.userId = u.userId " +
+            "JOIN category c ON r.categoryId = c.categoryId " +
+            "LEFT JOIN rating rt ON r.recipeId = rt.recipeId " +
+            "WHERE b.userId = ? AND b.bookmark_type = ? " +
+            "GROUP BY r.recipeId, u.userId, u.username, u.firstName, u.lastName, c.categoryId, c.categoryName, c.categoryImageUrl";
 
         try (Connection conn = dataSource.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setString(1, userId); // For is_hearted check
-            pstmt.setString(2, userId); // For user's bookmarks
+            pstmt.setString(1, userId); 
+            pstmt.setString(2, type); 
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
                     User user = new User(
                         rs.getString("userId"), 
-                        rs.getString("userName"), 
+                        rs.getString("username"), 
                         rs.getString("firstName"),
                         rs.getString("lastName")
                     );
@@ -67,6 +70,8 @@ public class BookmarkService {
 
                     int avgRating = (int) Math.round(rs.getDouble("averageRating"));
                     int numRatings = rs.getInt("countRatings");
+                    String recipeId = rs.getString("recipeId");
+                    List<String> ingredients = recipeService.getIngredientsForRecipe(recipeId);
 
                     Recipe recipe = new Recipe(
                             rs.getString("recipeId"),

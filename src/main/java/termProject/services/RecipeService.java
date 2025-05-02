@@ -229,7 +229,7 @@ public class RecipeService {
         );
     }
 
-    private List<String> getIngredientsForRecipe(String recipeId) throws SQLException {
+    public List<String> getIngredientsForRecipe(String recipeId) throws SQLException {
         List<String> ingredients = new ArrayList<>();
         final String sql = "SELECT ingredientName, ingredientAmount, ingredientUnit FROM recipe_ingredients WHERE recipeId = ?";
 
@@ -239,10 +239,10 @@ public class RecipeService {
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                String ingredient = String.format("%s %s %s",
-                        rs.getString("ingredientAmount"),
-                        rs.getString("ingredientUnit"),
-                        rs.getString("ingredientName"));
+                String ingredient = String.format("%s %s %s", 
+                    rs.getString("ingredientAmount"),
+                    rs.getString("ingredientUnit"),
+                    rs.getString("ingredientName"));
                 ingredients.add(ingredient);
             }
         }

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import termProject.models.Recipe;
@@ -32,11 +33,11 @@ public class PastBookmarksController {
      * /bookmarks URL itself is handled by this.
      */
     @GetMapping
-    public ModelAndView webpage() {
+    public ModelAndView webpage(@RequestParam(name = "error", required = false) String error) {
         // posts_page is a mustache template from src/main/resources/templates.
         // ModelAndView class enables initializing one and populating placeholders
         // in the template using Java objects assigned to named properties.
-        ModelAndView mv = new ModelAndView("posts_page");
+        ModelAndView mv = new ModelAndView("pastcookbook_page");
         
 
         /** Modified code starts here */
@@ -47,6 +48,8 @@ public class PastBookmarksController {
             return mv;
         }
         String loggedInUserId = loggedInUser.getUserId();
+        mv.addObject("username", loggedInUser.getFirstName());
+        mv.addObject("bookmark_type", "FUTURE");
         try {
             List<Recipe> recipes = bookmarkService.getPastRecipes(loggedInUserId);
             if (recipes.isEmpty()) {
