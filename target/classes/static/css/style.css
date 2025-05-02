@@ -175,9 +175,6 @@ body {
 .recipe-card:hover {
     transform: translateY(-5px);
 }
-<<<<<<< HEAD
- */
-=======
 
 .recipe-image {
     width: 100%;
@@ -213,7 +210,6 @@ body {
     color: #333;
 }
 
->>>>>>> 3a612b837b379571239ff6c83117816ec044a908
 /* Price Styling */
 .price {
     font-weight: bold;
@@ -658,7 +654,6 @@ body {
     background: #7a9867;
 }
 
-<<<<<<< HEAD
 /* Cookbooks */
 .cookbook-header h1 {
     text-align: center;
@@ -687,10 +682,8 @@ body {
     padding: 1rem 2rem;
     background-color: #f1e5a6;
     border-bottom: 2px solid #f1e5a6;
-=======
 .cooking-level {
     text-transform: capitalize;
     font-weight: 500;
     color: #666;
->>>>>>> 3a612b837b379571239ff6c83117816ec044a908
 }
