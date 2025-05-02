@@ -2,6 +2,9 @@ package termProject.controllers;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.stream.Collectors;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -58,22 +61,39 @@ public class RecipeController {
      * See notes from HomeController.java regardig error URL parameter.
      */
     @GetMapping("/{recipeId}")
-    public ModelAndView webpage(@PathVariable("recipeId") String recipeId,
-            @RequestParam(name = "error", required = false) String error) {
-        ModelAndView mv = new ModelAndView("recipe_detail"); // Change to recipe_detail instead of recipes_page
-
+    public ModelAndView showRecipe(@PathVariable String recipeId) {
+        ModelAndView mv = new ModelAndView("recipe_detail");
         try {
-            String currUserId = userService.getLoggedInUser().getUserId();
-            Recipe recipe = recipeService.getRecipeById(recipeId, currUserId);
+            String userId = userService.isAuthenticated() ? userService.getLoggedInUser().getUserId() : null;
+            Recipe recipe = recipeService.getRecipeById(recipeId, userId);
 
             if (recipe == null) {
-                throw new RuntimeException("Recipe not found");
+                return new ModelAndView("redirect:/recipe/recipes");
+            }
+            System.out.println("DEBUG: Found recipe with ID " + recipeId); // Debug log
+            mv.addObject("recipe", recipe);
+            if (userService.isAuthenticated()) {
+                mv.addObject("username", userService.getLoggedInUser().getFirstName());
+            }
+            return mv;
+
+        } catch (Exception e) {
+            return new ModelAndView("redirect:/recipe/recipes");
+        }
+    }
+
+    @GetMapping("/view/{recipeId}")
+    public ModelAndView viewRecipe(@PathVariable String recipeId) {
+        ModelAndView mv = new ModelAndView("recipe_detail");
+        try {
+            String userId = userService.isAuthenticated() ? userService.getLoggedInUser().getUserId() : null;
+            Recipe recipe = recipeService.getRecipeById(recipeId, userId);
+
+            if (recipe == null) {
+                return new ModelAndView("redirect:/recipes?error=Recipe not found");
             }
 
-            mv.addObject("recipe", recipe); // Add recipe object
-            // mv.addObject("reviews", reviewService.getReviewsByRecipeId(recipeId)); // Add
-            // reviews
-            mv.addObject("errorMessage", error);
+            mv.addObject("recipe", recipe);
 
             if (userService.isAuthenticated()) {
                 mv.addObject("username", userService.getLoggedInUser().getFirstName());
@@ -81,8 +101,9 @@ public class RecipeController {
 
             return mv;
         } catch (Exception e) {
-            mv.addObject("errorMessage", "Failed to load recipe: " + e.getMessage());
-            return mv;
+            System.err.println("Error viewing recipe: " + e.getMessage());
+            e.printStackTrace();
+            return new ModelAndView("redirect:/recipes?error=Error viewing recipe");
         }
     }
 
@@ -153,12 +174,62 @@ public class RecipeController {
     }
 
     @GetMapping("/recipes")
-    public ModelAndView showAllRecipes() {
+    public ModelAndView showAllRecipes(
+            @RequestParam(required = false) String categoryId,
+            @RequestParam(required = false) Integer dietId,
+            @RequestParam(required = false) Integer cuisineId,
+            @RequestParam(required = false) String cookingLevel) {
+
         ModelAndView mv = new ModelAndView("recipes");
         try {
-            List<Recipe> allRecipes = recipeService.getAllRecipes();
-            System.out.println("DEBUG: Found " + allRecipes.size() + " recipes"); // Debug log
-            mv.addObject("recipes", allRecipes);
+            // Get all recipes (filtered or unfiltered)
+            List<Recipe> recipes = recipeService.getFilteredRecipes(categoryId, dietId, cuisineId, cookingLevel);
+            mv.addObject("recipes", recipes);
+
+            // Get filter options from database
+            List<Map<String, Object>> categories = categoryService.getAllCategories().stream()
+                    .map(cat -> {
+                        Map<String, Object> catMap = new HashMap<>();
+                        catMap.put("categoryId", cat.getCategoryId());
+                        catMap.put("categoryName", cat.getCategoryName());
+                        catMap.put("selected", cat.getCategoryId().equals(categoryId));
+                        return catMap;
+                    })
+                    .collect(Collectors.toList());
+
+            List<Map<String, Object>> diets = dietService.getAllDiets().stream()
+                    .map(diet -> {
+                        Map<String, Object> dietMap = new HashMap<>();
+                        dietMap.put("dietId", diet.getDietId());
+                        dietMap.put("dietName", diet.getDietName());
+                        dietMap.put("selected",
+                                dietId != null && diet.getDietId() == dietId);
+                        return dietMap;
+                    })
+                    .collect(Collectors.toList());
+
+            List<Map<String, Object>> cuisines = cuisineService.getAllCuisines().stream()
+                    .map(cuisine -> {
+                        Map<String, Object> cuisineMap = new HashMap<>();
+                        cuisineMap.put("cuisineId", cuisine.getCuisineId());
+                        cuisineMap.put("cuisineName", cuisine.getCuisineName());
+                        cuisineMap.put("selected",
+                                String.valueOf(cuisine.getCuisineId()).equals(String.valueOf(cuisineId)));
+                        return cuisineMap;
+                    })
+                    .collect(Collectors.toList());
+
+            // Add filter options to model
+            mv.addObject("categories", categories);
+            mv.addObject("diets", diets);
+            mv.addObject("cuisines", cuisines);
+
+            // Add cooking level states
+            mv.addObject("cookingLevels", List.of(
+                    Map.of("value", "Beginner", "name", "Beginner", "selected", "Beginner".equals(cookingLevel)),
+                    Map.of("value", "Intermediate", "name", "Intermediate", "selected",
+                            "Intermediate".equals(cookingLevel)),
+                    Map.of("value", "Advanced", "name", "Advanced", "selected", "Advanced".equals(cookingLevel))));
 
             if (userService.isAuthenticated()) {
                 mv.addObject("username", userService.getLoggedInUser().getFirstName());
@@ -166,9 +237,10 @@ public class RecipeController {
 
             return mv;
         } catch (Exception e) {
-            System.err.println("Error fetching recipes: " + e.getMessage());
+            System.err.println("Error loading recipes: " + e.getMessage());
             e.printStackTrace();
-            throw e;
+            mv.addObject("error", "Error loading recipes");
+            return mv;
         }
     }
 }

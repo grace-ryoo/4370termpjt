@@ -21,16 +21,16 @@
     <!-- Recipe Categories -->
     <section class="recipe-category">
         <div class="section-header">
-            <h2>Recipe category</h2>
+            <h2>Categories</h2>
         </div>
         <div class="category-icons">
             {{#categories}}
-            <div class="category-item">
+            <a href="/recipe/recipes?categoryId={{categoryId}}" class="category-item">
                 <div class="category-icon">
                     <img src="{{categoryImageUrl}}" alt="{{categoryName}}">
                 </div>
                 <span>{{categoryName}}</span>
-            </div>
+            </a>
             {{/categories}}
         </div>
     </section>
@@ -41,17 +41,18 @@
             <h2>Popular Recipes</h2>
         </div>
         <div class="recipe-grid">
-            {{#trendingRecipes}}
-            <div class="recipe-card">
-                <div class="recipe-details">
-                    <h3>{{recipeName}}</h3>
-                    <div class="rating">
-                        <span class="stars">★★★★★</span>
+            {{#recipes}}
+            <a href="/recipe/view/{{recipeId}}" class="recipe-link">
+                <div class="recipe-card">
+                    <div class="recipe-details">
+                        <h3 class="recipe-title">{{recipeName}}</h3>
+                        <p class="recipe-meta">
+                            <span>{{cookingLevel}}</span> 
+                        </p>
                     </div>
-                    <button class="btn-add">+</button>
                 </div>
-            </div>
-            {{/trendingRecipes}}
+            </a>
+            {{/recipes}}
         </div>
     </section>
 </body>
