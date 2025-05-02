@@ -1,23 +1,45 @@
 <!DOCTYPE html>
- <html lang="en">
- {{> fragments/header}}
- 
- <body>
- 
-     <div class="container center-align narrow">
-         {{> fragments/error_message}}
-             <form action="/register" method="POST">
-                <input name="username" type="text" />
-                <input name="password" type="password" />
-                <input name="firstName" type="text" />
-                <input name="lastName" type="text" />
-                <input name="email" type="email" />
-                <button type="submit">Register</button>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register - Miso Hungry</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    {{> fragments/navbar}}
+
+    <div class="auth-container">
+        <div class="auth-form">
+            <h1>Create Account</h1>
+            {{> fragments/error_message}}
+            <form action="/register" method="POST">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input id="username" name="username" type="text" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input id="password" name="password" type="password" required>
+                </div>
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <input id="firstName" name="firstName" type="text" required>
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <input id="lastName" name="lastName" type="text" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input id="email" name="email" type="email" required>
+                </div>
+                <button type="submit" class="btn-primary">Register</button>
+                <div class="auth-links">
+                    <span>Already have an account?</span>
+                    <a href="/login" class="link">Login</a>
+                </div>
             </form>
-     </div>
- 
-     {{> fragments/footer}}
- 
- </body>
- 
- </html>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>All Recipes - Miso Hungry</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    {{> fragments/navbar}}
+    
+    <div class="container">
+        <h1>All Recipes</h1>
+        <div class="recipe-grid">
+            {{#recipes}}
+            <!-- Debug: Print recipe ID and name -->
+            <div class="recipe-card">
+                <div class="recipe-details">
+                    <h3>Recipe: {{recipeName}}</h3>
+                </div>
+            </div>
+            {{/recipes}}
+            {{^recipes}}
+            <!-- Show message if no recipes -->
+            <p>No recipes found.</p>
+            {{/recipes}}
+        </div>
+    </div>
+</body>
+</html>

@@ -6,18 +6,7 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <!-- Navigation Bar -->
-    <nav class="nav-bar">
-        <div class="logo">Miso Hungry</div>
-        <div class="nav-right">
-            {{#username}}
-                <span>Hello, {{username}}</span>
-            {{/username}}
-            {{^username}}
-                <a href="/login" class="btn-login">Login</a>
-            {{/username}}
-        </div>
-    </nav>
+    {{> fragments/navbar}}
 
     <!-- Hero Section -->
     <section class="hero-section">
@@ -54,12 +43,10 @@
         <div class="recipe-grid">
             {{#trendingRecipes}}
             <div class="recipe-card">
-                <img src="{{imageUrl}}" alt="{{title}}">
                 <div class="recipe-details">
-                    <h3>{{title}}</h3>
+                    <h3>{{recipeName}}</h3>
                     <div class="rating">
                         <span class="stars">★★★★★</span>
-                        <span class="price">${{price}}</span>
                     </div>
                     <button class="btn-add">+</button>
                 </div>

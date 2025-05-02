@@ -68,18 +68,21 @@ public class RecipeService {
     /**
      * public void addReview() {
      *
-     *      *}
+     * *}
      */
     public String createRecipe(String recipeName,
             String description,
             String userId,
             List<String> ingredients,
+            List<String> amounts,
+            List<String> units,
             int prepTime,
             int cookTime,
             int servings,
             String category,
             String dietId,
-            String cookLevel) {
+            String cookLevel,
+            int cuisineId) {
         if (userId == null || userId.isEmpty()) {
             return "-1";
         }
@@ -88,10 +91,10 @@ public class RecipeService {
             return "-1";
         }
 
-        final String sql = "INSERT INTO recipe (recipeName, description, userId, prep_time, cook_time, servings, categoryId, dietId, cookingLevel) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        final String sql = "INSERT INTO recipe (recipeName, description, userId, prep_time, cook_time, servings, categoryId, dietId, cookingLevel, cuisineId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = dataSource.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
             pstmt.setString(1, recipeName);
             pstmt.setString(2, description);
             pstmt.setString(3, userId);
@@ -101,6 +104,7 @@ public class RecipeService {
             pstmt.setString(7, category);
             pstmt.setString(8, dietId);
             pstmt.setString(9, cookLevel);
+            pstmt.setInt(10, cuisineId);
 
             int rowsAffected = pstmt.executeUpdate();
 
@@ -109,7 +113,7 @@ public class RecipeService {
                 if (rs.next()) {
                     String recipeId = rs.getString(1);
                     if (ingredients != null && !ingredients.isEmpty()) {
-                        saveIngredients(conn, recipeId, ingredients);
+                        saveIngredients(conn, recipeId, ingredients, amounts, units);
                     }
                     return recipeId;
                 }
@@ -121,13 +125,16 @@ public class RecipeService {
         }
     }
 
-    private void saveIngredients(Connection conn, String recipeId, List<String> ingredients)
+    private void saveIngredients(Connection conn, String recipeId,
+            List<String> ingredients, List<String> amounts, List<String> units)
             throws SQLException {
-        final String sql = "INSERT INTO recipe_ingredients (recipeId, ingredient) VALUES (?, ?)";
+        final String sql = "INSERT INTO recipe_ingredients (recipeId, ingredientName, ingredientAmount, ingredientUnit) VALUES (?, ?, ?, ?)";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            for (String ingredient : ingredients) {
+            for (int i = 0; i < ingredients.size(); i++) {
                 pstmt.setString(1, recipeId);
-                pstmt.setString(2, ingredient);
+                pstmt.setString(2, ingredients.get(i));
+                pstmt.setString(3, amounts.get(i));
+                pstmt.setString(4, units.get(i));
                 pstmt.addBatch();
             }
             pstmt.executeBatch();
@@ -153,7 +160,8 @@ public class RecipeService {
             ResultSet rs = stmt.executeQuery();
             System.out.println(" Fetching post for recipeId: " + recipeId + " using userId: " + userId);
             if (rs.next()) {
-                User user = new User(rs.getString("userId"), rs.getString("userName"),rs.getString("firstName"), rs.getString("lastName"));
+                User user = new User(rs.getString("userId"), rs.getString("userName"), rs.getString("firstName"),
+                        rs.getString("lastName"));
 
                 // Format the date
                 String formattedDate = "Never";
@@ -166,30 +174,27 @@ public class RecipeService {
                 Category category = new Category(
                         rs.getString("categoryId"),
                         rs.getString("categoryName"),
-                        rs.getString("categoryImageUrl")
-                );
+                        rs.getString("categoryImageUrl"));
 
                 int avgRating = (int) Math.round(rs.getDouble("averageRating"));
                 int numRatings = rs.getInt("countRatings");
 
                 recipe = new Recipe(
-                        rs.getString("recipeId"),
+                        recipeId,
                         rs.getString("recipeName"),
                         rs.getString("description"),
-                        convertUTCtoEST(rs.getString("recipeCreateDate")),
-                        user,
-                        category,
+                        rs.getString("userId"),
+                        rs.getString(
+                                "categoryId"),
+                        rs.getString("dietId"),
                         rs.getInt("prep_time"),
                         rs.getInt("cook_time"),
                         rs.getInt("servings"),
-                        rs.getString("cuisineId"),
-                        rs.getString("dietId"),
                         rs.getString("cookingLevel"),
-                        getIngredientsForRecipe(recipeId),
-                        rs.getInt("averageRating"),
-                        rs.getInt("countRatings")
-                //avgRating,
-                //numRatings
+                        rs.getInt("cuisineId"),
+                        getIngredientsForRecipe(recipeId)
+                // avgRating,
+                // numRatings
                 );
             }
 
@@ -222,30 +227,38 @@ public class RecipeService {
                 recipeId,
                 rs.getString("recipeName"),
                 rs.getString("description"),
-                convertUTCtoEST(rs.getString("created_at")),
-                user,
-                category,
+                rs.getString("userId"),
+                rs.getString(
+                        "categoryId"),
+                rs.getString("dietId"),
                 rs.getInt("prep_time"),
                 rs.getInt("cook_time"),
                 rs.getInt("servings"),
-                rs.getString("cuisineId"),
-                rs.getString("dietId"),
                 rs.getString("cookingLevel"),
-                ingredients,
-                avgRating,
-                numRatings); 
+
+                rs.getInt("cuisineId"),
+
+                ingredients
+        // avgRating,
+        // numRatings
+        );
     }
 
     private List<String> getIngredientsForRecipe(String recipeId) throws SQLException {
         List<String> ingredients = new ArrayList<>();
-        final String sql = "SELECT ingredient FROM recipe_ingredients WHERE recipeId = ?";
+        final String sql = "SELECT ingredientName, ingredientAmount, ingredientUnit FROM recipe_ingredients WHERE recipeId = ?";
 
-        try (Connection conn = dataSource.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = dataSource.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, recipeId);
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                ingredients.add(rs.getString("ingredient"));
+                String ingredient = String.format("%s %s %s",
+                        rs.getString("ingredientAmount"),
+                        rs.getString("ingredientUnit"),
+                        rs.getString("ingredientName"));
+                ingredients.add(ingredient);
             }
         }
         return ingredients;
@@ -292,16 +305,17 @@ public class RecipeService {
     public List<Recipe> getAllRecipes() {
         List<Recipe> recipes = new ArrayList<>();
         final String sql = "SELECT r.*, u.*, c.*, " +
-                          "COALESCE(AVG(rt.stars), 0) AS averageRating, " +
-                          "COUNT(rt.userId) AS countRatings " +
-                          "FROM recipe r " +
-                          "JOIN user u ON r.userId = u.userId " +
-                          "JOIN category c ON r.categoryId = c.categoryId " +
-                          "LEFT JOIN rating rt ON r.recipeId = rt.recipeId " +
-                          "GROUP BY r.recipeId";
-        
+                "COALESCE(AVG(rt.stars), 0) AS averageRating, " +
+                "COUNT(rt.userId) AS countRatings " +
+                "FROM recipe r " +
+                "JOIN user u ON r.userId = u.userId " +
+                "JOIN category c ON r.categoryId = c.categoryId " +
+                "LEFT JOIN rating rt ON r.recipeId = rt.recipeId " +
+                "GROUP BY r.recipeId ";
+                // "ORDER BY r.recipeCreateDate DESC";
+
         try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 recipes.add(mapRecipeFromResultSet(rs));
@@ -311,8 +325,6 @@ public class RecipeService {
         }
         return recipes;
     }
-
-    
 
     public List<Recipe> getRecipesByCategory(String categoryId) {
         List<Recipe> recipes = new ArrayList<>();
@@ -333,7 +345,7 @@ public class RecipeService {
         }
         return recipes;
     }
-    
+
     public List<Recipe> getTrendingRecipes() {
         List<Recipe> recipes = new ArrayList<>();
         final String sql = "SELECT r.*, u.*, c.*, " +
@@ -356,5 +368,5 @@ public class RecipeService {
         }
         return recipes;
     }
-    
+
 }

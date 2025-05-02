@@ -21,25 +21,32 @@ import termProject.services.RecipeService;
 import termProject.services.ReviewService;
 import termProject.services.UserService;
 import termProject.services.CategoryService;
+import termProject.services.DietService;
+import termProject.services.CuisineService;
 
 @Controller
 @RequestMapping("/recipe")
 public class RecipeController {
-    @Autowired
-    private RecipeService recipeService;
-    private ReviewService reviewService;
-    private UserService userService;
-    private CategoryService categoryService;
+    private final RecipeService recipeService;
+    private final ReviewService reviewService;
+    private final UserService userService;
+    private final CategoryService categoryService;
+    private final DietService dietService;
+    private final CuisineService cuisineService;
 
     @Autowired
     public RecipeController(RecipeService recipeService,
             UserService userService,
             ReviewService reviewService,
-            CategoryService categoryService) {
+            CategoryService categoryService,
+            DietService dietService,
+            CuisineService cuisineService) {
         this.recipeService = recipeService;
         this.userService = userService;
         this.reviewService = reviewService;
         this.categoryService = categoryService;
+        this.dietService = dietService;
+        this.cuisineService = cuisineService;
     }
 
     /**
@@ -64,7 +71,8 @@ public class RecipeController {
             }
 
             mv.addObject("recipe", recipe); // Add recipe object
-            // mv.addObject("reviews", reviewService.getReviewsByRecipeId(recipeId)); // Add reviews
+            // mv.addObject("reviews", reviewService.getReviewsByRecipeId(recipeId)); // Add
+            // reviews
             mv.addObject("errorMessage", error);
 
             if (userService.isAuthenticated()) {
@@ -81,7 +89,11 @@ public class RecipeController {
     @GetMapping("/new")
     public ModelAndView showRecipeForm() {
         ModelAndView mv = new ModelAndView("recipe_form");
+
+        // Add required data for dropdowns
         mv.addObject("categories", categoryService.getAllCategories());
+        mv.addObject("cuisines", cuisineService.getAllCuisines()); // Add this line
+        mv.addObject("diets", dietService.getAllDiets());
         if (userService.isAuthenticated()) {
             mv.addObject("username", userService.getLoggedInUser().getFirstName());
         }
@@ -113,29 +125,50 @@ public class RecipeController {
     }
 
     @PostMapping("/create")
-    public String createRecipe(@RequestParam("recipeName") String recipeName,
-                             @RequestParam("description") String description,
-                             @RequestParam("categoryId") String categoryId,
-                             @RequestParam("prep_time") int prepTime,
-                             @RequestParam("cook_time") int cookTime,
-                             @RequestParam("servings") int servings,
-                             @RequestParam("ingredients[]") List<String> ingredients,
-                             @RequestParam("dietId") String dietId,
-                             @RequestParam("cookingLevel") String cookingLevel) {
-        
-        if (!userService.isAuthenticated()) {
-            return "redirect:/login";
-        }
-        
+    public String createRecipe(
+            @RequestParam("recipeName") String recipeName,
+            @RequestParam("description") String description,
+            @RequestParam("categoryId") String categoryId,
+            @RequestParam("prep_time") int prepTime,
+            @RequestParam("cook_time") int cookTime,
+            @RequestParam("servings") int servings,
+            @RequestParam("ingredients[]") List<String> ingredients,
+            @RequestParam("amounts[]") List<String> amounts,
+            @RequestParam("units[]") List<String> units,
+            @RequestParam("dietId") String dietId,
+            @RequestParam("cookingLevel") String cookingLevel,
+            @RequestParam("cuisineId") int cuisineId) {
+
         try {
             String userId = userService.getLoggedInUser().getUserId();
-            String recipeId = recipeService.createRecipe(recipeName, description, userId, 
-                ingredients, prepTime, cookTime, servings, categoryId, dietId, cookingLevel);
-            return "redirect:/recipe/" + recipeId;
+            String recipeId = recipeService.createRecipe(recipeName, description, userId,
+                    ingredients, amounts, units, prepTime, cookTime, servings,
+                    categoryId, dietId, cookingLevel, cuisineId);
+
+            // Redirect to the recipes page after successful creation
+            return "redirect:/recipe/recipes";
         } catch (Exception e) {
-            String message = URLEncoder.encode("Failed to create recipe: " + e.getMessage(), 
-                StandardCharsets.UTF_8);
-            return "redirect:/recipe/new?error=" + message;
+            return "redirect:/recipe/new?error=" + URLEncoder.encode(e.getMessage(), StandardCharsets.UTF_8);
+        }
+    }
+
+    @GetMapping("/recipes")
+    public ModelAndView showAllRecipes() {
+        ModelAndView mv = new ModelAndView("recipes");
+        try {
+            List<Recipe> allRecipes = recipeService.getAllRecipes();
+            System.out.println("DEBUG: Found " + allRecipes.size() + " recipes"); // Debug log
+            mv.addObject("recipes", allRecipes);
+
+            if (userService.isAuthenticated()) {
+                mv.addObject("username", userService.getLoggedInUser().getFirstName());
+            }
+
+            return mv;
+        } catch (Exception e) {
+            System.err.println("Error fetching recipes: " + e.getMessage());
+            e.printStackTrace();
+            throw e;
         }
     }
 }
