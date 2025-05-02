@@ -18,10 +18,16 @@
 
     <div class="form-container">
         <h1>Create New Recipe</h1>
-        <form action="/recipe/create" method="POST" class="recipe-form">
+        <form action="/recipe/create" method="POST" class="recipe-form" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="recipeName">Recipe Name</label>
                 <input type="text" id="recipeName" name="recipeName" required>
+            </div>
+
+            <div class="form-group">
+                <label for="recipeImage">Recipe Image</label>
+                <input type="file" id="recipeImage" name="recipeImage" accept="image/*">
+                <p class="help-text">Upload an image of your recipe (optional)</p>
             </div>
 
             <div class="form-group">
