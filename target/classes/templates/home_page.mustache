@@ -41,17 +41,18 @@
             <h2>Popular Recipes</h2>
         </div>
         <div class="recipe-grid">
-            {{#trendingRecipes}}
-            <div class="recipe-card">
-                <div class="recipe-details">
-                    <h3>{{recipeName}}</h3>
-                    <div class="rating">
-                        <span class="stars">★★★★★</span>
+            {{#recipes}}
+            <a href="/recipe/view/{{recipeId}}" class="recipe-link">
+                <div class="recipe-card">
+                    <div class="recipe-details">
+                        <h3 class="recipe-title">{{recipeName}}</h3>
+                        <p class="recipe-meta">
+                            <span>{{cookingLevel}}</span> 
+                        </p>
                     </div>
-                    <button class="btn-add">+</button>
                 </div>
-            </div>
-            {{/trendingRecipes}}
+            </a>
+            {{/recipes}}
         </div>
     </section>
 </body>

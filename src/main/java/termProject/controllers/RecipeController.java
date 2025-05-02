@@ -58,22 +58,39 @@ public class RecipeController {
      * See notes from HomeController.java regardig error URL parameter.
      */
     @GetMapping("/{recipeId}")
-    public ModelAndView webpage(@PathVariable("recipeId") String recipeId,
-            @RequestParam(name = "error", required = false) String error) {
-        ModelAndView mv = new ModelAndView("recipe_detail"); // Change to recipe_detail instead of recipes_page
-
+    public ModelAndView showRecipe(@PathVariable String recipeId) {
+        ModelAndView mv = new ModelAndView("recipe_detail");
         try {
-            String currUserId = userService.getLoggedInUser().getUserId();
-            Recipe recipe = recipeService.getRecipeById(recipeId, currUserId);
+            String userId = userService.isAuthenticated() ? userService.getLoggedInUser().getUserId() : null;
+            Recipe recipe = recipeService.getRecipeById(recipeId, userId);
 
             if (recipe == null) {
-                throw new RuntimeException("Recipe not found");
+                return new ModelAndView("redirect:/recipe/recipes");
+            }
+            System.out.println("DEBUG: Found recipe with ID " + recipeId); // Debug log
+            mv.addObject("recipe", recipe);
+            if (userService.isAuthenticated()) {
+                mv.addObject("username", userService.getLoggedInUser().getFirstName());
+            }
+            return mv;
+
+        } catch (Exception e) {
+            return new ModelAndView("redirect:/recipe/recipes");
+        }
+    }
+
+    @GetMapping("/view/{recipeId}")
+    public ModelAndView viewRecipe(@PathVariable String recipeId) {
+        ModelAndView mv = new ModelAndView("recipe_detail");
+        try {
+            String userId = userService.isAuthenticated() ? userService.getLoggedInUser().getUserId() : null;
+            Recipe recipe = recipeService.getRecipeById(recipeId, userId);
+
+            if (recipe == null) {
+                return new ModelAndView("redirect:/recipes?error=Recipe not found");
             }
 
-            mv.addObject("recipe", recipe); // Add recipe object
-            // mv.addObject("reviews", reviewService.getReviewsByRecipeId(recipeId)); // Add
-            // reviews
-            mv.addObject("errorMessage", error);
+            mv.addObject("recipe", recipe);
 
             if (userService.isAuthenticated()) {
                 mv.addObject("username", userService.getLoggedInUser().getFirstName());
@@ -81,8 +98,9 @@ public class RecipeController {
 
             return mv;
         } catch (Exception e) {
-            mv.addObject("errorMessage", "Failed to load recipe: " + e.getMessage());
-            return mv;
+            System.err.println("Error viewing recipe: " + e.getMessage());
+            e.printStackTrace();
+            return new ModelAndView("redirect:/recipes?error=Error viewing recipe");
         }
     }
 

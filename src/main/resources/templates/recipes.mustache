@@ -12,16 +12,16 @@
         <h1>All Recipes</h1>
         <div class="recipe-grid">
             {{#recipes}}
-            <!-- Debug: Print recipe ID and name -->
-            <div class="recipe-card">
-                <div class="recipe-details">
-                    <h3>Recipe: {{recipeName}}</h3>
+            <a href="/recipe/{{recipeId}}" class="recipe-link">
+                <div class="recipe-card">
+                    <div class="recipe-details">
+                        <h3 class="recipe-title">{{recipeName}}</h3>
+                        <p class="recipe-meta">
+                            <span>{{cookingLevel}}</span> 
+                        </p>
+                    </div>
                 </div>
-            </div>
-            {{/recipes}}
-            {{^recipes}}
-            <!-- Show message if no recipes -->
-            <p>No recipes found.</p>
+            </a>
             {{/recipes}}
         </div>
     </div>

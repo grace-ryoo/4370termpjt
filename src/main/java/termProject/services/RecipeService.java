@@ -144,60 +144,47 @@ public class RecipeService {
     public Recipe getRecipeById(String recipeId, String userId) {
         Recipe recipe = null;
 
-        String sql = "SELECT r.*, u.firstName, u.lastName, c.categoryId, c.categoryName, c.categoryImageUrl, "
+        String sql = "SELECT r.*, u.userId, u.firstName, u.lastName, c.categoryId, c.categoryName, c.categoryImageUrl, "
                 + "COALESCE(AVG(rt.stars), 0) AS averageRating, "
                 + "COUNT(rt.userId) AS countRatings "
                 + "FROM recipe r "
                 + "JOIN user u ON r.userId = u.userId "
                 + "JOIN category c ON r.categoryId = c.categoryId "
-                + "LEFT JOIN rating rt ON r.recipeId = rt.recipeId"
+                + "LEFT JOIN rating rt ON r.recipeId = rt.recipeId "
                 + "WHERE r.recipeId = ? "
-                + "GROUP BY r.recipeId, u.userId, u.firstName, u.lastName, c.categoryId, c.categoryName, c.categoryImageUrl\";";
+                + "GROUP BY r.recipeId, u.userId, c.categoryId";
 
-        try (Connection conn = dataSource.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = dataSource.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, recipeId);
-            stmt.setString(2, userId);
             ResultSet rs = stmt.executeQuery();
-            System.out.println(" Fetching post for recipeId: " + recipeId + " using userId: " + userId);
-            if (rs.next()) {
-                User user = new User(rs.getString("userId"), rs.getString("userName"), rs.getString("firstName"),
-                        rs.getString("lastName"));
 
-                // Format the date
-                String formattedDate = "Never";
-                Timestamp timestamp = rs.getTimestamp("created_at");
-                if (timestamp != null) {
-                    SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy, hh:mm a");
-                    formattedDate = sdf.format(timestamp);
-                }
+            if (rs.next()) {
+                User user = new User(
+                        rs.getString("userId"),
+                        null,
+                        rs.getString("firstName"),
+                        rs.getString("lastName"));
 
                 Category category = new Category(
                         rs.getString("categoryId"),
                         rs.getString("categoryName"),
                         rs.getString("categoryImageUrl"));
 
-                int avgRating = (int) Math.round(rs.getDouble("averageRating"));
-                int numRatings = rs.getInt("countRatings");
-
                 recipe = new Recipe(
                         recipeId,
                         rs.getString("recipeName"),
                         rs.getString("description"),
                         rs.getString("userId"),
-                        rs.getString(
-                                "categoryId"),
+                        rs.getString("categoryId"),
                         rs.getString("dietId"),
                         rs.getInt("prep_time"),
                         rs.getInt("cook_time"),
                         rs.getInt("servings"),
                         rs.getString("cookingLevel"),
                         rs.getInt("cuisineId"),
-                        getIngredientsForRecipe(recipeId)
-                // avgRating,
-                // numRatings
-                );
+                        getIngredientsForRecipe(recipeId));
             }
-
         } catch (SQLException e) {
             throw new RuntimeException("Error fetching recipes by ID", e);
         }
@@ -312,7 +299,7 @@ public class RecipeService {
                 "JOIN category c ON r.categoryId = c.categoryId " +
                 "LEFT JOIN rating rt ON r.recipeId = rt.recipeId " +
                 "GROUP BY r.recipeId ";
-                // "ORDER BY r.recipeCreateDate DESC";
+        // "ORDER BY r.recipeCreateDate DESC";
 
         try (Connection conn = dataSource.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql)) {

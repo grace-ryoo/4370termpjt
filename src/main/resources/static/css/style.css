@@ -167,6 +167,11 @@ body {
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+}
+
+.recipe-card:hover {
+    transform: translateY(-5px);
 }
 
 /* Price Styling */
@@ -325,7 +330,7 @@ body {
 
 /* Recipe Detail Styles */
 .recipe-detail {
-    max-width: 1200px;
+    max-width: 800px;
     margin: 2rem auto;
     padding: 2rem;
     background: white;
@@ -333,27 +338,63 @@ body {
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-.recipe-header {
+.recipe-detail .recipe-title {
+    color: #333;
+    font-size: 2rem;
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
 }
 
 .recipe-meta {
     display: flex;
     justify-content: center;
     gap: 2rem;
-    color: var(--text-color);
+    margin-bottom: 2rem;
+    color: #666;
+}
+
+.recipe-description, .recipe-ingredients {
+    margin-bottom: 2rem;
+}
+
+.recipe-description h2, .recipe-ingredients h2 {
+    color: #90af7b;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.recipe-ingredients ul {
+    list-style: none;
+    padding: 0;
+}
+
+.recipe-ingredients li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #eee;
+}
+
+.recipe-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.recipe-header h1 {
+    color: #333;
+    font-size: 2rem;
+    margin-bottom: 1rem;
 }
 
 .recipe-content {
     display: grid;
-    grid-template-columns: 1fr 2fr;
+    grid-template-columns: 2fr 1fr;
     gap: 2rem;
+    margin-top: 2rem;
 }
 
-.recipe-image img {
-    width: 100%;
-    border-radius: 12px;
+.recipe-content h2 {
+    color: #90af7b;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
 }
 
 .ingredients ul {
@@ -364,6 +405,11 @@ body {
 .ingredients li {
     padding: 0.5rem 0;
     border-bottom: 1px solid #eee;
+}
+
+.description p {
+    line-height: 1.6;
+    color: #444;
 }
 
 .container {
@@ -399,6 +445,18 @@ body {
 
 .btn-view:hover {
     background-color: #7a9867;
+}
+
+/* Recipe Links */
+.recipe-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.recipe-link:hover .recipe-card {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 /* Auth Forms */
@@ -483,4 +541,16 @@ body {
 
 .auth-links .link:hover {
     text-decoration: underline;
+}
+
+.recipe-title {
+    text-align: center;
+    color: #333;
+    margin: 1rem 0;
+    font-size: 1.2rem;
+    padding: 0 1rem;
+}
+
+.recipe-details {
+    padding: 1rem;
 }
