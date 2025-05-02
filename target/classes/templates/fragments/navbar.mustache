@@ -2,14 +2,12 @@
     <div class="logo">Miso Hungry</div>
     <div class="nav-right">
         <a href="/" class="nav-link">Home</a>
+        <a href="/cookedChronicles" class="nav-link">Cooked Chronicles</a>
+        <a href="/chroniclesToCook" class="nav-link">Chronicles to Cook</a>
         <a href="/recipe/recipes" class="nav-link">All Recipes</a>
-        {{#username}}
-            <a href="/recipe/new" class="btn-add-recipe">Add Recipe</a>
-            <span class="username">My Account</span>
-        {{/username}}
-        {{^username}}
-            <a href="/login" class="btn-login">Login</a>
-        {{/username}}
+        <a href="/recipe/new" class="btn-add-recipe">Add Recipe</a>
+        <a href="/profile" class="nav-link">My Account</a>
+        <a href="/login" class="btn-login">Logout</a>
     </div>
 </nav>
 

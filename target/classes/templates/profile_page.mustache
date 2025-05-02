@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Miso Hungry</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    {{> fragments/navbar}}
+
+    <div class="recipe-grid">
+        {{#recipes}}
+        <a href="/recipe/view/{{recipeId}}" class="recipe-link">
+            <div class="recipe-card">
+                <div class="recipe-details">
+                    <h3 class="recipe-title">{{recipeName}}</h3>
+                    <p class="recipe-meta">
+                        <span>{{cookingLevel}}</span> 
+                    </p>
+                </div>
+            </div>
+        </a>
+        {{/recipes}}
+    </div>
+
+    {{^recipes}}
+        <div class="no-recipes">
+            <p>No recipes created yet. Explore recipes!</p>
+            <a href="/" class="explore-link">Explore Recipes</a>
+        </div>
+    {{/recipes}}
+</body>
+</html>

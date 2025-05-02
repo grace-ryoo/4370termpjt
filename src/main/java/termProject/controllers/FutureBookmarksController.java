@@ -53,7 +53,7 @@ public class FutureBookmarksController {
                 // Do that if your content list is empty.
                 mv.addObject("isNoContent", true);
             } else {
-                mv.addObject("futureCookbook", recipes);
+                mv.addObject("recipes", recipes);
             }
         } catch (Exception e) {
             String errorMessage = "An error occurred while fetching future recipes.";

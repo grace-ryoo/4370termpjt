@@ -8,57 +8,39 @@
     <script src="/js/main.js" defer></script>
 </head>
 <body>
-    <!-- Navigation Bar -->
-    <nav class="nav-bar">
-        <div class="logo">Miso Hungry</div>
-        <div class="nav-right">
-            {{#username}}
-                <span>Hello, {{username}}</span>
-            {{/username}}
-            {{^username}}
-                <a href="/login" class="btn-login">Login</a>
-            {{/username}}
-        </div>
-    </nav>
+    <!-- Navbar -->
+    {{> fragments/navbar }}
 
     <!-- Future Cookbook Header -->
     <header class="cookbook-header">
-        <h1 class="cookbook-title">Chronicles to Cook</h1>
+        <h1>Chronicles to Cook</h1>
     </header>
 
     <!-- Future Recipes Grid -->
-    <section class="cookbook-section">
-        <div class="cookbook-grid">
-            {{#futureCookbook}}
+    <div class="cookbook-grid">
+        <div class="recipe-grid">
+            {{#recipes}}
+            <a href="/recipe/view/{{recipeId}}" class="recipe-link">
                 <div class="recipe-card">
                     <div class="recipe-details">
-                        <div class="recipe-header">
-                            <h3>{{recipeName}}</h3>
-                            <div class="rating-stars">
-                                <!-- Rating stars (add functionality with JS later) -->
-                                <button class="star" data-rating="1">&#9733;</button>
-                                <button class="star" data-rating="2">&#9733;</button>
-                                <button class="star" data-rating="3">&#9733;</button>
-                                <button class="star" data-rating="4">&#9733;</button>
-                                <button class="star" data-rating="5">&#9733;</button>
-                            </div>
-                        </div>
-                        <p>{{description}}</p>
-                        
-                        
-
+                        <h3 class="recipe-title">{{recipeName}}</h3>
+                        <p class="recipe-meta">
+                            <span>{{cookingLevel}}</span> 
+                        </p>
                     </div>
                 </div>
-            {{/futureCookbook}}
-
-            {{^futureCookbook}}
-                <div class="no-recipes">
-                    <p>No recipes bookmarked for the future yet. Explore and save some ideas!</p>
-                    <a href="/" class="explore-link">Explore Recipes</a>
-                </div>
-            {{/futureCookbook}}
+            </a>
+            {{/recipes}}
         </div>
-    </section>
+
+        {{^recipes}}
+            <div class="no-recipes">
+                <p>No recipes bookmarked for the future yet. Explore and save some recipes!</p>
+                <a href="/" class="explore-link">Explore Recipes</a>
+            </div>
+        {{/recipes}}
+    </div>
+
 
 
     <!-- Error Message -->
