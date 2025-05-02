@@ -20,16 +20,7 @@
     <div class="cookbook-grid">
         <div class="recipe-grid">
             {{#recipes}}
-            <a href="/recipe/view/{{recipeId}}" class="recipe-link">
-                <div class="recipe-card">
-                    <div class="recipe-details">
-                        <h3 class="recipe-title">{{recipeName}}</h3>
-                        <p class="recipe-meta">
-                            <span>{{cookingLevel}}</span> 
-                        </p>
-                    </div>
-                </div>
-            </a>
+                {{> fragments/recipe_card}}
             {{/recipes}}
         </div>
 

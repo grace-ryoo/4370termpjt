@@ -180,7 +180,7 @@ public class RecipeService {
         }
     }
 
-    private Recipe mapRecipeFromResultSet(ResultSet rs) throws SQLException {
+    public Recipe mapRecipeFromResultSet(ResultSet rs) throws SQLException {
         User user = new User(
                 rs.getString("userId"),
                 rs.getString("userName"),
