@@ -1,21 +1,33 @@
 <!DOCTYPE html>
- <html lang="en">
- {{> fragments/header}}
- 
- <body>
- 
-     <div class="container center-align narrow">
-         {{> fragments/error_message}}
-         <form method="post" action="/login">
-             <input name="username" class="short-input full" type="text" placeholder="Username">
-             <input name="password" class="short-input full" type="password" placeholder="Password">
-             <button type="submit" class="action-button">Login</button>
-             <a class="link" href="/register">Register</a>
-         </form>
-     </div>
- 
-     {{> fragments/footer}}
- 
- </body>
- 
- </html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Miso Hungry</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    {{> fragments/navbar}}
+
+    <div class="auth-container">
+        <div class="auth-form">
+            <h1>Login</h1>
+            {{> fragments/error_message}}
+            <form method="post" action="/login">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input id="username" name="username" type="text" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input id="password" name="password" type="password" required>
+                </div>
+                <button type="submit" class="btn-primary">Login</button>
+                <div class="auth-links">
+                    <span>Don't have an account?</span>
+                    <a href="/register" class="link">Register</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

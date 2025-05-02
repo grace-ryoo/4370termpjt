@@ -57,30 +57,22 @@ import java.util.List;
                      );
  
                      Recipe recipe = new Recipe(
-                         rs.getString("recipeId"),
-                         rs.getString("recipeName"),
-                         rs.getString("description"),
-                         convertUTCtoEST(rs.getString("recipeCreateDate")),
-                         new User(
+                             rs.getString("recipeId"),
+                             rs.getString("recipeName"),
+                             rs.getString("description"),
                              rs.getString("userId"),
-                             rs.getString("userName"),
-                             rs.getString("firstName"),
-                             rs.getString("lastName")
-                         ),
-                         new Category(
-                             rs.getString("categoryId"),
-                             rs.getString("categoryName"),
-                             rs.getString("categoryImageUrl")
-                         ),
-                         rs.getInt("prep_time"),
-                         rs.getInt("cook_time"),
-                         rs.getInt("servings"),
-                         rs.getString("cuisineId"),
-                         rs.getString("dietId"),
-                         rs.getString("cookingLevel"),
-                         Arrays.asList(rs.getString("ingredients").split("\\s*,\\s*")),
-                         rs.getInt("averageRating"),
-                         rs.getInt("countRatings")
+                             rs.getString(
+                                     "categoryId"),
+                             rs.getString("dietId"),
+                             rs.getInt("prep_time"),
+                             rs.getInt("cook_time"),
+                             rs.getInt("servings"),
+                             rs.getString("cookingLevel"),
+                             rs.getInt("cuisineId"),
+
+                                Arrays.asList(rs.getString("ingredients").split(","))
+                     // avgRating,
+                     // numRatings
                      );
 
                      recipeByUser.add(recipe);
