@@ -682,6 +682,7 @@ body {
     padding: 1rem 2rem;
     background-color: #f1e5a6;
     border-bottom: 2px solid #f1e5a6;
+}
 .cooking-level {
     text-transform: capitalize;
     font-weight: 500;
