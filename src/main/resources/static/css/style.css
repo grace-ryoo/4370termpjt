@@ -267,6 +267,19 @@ body {
     resize: vertical;
 }
 
+.form-group input[type="file"] {
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 100%;
+}
+
+.help-text {
+    font-size: 0.875rem;
+    color: #666;
+    margin-top: 0.25rem;
+}
+
 .ingredients-list {
     display: flex;
     flex-direction: column;
@@ -603,4 +616,10 @@ body {
 
 .btn-filter:hover {
     background: #7a9867;
+}
+
+.cooking-level {
+    text-transform: capitalize;
+    font-weight: 500;
+    color: #666;
 }

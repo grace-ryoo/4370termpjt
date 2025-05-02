@@ -1,0 +1,21 @@
+<a href="/recipe/view/{{recipeId}}" class="recipe-link">
+    <div class="recipe-card">
+        <div class="recipe-image">
+            {{#imageUrl}}
+                <img src="{{imageUrl}}" alt="{{recipeName}}">
+            {{/imageUrl}}
+            {{^imageUrl}}
+                <img src="{{category.categoryImageUrl}}" alt="{{category.categoryName}}">
+            {{/imageUrl}}
+        </div>
+        <div class="recipe-details">
+            <h3 class="recipe-title">{{recipeName}}</h3>
+            <p class="recipe-meta">
+                <span class="cooking-level">{{cookingLevel}}</span>
+                <span class="meta-divider">•</span>
+                <span class="prep-time">{{prepTime}} min prep</span>
+            </p>
+            <!-- ...rest of the recipe card... -->
+        </div>
+    </div>
+</a>
