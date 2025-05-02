@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import termProject.models.Recipe;
@@ -30,21 +31,21 @@ public class FutureBookmarksController {
      * /bookmarks URL itself is handled by this.
      */
     @GetMapping
-    public ModelAndView webpage() {
+    public ModelAndView webpage(@RequestParam(name = "error", required = false) String error) {
         // posts_page is a mustache template from src/main/resources/templates.
         // ModelAndView class enables initializing one and populating placeholders
         // in the template using Java objects assigned to named properties.
-        ModelAndView mv = new ModelAndView("posts_page");
+        ModelAndView mv = new ModelAndView("futurecookbook_page");
         
 
         /** Modified code starts here */
         User loggedInUser = userService.getLoggedInUser();
         if (loggedInUser == null) {
-            String errorMessage = "User is not logged in.";
-            mv.addObject("errorMessage", errorMessage);
-            return mv;
+            return new ModelAndView("redirect:/login");
         }
         String loggedInUserId = loggedInUser.getUserId();
+        mv.addObject("username", loggedInUser.getFirstName());
+        mv.addObject("bookmark_type", "FUTURE");
         try {
             List<Recipe> recipes = bookmarkService.getFutureRecipes(loggedInUserId);
             if (recipes.isEmpty()) {

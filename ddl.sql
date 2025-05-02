@@ -87,5 +87,10 @@ CREATE TABLE IF NOT EXISTS diet (
     dietDescription VARCHAR(255)
 );
 
+CREATE TABLE IF NOT EXISTS cuisine (
+    cuisineId INT AUTO_INCREMENT PRIMARY KEY,
+    cuisineName VARCHAR(50) NOT NULL UNIQUE,
+    cuisineDescription VARCHAR(255)
+);
 
 

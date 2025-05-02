@@ -12,6 +12,12 @@
         <div class="recipe-detail">
             <h1 class="recipe-title">{{recipe.recipeName}}</h1>
             
+            {{#recipe.imageUrl}}
+            <div class="recipe-detail-image">
+                <img src="{{recipe.imageUrl}}" alt="{{recipe.recipeName}}">
+            </div>
+            {{/recipe.imageUrl}}
+            
             <div class="recipe-meta">
                 <span>Prep Time: {{recipe.prepTime}} min</span>
                 <span>Cook Time: {{recipe.cookTime}} min</span>
