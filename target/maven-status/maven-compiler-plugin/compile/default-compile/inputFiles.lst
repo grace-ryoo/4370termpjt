@@ -1,6 +1,7 @@
 /Users/ahhchu/Desktop/school/DB-menik/projects/4370termpjt/src/main/java/termProject/models/GroceryItem.java
 /Users/ahhchu/Desktop/school/DB-menik/projects/4370termpjt/src/main/java/termProject/models/Category.java
 /Users/ahhchu/Desktop/school/DB-menik/projects/4370termpjt/src/main/java/termProject/services/DietService.java
+/Users/ahhchu/Desktop/school/DB-menik/projects/4370termpjt/src/main/java/termProject/config/WebMvcConfig.java
 /Users/ahhchu/Desktop/school/DB-menik/projects/4370termpjt/src/main/java/termProject/models/User.java
 /Users/ahhchu/Desktop/school/DB-menik/projects/4370termpjt/src/main/java/termProject/controllers/PastBookmarksController.java
 /Users/ahhchu/Desktop/school/DB-menik/projects/4370termpjt/src/main/java/termProject/config/WebConfig.java
@@ -17,6 +18,7 @@
 /Users/ahhchu/Desktop/school/DB-menik/projects/4370termpjt/src/main/java/termProject/controllers/RecipeController.java
 /Users/ahhchu/Desktop/school/DB-menik/projects/4370termpjt/src/main/java/termProject/models/Cuisine.java
 /Users/ahhchu/Desktop/school/DB-menik/projects/4370termpjt/src/main/java/termProject/controllers/LoginController.java
+/Users/ahhchu/Desktop/school/DB-menik/projects/4370termpjt/src/main/java/termProject/services/FileStorageService.java
 /Users/ahhchu/Desktop/school/DB-menik/projects/4370termpjt/src/main/java/termProject/models/Review.java
 /Users/ahhchu/Desktop/school/DB-menik/projects/4370termpjt/src/main/java/termProject/services/GroceryListService.java
 /Users/ahhchu/Desktop/school/DB-menik/projects/4370termpjt/src/main/java/termProject/components/AuthInterceptor.java
