@@ -45,20 +45,7 @@
                         </div>
                         <p>{{description}}</p>
                         
-                        <!-- Bookmarking functionality -->
-                        {{#isBookmarked}}
-                            <!-- If the recipe is already bookmarked, it needs to send "false" for unbookmark and the bookmark type -->
-                            <form method="get" action="/recipe/{{recipeId}}/bookmark/false/{{bookmark_type}}">
-                                <button class="fa fa-bookmark" type="submit"></button>
-                            </form>
-                        {{/isBookmarked}}
-
-                        {{^isBookmarked}}
-                            <!-- If the recipe is not bookmarked, it needs to send "true" for bookmark and the bookmark type -->
-                            <form method="get" action="/recipe/{{recipeId}}/bookmark/true/{{bookmark_type}}">
-                                <button class="far fa-bookmark" type="submit"></button>
-                            </form>
-                        {{/isBookmarked}}
+                        
 
                     </div>
                 </div>
