@@ -33,12 +33,13 @@ create table if not exists recipe (
     prep_time INT not null,
     cook_time INT not null,
     servings INT not null,
-    cuisineId VARCHAR(255) not null,
-    dietId VARCHAR(255) not null,
+    cuisineId INT not null,
+    dietId INT not null,
     cookingLevel VARCHAR(255) not null,
     primary key (recipeId),
     FOREIGN KEY (userId) REFERENCES user(userId),
-    FOREIGN KEY (categoryId) REFERENCES category(categoryId)
+    FOREIGN KEY (categoryId) REFERENCES category(categoryId),
+    CONSTRAINT fk_recipe_diet FOREIGN KEY (dietId) REFERENCES diet(dietId)
 );
 
 CREATE TABLE if not exists recipe_ingredients (
@@ -76,4 +77,18 @@ CREATE TABLE IF NOT EXISTS groceryList (
     PRIMARY KEY (itemId, userId),
     FOREIGN KEY (userId) REFERENCES user(userId)
 );
+
+-- Create the diet table
+CREATE TABLE IF NOT EXISTS diet (
+    dietId INT AUTO_INCREMENT PRIMARY KEY,
+    dietName VARCHAR(50) NOT NULL UNIQUE,
+    dietDescription VARCHAR(255)
+);
+
+CREATE TABLE IF NOT EXISTS cuisine (
+    cuisineId INT AUTO_INCREMENT PRIMARY KEY,
+    cuisineName VARCHAR(50) NOT NULL UNIQUE,
+    cuisineDescription VARCHAR(255)
+);
+
 

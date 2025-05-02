@@ -9,6 +9,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -19,8 +20,6 @@ import org.springframework.stereotype.Service;
 import termProject.models.Category;
 import termProject.models.Recipe;
 import termProject.models.User;
-
-import termProject.services.RecipeService;
 
 @Service
 public class BookmarkService {
@@ -75,21 +74,21 @@ public class BookmarkService {
                     List<String> ingredients = recipeService.getIngredientsForRecipe(recipeId);
 
                     Recipe recipe = new Recipe(
-                        recipeId,
-                        rs.getString("recipeName"),
-                        rs.getString("description"),
-                        convertUTCtoEST(rs.getString("recipeCreateDate")),
-                        user,
-                        category,
-                        rs.getInt("prep_time"),
-                        rs.getInt("cook_time"),
-                        rs.getInt("servings"),
-                        rs.getString("cuisineId"),
-                        rs.getString("dietId"),
-                        rs.getString("cookingLevel"),
-                        ingredients,
-                        avgRating,
-                        numRatings
+                            rs.getString("recipeId"),
+                            rs.getString("recipeName"),
+                            rs.getString("description"),
+                            rs.getString("userId"),
+                            rs.getString(
+                                    "categoryId"),
+                            rs.getString("dietId"),
+                            rs.getInt("prep_time"),
+                            rs.getInt("cook_time"),
+                            rs.getInt("servings"),
+                            rs.getString("cookingLevel"),
+                            rs.getInt("cuisineId"),
+                            Arrays.asList(rs.getString("ingredients").split(","))
+                    // avgRating,
+                    // numRatings
                     );
                     recipes.add(recipe);
                     

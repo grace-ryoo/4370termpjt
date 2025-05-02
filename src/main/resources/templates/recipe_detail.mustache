@@ -2,47 +2,35 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{{recipe.title}} - Miso Hungry</title>
+    <title>{{recipe.recipeName}} - Miso Hungry</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <nav class="nav-bar">
-        <div class="logo">Miso Hungry</div>
-        <div class="nav-right">
-            <a href="/" class="nav-link">Home</a>
-            {{#username}}
-                <span>Hello, {{username}}</span>
-            {{/username}}
-        </div>
-    </nav>
-
-    <div class="recipe-detail">
-        <div class="recipe-header">
-            <h1>{{recipe.title}}</h1>
+    {{> fragments/navbar}}
+    
+    <div class="container">
+        <div class="recipe-detail">
+            <h1 class="recipe-title">{{recipe.recipeName}}</h1>
+            
             <div class="recipe-meta">
-                <span class="prep-time">Prep: {{recipe.prep_time}} mins</span>
-                <span class="cook-time">Cook: {{recipe.cook_time}} mins</span>
-                <span class="servings">Serves: {{recipe.servings}}</span>
-            </div>
-        </div>
-
-        <div class="recipe-content">
-            <div class="recipe-image">
-                <img src="{{recipe.imageUrl}}" alt="{{recipe.title}}">
+                <span>Prep Time: {{recipe.prepTime}} min</span>
+                <span>Cook Time: {{recipe.cookTime}} min</span>
+                <span>Servings: {{recipe.servings}}</span>
+                <span>Level: {{recipe.cookingLevel}}</span>
             </div>
             
-            <div class="ingredients">
+            <div class="recipe-description">
+                <h2>Description</h2>
+                <p>{{recipe.description}}</p>
+            </div>
+            
+            <div class="recipe-ingredients">
                 <h2>Ingredients</h2>
                 <ul>
                     {{#recipe.ingredients}}
-                        <li>{{.}}</li>
+                    <li>{{.}}</li>
                     {{/recipe.ingredients}}
                 </ul>
-            </div>
-
-            <div class="instructions">
-                <h2>Instructions</h2>
-                <p>{{recipe.description}}</p>
             </div>
         </div>
     </div>
