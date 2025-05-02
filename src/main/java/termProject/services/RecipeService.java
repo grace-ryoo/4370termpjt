@@ -239,11 +239,15 @@ public class RecipeService {
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                String ingredient = String.format("%s %s %s",
+                String ingredient = String.format("%s %s %s", 
+                    rs.getString("ingredientAmount"),
+                    rs.getString("ingredientUnit"),
+                    rs.getString("ingredientName"));
                 ingredients.add(ingredient);
             }
         }
         return ingredients;
+    }
 
     private String convertUTCtoEST(String utcTimestamp) {
         DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
