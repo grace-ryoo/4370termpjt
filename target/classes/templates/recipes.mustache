@@ -57,9 +57,26 @@
                     <label for="cookingLevel">Cooking Level</label>
                     <select name="cookingLevel" id="cookingLevel">
                         <option value="">All Levels</option>
-                        <option value="Beginner" {{#isBeginnerSelected}}selected{{/isBeginnerSelected}}>Beginner</option>
-                        <option value="Intermediate" {{#isIntermediateSelected}}selected{{/isIntermediateSelected}}>Intermediate</option>
-                        <option value="Advanced" {{#isAdvancedSelected}}selected{{/isAdvancedSelected}}>Advanced</option>
+                        {{#isEasy}}
+                            <option value="easy" selected>Easy</option>
+                        {{/isEasy}}
+                        {{^isEasy}}
+                            <option value="easy">Easy</option>
+                        {{/isEasy}}
+                        
+                        {{#isMedium}}
+                            <option value="medium" selected>Medium</option>
+                        {{/isMedium}}
+                        {{^isMedium}}
+                            <option value="medium">Medium</option>
+                        {{/isMedium}}
+                        
+                        {{#isHard}}
+                            <option value="hard" selected>Hard</option>
+                        {{/isHard}}
+                        {{^isHard}}
+                            <option value="hard">Hard</option>
+                        {{/isHard}}
                     </select>
                 </div>
 
@@ -69,16 +86,7 @@
 
         <div class="recipe-grid">
             {{#recipes}}
-            <a href="/recipe/{{recipeId}}" class="recipe-link">
-                <div class="recipe-card">
-                    <div class="recipe-details">
-                        <h3 class="recipe-title">{{recipeName}}</h3>
-                        <p class="recipe-meta">
-                            <span>{{cookingLevel}}</span> 
-                        </p>
-                    </div>
-                </div>
-            </a>
+                {{> fragments/recipe_card}}
             {{/recipes}}
         </div>
     </div>

@@ -36,6 +36,7 @@ create table if not exists recipe (
     cuisineId INT not null,
     dietId INT not null,
     cookingLevel VARCHAR(255) not null,
+    imageUrl VARCHAR(255) not null,
     primary key (recipeId),
     FOREIGN KEY (userId) REFERENCES user(userId),
     FOREIGN KEY (categoryId) REFERENCES category(categoryId),
