@@ -9,6 +9,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -68,21 +69,21 @@ public class BookmarkService {
                     int numRatings = rs.getInt("countRatings");
 
                     Recipe recipe = new Recipe(
-                        rs.getString("recipeId"),
-                        rs.getString("recipeName"),
-                        rs.getString("description"),
-                        convertUTCtoEST(rs.getString("recipeCreateDate")),
-                        user,
-                        category,
-                        rs.getInt("prep_time"),
-                        rs.getInt("cook_time"),
-                        rs.getInt("servings"),
-                        rs.getString("cuisineId"),
-                        rs.getString("dietId"),
-                        rs.getString("cookingLevel"),
-                        new ArrayList<>(List.of(rs.getString("ingredients").split(","))),
-                        avgRating,
-                        numRatings
+                            rs.getString("recipeId"),
+                            rs.getString("recipeName"),
+                            rs.getString("description"),
+                            rs.getString("userId"),
+                            rs.getString(
+                                    "categoryId"),
+                            rs.getString("dietId"),
+                            rs.getInt("prep_time"),
+                            rs.getInt("cook_time"),
+                            rs.getInt("servings"),
+                            rs.getString("cookingLevel"),
+                            rs.getInt("cuisineId"),
+                            Arrays.asList(rs.getString("ingredients").split(","))
+                    // avgRating,
+                    // numRatings
                     );
                     recipes.add(recipe);
                     

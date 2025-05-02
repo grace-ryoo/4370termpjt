@@ -33,7 +33,7 @@ create table if not exists recipe (
     prep_time INT not null,
     cook_time INT not null,
     servings INT not null,
-    cuisineId VARCHAR(255) not null,
+    cuisineId INT not null,
     dietId INT not null,
     cookingLevel VARCHAR(255) not null,
     primary key (recipeId),

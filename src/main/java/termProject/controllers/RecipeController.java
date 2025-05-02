@@ -22,6 +22,7 @@ import termProject.services.ReviewService;
 import termProject.services.UserService;
 import termProject.services.CategoryService;
 import termProject.services.DietService;
+import termProject.services.CuisineService;
 
 @Controller
 @RequestMapping("/recipe")
@@ -31,18 +32,21 @@ public class RecipeController {
     private final UserService userService;
     private final CategoryService categoryService;
     private final DietService dietService;
+    private final CuisineService cuisineService;
 
     @Autowired
     public RecipeController(RecipeService recipeService,
             UserService userService,
             ReviewService reviewService,
             CategoryService categoryService,
-            DietService dietService) {
+            DietService dietService,
+            CuisineService cuisineService) {
         this.recipeService = recipeService;
         this.userService = userService;
         this.reviewService = reviewService;
         this.categoryService = categoryService;
         this.dietService = dietService;
+        this.cuisineService = cuisineService;
     }
 
     /**
@@ -86,11 +90,9 @@ public class RecipeController {
     public ModelAndView showRecipeForm() {
         ModelAndView mv = new ModelAndView("recipe_form");
 
-        // Add empty recipe object for the form
-        mv.addObject("recipe", new Recipe());
-        
         // Add required data for dropdowns
         mv.addObject("categories", categoryService.getAllCategories());
+        mv.addObject("cuisines", cuisineService.getAllCuisines()); // Add this line
         mv.addObject("diets", dietService.getAllDiets());
         if (userService.isAuthenticated()) {
             mv.addObject("username", userService.getLoggedInUser().getFirstName());
@@ -123,29 +125,28 @@ public class RecipeController {
     }
 
     @PostMapping("/create")
-    public String createRecipe(@RequestParam("recipeName") String recipeName,
+    public String createRecipe(
+            @RequestParam("recipeName") String recipeName,
             @RequestParam("description") String description,
             @RequestParam("categoryId") String categoryId,
             @RequestParam("prep_time") int prepTime,
             @RequestParam("cook_time") int cookTime,
             @RequestParam("servings") int servings,
             @RequestParam("ingredients[]") List<String> ingredients,
+            @RequestParam("amounts[]") List<String> amounts,
+            @RequestParam("units[]") List<String> units,
             @RequestParam("dietId") String dietId,
-            @RequestParam("cookingLevel") String cookingLevel) {
-
-        if (!userService.isAuthenticated()) {
-            return "redirect:/login";
-        }
+            @RequestParam("cookingLevel") String cookingLevel,
+            @RequestParam("cuisineId") int cuisineId) {
 
         try {
             String userId = userService.getLoggedInUser().getUserId();
             String recipeId = recipeService.createRecipe(recipeName, description, userId,
-                    ingredients, prepTime, cookTime, servings, categoryId, dietId, cookingLevel);
+                    ingredients, amounts, units, prepTime, cookTime, servings,
+                    categoryId, dietId, cookingLevel, cuisineId);
             return "redirect:/recipe/" + recipeId;
         } catch (Exception e) {
-            String message = URLEncoder.encode("Failed to create recipe: " + e.getMessage(),
-                    StandardCharsets.UTF_8);
-            return "redirect:/recipe/new?error=" + message;
+            return "redirect:/recipe/new?error=" + URLEncoder.encode(e.getMessage(), StandardCharsets.UTF_8);
         }
     }
 }

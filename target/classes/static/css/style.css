@@ -259,7 +259,26 @@ body {
 
 .ingredient-item {
     display: flex;
-    gap: 0.5rem;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.ingredient-item input {
+    padding: 0.5rem;
+}
+
+.ingredient-item input[name="ingredients[]"] {
+    flex: 2;
+}
+
+.ingredient-item input[name="amounts[]"] {
+    flex: 1;
+    max-width: 100px;
+}
+
+.ingredient-item input[name="units[]"] {
+    flex: 1;
+    max-width: 100px;
 }
 
 .btn-remove {

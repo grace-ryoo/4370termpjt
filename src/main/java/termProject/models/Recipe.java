@@ -12,6 +12,7 @@ public class Recipe {
     private int prepTime;
     private int cookTime;
     private int servings;
+    private int cuisineId;
     private String cookingLevel;
     private List<String> ingredients;
 
@@ -23,7 +24,7 @@ public class Recipe {
     public Recipe(String recipeId, String recipeName, String description,
             String userId, String categoryId, String dietId,
             int prepTime, int cookTime, int servings,
-            String cookingLevel, List<String> ingredients) {
+            String cookingLevel, int cuisineId, List<String> ingredients) {
         this.recipeId = recipeId;
         this.recipeName = recipeName;
         this.description = description;
@@ -34,6 +35,7 @@ public class Recipe {
         this.cookTime = cookTime;
         this.servings = servings;
         this.cookingLevel = cookingLevel;
+        this.cuisineId = cuisineId;
         this.ingredients = ingredients;
     }
 
@@ -116,6 +118,13 @@ public class Recipe {
 
     public void setCookingLevel(String cookingLevel) {
         this.cookingLevel = cookingLevel;
+    }
+
+    public int getCuisineId() {
+        return cuisineId;
+    }
+    public void setCuisineId(int cuisineId) {
+        this.cuisineId = cuisineId;
     }
 
     public List<String> getIngredients() {
