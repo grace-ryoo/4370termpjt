@@ -70,7 +70,8 @@ import java.util.List;
                              rs.getString("cookingLevel"),
                              rs.getInt("cuisineId"),
 
-                                Arrays.asList(rs.getString("ingredients").split(","))
+                                Arrays.asList(rs.getString("ingredients").split(",")),
+                                rs.getString("imageUrl")
                      // avgRating,
                      // numRatings
                      );

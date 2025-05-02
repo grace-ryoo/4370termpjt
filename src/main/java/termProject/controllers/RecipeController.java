@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import termProject.models.Review;
@@ -26,6 +27,7 @@ import termProject.services.UserService;
 import termProject.services.CategoryService;
 import termProject.services.DietService;
 import termProject.services.CuisineService;
+import termProject.services.FileStorageService;
 
 @Controller
 @RequestMapping("/recipe")
@@ -36,6 +38,7 @@ public class RecipeController {
     private final CategoryService categoryService;
     private final DietService dietService;
     private final CuisineService cuisineService;
+    private final FileStorageService fileStorageService;
 
     @Autowired
     public RecipeController(RecipeService recipeService,
@@ -43,13 +46,15 @@ public class RecipeController {
             ReviewService reviewService,
             CategoryService categoryService,
             DietService dietService,
-            CuisineService cuisineService) {
+            CuisineService cuisineService,
+            FileStorageService fileStorageService) {
         this.recipeService = recipeService;
         this.userService = userService;
         this.reviewService = reviewService;
         this.categoryService = categoryService;
         this.dietService = dietService;
         this.cuisineService = cuisineService;
+        this.fileStorageService = fileStorageService;
     }
 
     /**
@@ -158,16 +163,23 @@ public class RecipeController {
             @RequestParam("units[]") List<String> units,
             @RequestParam("dietId") String dietId,
             @RequestParam("cookingLevel") String cookingLevel,
-            @RequestParam("cuisineId") int cuisineId) {
+            @RequestParam("cuisineId") int cuisineId,
+            @RequestParam(value = "recipeImage", required = false) MultipartFile recipeImage) {
 
         try {
-            String userId = userService.getLoggedInUser().getUserId();
-            String recipeId = recipeService.createRecipe(recipeName, description, userId,
-                    ingredients, amounts, units, prepTime, cookTime, servings,
-                    categoryId, dietId, cookingLevel, cuisineId);
+            String imageUrl = null;
+            if (recipeImage != null && !recipeImage.isEmpty()) {
+                // Save the image and get its URL
+                imageUrl = fileStorageService.storeFile(recipeImage);
+            }
 
-            // Redirect to the recipes page after successful creation
-            return "redirect:/recipe/recipes";
+            // Create recipe with image URL
+            String recipeId = recipeService.createRecipe(
+                    recipeName, description, userService.getLoggedInUser().getUserId(),
+                    ingredients, amounts, units, prepTime, cookTime, servings,
+                    categoryId, dietId, cookingLevel, cuisineId, imageUrl);
+
+            return "redirect:/recipe/view/" + recipeId;
         } catch (Exception e) {
             return "redirect:/recipe/new?error=" + URLEncoder.encode(e.getMessage(), StandardCharsets.UTF_8);
         }
@@ -203,7 +215,7 @@ public class RecipeController {
                         dietMap.put("dietId", diet.getDietId());
                         dietMap.put("dietName", diet.getDietName());
                         dietMap.put("selected",
-                                dietId != null && diet.getDietId() == dietId);
+                                dietId != null && diet.getDietId() == (dietId));
                         return dietMap;
                     })
                     .collect(Collectors.toList());
@@ -230,6 +242,11 @@ public class RecipeController {
                     Map.of("value", "Intermediate", "name", "Intermediate", "selected",
                             "Intermediate".equals(cookingLevel)),
                     Map.of("value", "Advanced", "name", "Advanced", "selected", "Advanced".equals(cookingLevel))));
+
+            // Add cooking level flags
+            mv.addObject("isEasy", "easy".equals(cookingLevel));
+            mv.addObject("isMedium", "medium".equals(cookingLevel));
+            mv.addObject("isHard", "hard".equals(cookingLevel));
 
             if (userService.isAuthenticated()) {
                 mv.addObject("username", userService.getLoggedInUser().getFirstName());
