@@ -74,6 +74,7 @@ CREATE TABLE IF NOT EXISTS groceryList (
     userId INT NOT NULL,
     itemName VARCHAR(255) NOT NULL,
     itemQuantity INT NOT NULL,
+    isBought BOOLEAN default FALSE,
     PRIMARY KEY (itemId, userId),
     FOREIGN KEY (userId) REFERENCES user(userId)
 );

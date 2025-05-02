@@ -2,45 +2,62 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Recipe Share</title>
-    <link rel="stylesheet" href="/css/styles.css">
+    <title>Miso Hungry</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <!-- Welcome Section -->
-    <header class="welcome-section">
-        <h1>Hello, {{username}}</h1>
-        <p>Share and discover amazing recipes!</p>
-    </header>
+    {{> fragments/navbar}}
 
-    <!-- Recipe Categories -->
-    <section class="categories">
-        <h2>Recipe Categories</h2>
-        <div class="category-container">
-            {{#categories}}
-                <div class="category-card">
-                    <img src="{{imageUrl}}" alt="{{name}}">
-                    <h3>{{name}}</h3>
-                    <span class="recipe-count">{{recipeCount}} recipes</span>
-                </div>
-            {{/categories}}
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1>Hello, {{username}}</h1>
+        </div>
+        <div class="hero-image">
+            <!-- Add your hero image here -->
         </div>
     </section>
 
-    <!-- Trending Recipes -->
-    <section class="trending">
-        <h2>Trending Recipes</h2>
-        <div class="recipe-grid">
-            {{#trendingRecipes}}
-                <div class="recipe-card">
-                    <img src="{{imageUrl}}" alt="{{title}}">
-                    <h3>{{title}}</h3>
-                    <div class="recipe-info">
-                        <span>By {{author}}</span>
-                        <span>{{likes}} likes</span>
-                    </div>
-                </div>
-            {{/trendingRecipes}}
-        </div>
-    </section>
+    <h1>Your Grocery List</h1>
+
+  {{#errorMessage}}
+    <p class="error">{{errorMessage}}</p>
+  {{/errorMessage}}
+
+  {{#isNoContent}}
+    <p class="empty">You have no items in your grocery list.</p>
+  {{/isNoContent}}
+
+  {{^isNoContent}}
+    <ul>
+      {{#items}}
+        <li>
+          <span class="item-name">{{name}} {{quantity}}</span>
+          <div class="actions">
+            <form method="POST" action="/groceryList/delete" style="display:inline;">
+              <input type="hidden" name="itemId" value="{{itemId}}" />
+              <button type="submit">Delete</button>
+            </form>
+            <form method="POST" action="/groceryList/mark" style="display:inline;">
+              <input type="hidden" name="itemId" value="{{itemId}}" />
+                <label>
+                    <input type="checkbox" name="isBought" onchange="this.form.submit()" {{#isBought}}checked{{/isBought}}>
+                    Bought
+                 </label>
+            </form>
+          </div>
+        </li>
+      {{/items}}
+    </ul>
+  {{/isNoContent}}
+
+  <h2>Add a new item</h2>
+  <form method="POST" action="/groceryList/add">
+  <input type="text" name="itemName" placeholder="e.g. Eggs" required />
+  <input type="number" name="itemQuantity" min="1" value="1" required />
+  <button type="submit">Add</button>
+  </form>
+
+  
 </body>
 </html>
