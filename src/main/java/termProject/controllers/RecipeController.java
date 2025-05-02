@@ -177,7 +177,7 @@ public class RecipeController {
             String recipeId = recipeService.createRecipe(
                     recipeName, description, userService.getLoggedInUser().getUserId(),
                     ingredients, amounts, units, prepTime, cookTime, servings,
-                    categoryId, dietId, cookingLevel, cuisineId);
+                    categoryId, dietId, cookingLevel, cuisineId, imageUrl);
 
             return "redirect:/recipe/view/" + recipeId;
         } catch (Exception e) {

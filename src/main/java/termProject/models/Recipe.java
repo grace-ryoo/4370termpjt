@@ -15,6 +15,9 @@ public class Recipe {
     private int cuisineId;
     private String cookingLevel;
     private List<String> ingredients;
+    private String imageUrl;
+    private String stars;
+    private int ratingCount;
 
     // Default constructor needed for form binding
     public Recipe() {
@@ -24,7 +27,8 @@ public class Recipe {
     public Recipe(String recipeId, String recipeName, String description,
             String userId, String categoryId, String dietId,
             int prepTime, int cookTime, int servings,
-            String cookingLevel, int cuisineId, List<String> ingredients) {
+            String cookingLevel, int cuisineId, List<String> ingredients,
+            String imageUrl) {
         this.recipeId = recipeId;
         this.recipeName = recipeName;
         this.description = description;
@@ -37,6 +41,7 @@ public class Recipe {
         this.cookingLevel = cookingLevel;
         this.cuisineId = cuisineId;
         this.ingredients = ingredients;
+        this.imageUrl = imageUrl;
     }
 
     // Getters and Setters
@@ -123,6 +128,7 @@ public class Recipe {
     public int getCuisineId() {
         return cuisineId;
     }
+
     public void setCuisineId(int cuisineId) {
         this.cuisineId = cuisineId;
     }
@@ -133,5 +139,29 @@ public class Recipe {
 
     public void setIngredients(List<String> ingredients) {
         this.ingredients = ingredients;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public String getStars() {
+        return stars;
+    }
+
+    public void setStars(String stars) {
+        this.stars = stars;
+    }
+
+    public int getRatingCount() {
+        return ratingCount;
+    }
+
+    public void setRatingCount(int ratingCount) {
+        this.ratingCount = ratingCount;
     }
 }

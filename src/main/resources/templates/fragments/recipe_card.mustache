@@ -2,10 +2,7 @@
     <div class="recipe-card">
         <div class="recipe-image">
             {{#imageUrl}}
-                <img src="{{imageUrl}}" alt="{{recipeName}}">
-            {{/imageUrl}}
-            {{^imageUrl}}
-                <img src="{{category.categoryImageUrl}}" alt="{{category.categoryName}}">
+                <img src="{{imageUrl}}" alt="{{recipeName}}" class="recipe-img">
             {{/imageUrl}}
         </div>
         <div class="recipe-details">
@@ -15,7 +12,10 @@
                 <span class="meta-divider">•</span>
                 <span class="prep-time">{{prepTime}} min prep</span>
             </p>
-            <!-- ...rest of the recipe card... -->
+            <div class="recipe-rating">
+                <span class="stars">{{stars}}</span>
+                <span class="rating-count">({{ratingCount}})</span>
+            </div>
         </div>
     </div>
 </a>

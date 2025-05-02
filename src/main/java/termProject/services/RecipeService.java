@@ -82,7 +82,9 @@ public class RecipeService {
             String category,
             String dietId,
             String cookLevel,
-            int cuisineId) {
+            int cuisineId,
+            String imageUrl) {
+
         if (userId == null || userId.isEmpty()) {
             return "-1";
         }
@@ -91,7 +93,9 @@ public class RecipeService {
             return "-1";
         }
 
-        final String sql = "INSERT INTO recipe (recipeName, description, userId, prep_time, cook_time, servings, categoryId, dietId, cookingLevel, cuisineId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        final String sql = "INSERT INTO recipe (recipeName, description, userId, prep_time, cook_time, " +
+                "servings, categoryId, dietId, cookingLevel, cuisineId, imageUrl) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = dataSource.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
@@ -105,6 +109,7 @@ public class RecipeService {
             pstmt.setString(8, dietId);
             pstmt.setString(9, cookLevel);
             pstmt.setInt(10, cuisineId);
+            pstmt.setString(11, imageUrl);
 
             int rowsAffected = pstmt.executeUpdate();
 
@@ -183,7 +188,8 @@ public class RecipeService {
                         rs.getInt("servings"),
                         rs.getString("cookingLevel"),
                         rs.getInt("cuisineId"),
-                        getIngredientsForRecipe(recipeId));
+                        getIngredientsForRecipe(recipeId),
+                        rs.getString("imageUrl"));
             }
         } catch (SQLException e) {
             throw new RuntimeException("Error fetching recipes by ID", e);
@@ -207,28 +213,42 @@ public class RecipeService {
         String recipeId = rs.getString("recipeId");
         List<String> ingredients = getIngredientsForRecipe(recipeId);
 
-        int avgRating = (int) Math.round(rs.getDouble("averageRating"));
-        int numRatings = rs.getInt("countRatings");
-
-        return new Recipe(
+        Recipe recipe = new Recipe(
                 recipeId,
                 rs.getString("recipeName"),
                 rs.getString("description"),
                 rs.getString("userId"),
-                rs.getString(
-                        "categoryId"),
+                rs.getString("categoryId"),
                 rs.getString("dietId"),
                 rs.getInt("prep_time"),
                 rs.getInt("cook_time"),
                 rs.getInt("servings"),
                 rs.getString("cookingLevel"),
-
                 rs.getInt("cuisineId"),
+                ingredients,
+                rs.getString("imageUrl"));
 
-                ingredients
-        // avgRating,
-        // numRatings
-        );
+        // Set image URL
+        String imageUrl = rs.getString("imageUrl");
+        if (imageUrl != null && !imageUrl.startsWith("/uploads/")) {
+            imageUrl = "/uploads/" + imageUrl;
+        }
+        recipe.setImageUrl(imageUrl);
+
+        // Set rating information
+        int avgRating = (int) Math.round(rs.getDouble("averageRating"));
+        int ratingCount = rs.getInt("countRatings");
+
+        // Create star display (★ for filled stars)
+        StringBuilder stars = new StringBuilder();
+        for (int i = 0; i < 5; i++) {
+            stars.append(i < avgRating ? "★" : "☆");
+        }
+
+        recipe.setStars(stars.toString());
+        recipe.setRatingCount(ratingCount);
+
+        return recipe;
     }
 
     private List<String> getIngredientsForRecipe(String recipeId) throws SQLException {
