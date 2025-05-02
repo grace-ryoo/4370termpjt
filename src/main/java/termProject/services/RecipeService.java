@@ -145,55 +145,39 @@ public class RecipeService {
     }
 
     public Recipe getRecipeById(String recipeId, String userId) {
-        Recipe recipe = null;
-
-        String sql = "SELECT r.*, u.userId, u.firstName, u.lastName, c.categoryId, c.categoryName, c.categoryImageUrl, "
-                + "COALESCE(AVG(rt.stars), 0) AS averageRating, "
-                + "COUNT(rt.userId) AS countRatings "
-                + "FROM recipe r "
-                + "JOIN user u ON r.userId = u.userId "
-                + "JOIN category c ON r.categoryId = c.categoryId "
-                + "LEFT JOIN rating rt ON r.recipeId = rt.recipeId "
-                + "WHERE r.recipeId = ? "
-                + "GROUP BY r.recipeId, u.userId, c.categoryId";
+        final String sql = "SELECT r.*, u.*, c.*, " +
+                "COALESCE(AVG(rt.stars), 0) as averageRating, " +
+                "COUNT(rt.userId) as countRatings " +
+                "FROM recipe r " +
+                "JOIN user u ON r.userId = u.userId " +
+                "JOIN category c ON r.categoryId = c.categoryId " +
+                "LEFT JOIN rating rt ON r.recipeId = rt.recipeId " +
+                "WHERE r.recipeId = ? " +
+                "GROUP BY r.recipeId, u.userId, c.categoryId";
 
         try (Connection conn = dataSource.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql)) {
+
             stmt.setString(1, recipeId);
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                User user = new User(
-                        rs.getString("userId"),
-                        null,
-                        rs.getString("firstName"),
-                        rs.getString("lastName"));
+                Recipe recipe = mapRecipeFromResultSet(rs);
+                recipe.setIngredients(getIngredientsForRecipe(recipeId));
 
-                Category category = new Category(
-                        rs.getString("categoryId"),
-                        rs.getString("categoryName"),
-                        rs.getString("categoryImageUrl"));
+                // Debug output
+                System.out.println("Recipe ID: " + recipe.getRecipeId());
+                System.out.println("Recipe Name: " + recipe.getRecipeName());
+                System.out.println("Stars: " + recipe.getStars());
+                System.out.println("Rating Count: " + recipe.getRatingCount());
 
-                recipe = new Recipe(
-                        recipeId,
-                        rs.getString("recipeName"),
-                        rs.getString("description"),
-                        rs.getString("userId"),
-                        rs.getString("categoryId"),
-                        rs.getString("dietId"),
-                        rs.getInt("prep_time"),
-                        rs.getInt("cook_time"),
-                        rs.getInt("servings"),
-                        rs.getString("cookingLevel"),
-                        rs.getInt("cuisineId"),
-                        getIngredientsForRecipe(recipeId),
-                        rs.getString("imageUrl"));
+                return recipe;
             }
+            return null;
         } catch (SQLException e) {
-            throw new RuntimeException("Error fetching recipes by ID", e);
+            e.printStackTrace();
+            throw new RuntimeException("Error fetching recipe: ", e);
         }
-
-        return recipe;
     }
 
     private Recipe mapRecipeFromResultSet(ResultSet rs) throws SQLException {
@@ -233,18 +217,15 @@ public class RecipeService {
         }
         recipe.setImageUrl(imageUrl);
 
-        // Set rating information
-        int avgRating = (int) Math.round(rs.getDouble("averageRating"));
-        int ratingCount = rs.getInt("countRatings");
-
-        // Create star display (★ for filled stars)
+        // Calculate and set the star rating properties
+        double avgRating = rs.getDouble("averageRating");
         StringBuilder stars = new StringBuilder();
+        int filledStars = (int) Math.round(avgRating);
         for (int i = 0; i < 5; i++) {
-            stars.append(i < avgRating ? "★" : "☆");
+            stars.append(i < filledStars ? "★" : "☆");
         }
-
-        recipe.setStars(stars.toString());
-        recipe.setRatingCount(ratingCount);
+        recipe.setProperty("stars", stars.toString());
+        recipe.setProperty("ratingCount", String.valueOf(rs.getInt("countRatings")));
 
         return recipe;
     }
@@ -259,10 +240,10 @@ public class RecipeService {
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                String ingredient = String.format("%s %s %s", 
-                    rs.getString("ingredientAmount"),
-                    rs.getString("ingredientUnit"),
-                    rs.getString("ingredientName"));
+                String ingredient = String.format("%s %s %s",
+                        rs.getString("ingredientAmount"),
+                        rs.getString("ingredientUnit"),
+                        rs.getString("ingredientName"));
                 ingredients.add(ingredient);
             }
         }
@@ -278,17 +259,35 @@ public class RecipeService {
         return estZoned.format(outputFormatter);
     }
 
-    public void addRating(String userId, String recipeId) {
-        final String sql = "INSERT INTO rating (userId, postId) VALUES (?, ?)";
-        try (Connection conn = dataSource.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
+    public void addRating(String userId, String recipeId, int stars) {
+        final String sql = "INSERT INTO rating (userId, recipeId, stars) VALUES (?, ?, ?) " +
+                "ON DUPLICATE KEY UPDATE stars = ?";
+        try (Connection conn = dataSource.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, userId);
             pstmt.setString(2, recipeId);
+            pstmt.setInt(3, stars);
+            pstmt.setInt(4, stars); // For update case
             pstmt.executeUpdate();
-            System.out.println("Success: rated recipe");
-
+            System.out.println("Success: rated recipe with " + stars + " stars");
         } catch (SQLException e) {
             throw new RuntimeException("Error rating recipe: ", e);
+        }
+    }
+
+    public Integer getUserRating(String userId, String recipeId) {
+        final String sql = "SELECT stars FROM rating WHERE userId = ? AND recipeId = ?";
+        try (Connection conn = dataSource.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, userId);
+            pstmt.setString(2, recipeId);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("stars");
+            }
+            return null;
+        } catch (SQLException e) {
+            throw new RuntimeException("Error getting user rating: ", e);
         }
     }
 
@@ -304,6 +303,22 @@ public class RecipeService {
 
         } catch (SQLException e) {
             throw new RuntimeException("Error undoing recipe: ", e);
+        }
+    }
+
+    public boolean hasUserRated(String userId, String recipeId) {
+        final String sql = "SELECT COUNT(*) FROM rating WHERE userId = ? AND recipeId = ?";
+        try (Connection conn = dataSource.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, userId);
+            pstmt.setString(2, recipeId);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+            return false;
+        } catch (SQLException e) {
+            throw new RuntimeException("Error checking user rating: ", e);
         }
     }
 

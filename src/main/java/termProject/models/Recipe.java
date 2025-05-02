@@ -1,6 +1,8 @@
 package termProject.models;
 
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 public class Recipe {
     private String recipeId;
@@ -16,8 +18,7 @@ public class Recipe {
     private String cookingLevel;
     private List<String> ingredients;
     private String imageUrl;
-    private String stars;
-    private int ratingCount;
+    private Map<String, String> properties = new HashMap<>();
 
     // Default constructor needed for form binding
     public Recipe() {
@@ -149,19 +150,15 @@ public class Recipe {
         this.imageUrl = imageUrl;
     }
 
+    public void setProperty(String key, String value) {
+        properties.put(key, value);
+    }
+
     public String getStars() {
-        return stars;
+        return properties.get("stars");
     }
 
-    public void setStars(String stars) {
-        this.stars = stars;
-    }
-
-    public int getRatingCount() {
-        return ratingCount;
-    }
-
-    public void setRatingCount(int ratingCount) {
-        this.ratingCount = ratingCount;
+    public String getRatingCount() {
+        return properties.get("ratingCount");
     }
 }
