@@ -683,6 +683,10 @@ body {
 }
 .no-recipes {
     text-align: center;
+    color: #666;
+    font-style: italic;
+    grid-column: 1 / -1;
+    padding: 2rem;
 }
 .explore-link {
     text-align: center;
