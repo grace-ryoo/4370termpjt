@@ -39,7 +39,10 @@ public class RecipeService {
     }
 
     public void bookmark(String userId, String recipeId, String bookmark_type) {
-        final String sql = "INSERT INTO bookmark (userId, recipeId, bookmark_type) VALUES (?, ?, ?)";
+        final String sql = "INSERT INTO bookmark (userId, recipeId, bookmark_type) " +
+            "VALUES (?, ?, ?) " +
+            "ON DUPLICATE KEY UPDATE bookmark_type = VALUES(bookmark_type)";
+
         try (Connection conn = dataSource.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, userId);
             pstmt.setString(2, recipeId);
@@ -51,12 +54,11 @@ public class RecipeService {
         }
     }
 
-    public void unBookmark(String userId, String recipeId, String bookmark_type) {
-        final String sql = "DELETE from bookmark WHERE userId = ? AND recipeId = ? AND bookmark_type = ?";
+    public void unBookmark(String userId, String recipeId) {
+        final String sql = "DELETE from bookmark WHERE userId = ? AND recipeId = ?";
         try (Connection conn = dataSource.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, userId);
             pstmt.setString(2, recipeId);
-            pstmt.setString(3, bookmark_type);
             pstmt.executeUpdate();
             System.out.println("Success: unbookmarked recipe");
         } catch (SQLException e) {
@@ -68,10 +70,11 @@ public class RecipeService {
      * NEED UPDATE
      */
     /**
-     * public void addReview() {
+     * public void addReview()
      *
-     * *}
+     *
      */
+    
     public String createRecipe(String recipeName,
             String description,
             String userId,

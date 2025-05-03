@@ -113,7 +113,7 @@ public class RecipeController {
             if (isAdd) {
                 recipeService.bookmark(currUserId, recipeId, bookmarkType);
             } else {
-                recipeService.unBookmark(currUserId, recipeId, bookmarkType);
+                recipeService.unBookmark(currUserId, recipeId);
             }
             // Update this line to use the correct view path
             return "redirect:/recipe/view/" + recipeId;
