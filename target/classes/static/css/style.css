@@ -784,12 +784,46 @@ body {
     transform: scale(1.1);
 }
 
-
-
 .bookmark-btn:hover::after {
     opacity: 1;
 }
 
+/* Detail page bookmark buttons */
+.detail-bookmark-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin: 1rem 0;
+    gap: 1.5rem;
+}
+
+.detail-bookmark-buttons form {
+    margin: 0;
+}
+
+.detail-bookmark-buttons .bookmark-btn {
+    font-size: 24px;
+    width: 50px;
+    height: 50px;
+}
+
+.bookmark-labels {
+    display: flex;
+    gap: 2rem;
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.past-label {
+    color: #90af7b;
+    font-weight: 500;
+}
+
+.future-label {
+    color: #f1e5a6;
+    font-weight: 500;
+}
 
 /* Recipe Rating Section */
 .recipe-rating-section {
