@@ -22,17 +22,13 @@ public class Review {
     /**
      * Date when the review was created.
      */
-    private final String reviewCreateDate;
+    private final String reviewDate;
 
     /**
      * User who created the review.
      */
     private final User user;
 
-    /**
-     * Rating of the review.
-     */
-    private final int rating;
 
 
     /**
@@ -41,17 +37,15 @@ public class Review {
      * @param reviewId the unique identifier of the review
      * @param recipeId the unique identifier of the recipe that is being reviewed
      * @param comment the text content of the review
-     * @param reviewCreateDate the creation date of the review
+     * @param reviewDate the creation date of the review
      * @param user the user who created the review
-     * @param rating the rating of the review
      */
-    public Review(String reviewId, String recipeId, String comment, String reviewCreateDate, User user, int rating) {
+    public Review(String reviewId, String recipeId, String comment, String reviewDate, User user) {
         this.reviewId = reviewId;
         this.recipeId = recipeId;
         this.comment = comment;
-        this.reviewCreateDate = reviewCreateDate;
+        this.reviewDate = reviewDate;
         this.user = user;
-        this.rating = rating;
     }
 
     /**
@@ -86,8 +80,8 @@ public class Review {
      *
      * @return the recipe creation date
      */
-    public String getReviewCreateDate() {
-        return reviewCreateDate;
+    public String getReviewDate() {
+        return reviewDate;
     }
 
     /**
@@ -99,12 +93,4 @@ public class Review {
         return user;
     }
 
-    /**
-     * Returns the rating of the review.
-     *
-     * @return the rating of the review
-     */
-    public int getRating() {
-        return rating;
-    }
 }

@@ -29,7 +29,7 @@ public class GroceryListService {
     public List<GroceryItem> getGroceryList(String userId) {
         List<GroceryItem> items = new ArrayList<>();
 
-        final String sql = "SELECT itemId, itemName, itemQuantity FROM groceryList WHERE userId = ?";
+        final String sql = "SELECT itemId, itemName, itemQuantity, isBought FROM groceryList WHERE userId = ?";
         try (Connection conn = dataSource.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, userId);
@@ -38,9 +38,11 @@ public class GroceryListService {
                     int itemId = rs.getInt("itemId");
                     String itemName = rs.getString("itemName");
                     int itemQuantity = rs.getInt("itemQuantity");
+                    boolean isBought = rs.getBoolean("isBought");
 
                     User user = new User(userId, "", "", ""); // Assuming firstName and lastName are not needed here
                     GroceryItem item = new GroceryItem(itemId, itemName, itemQuantity, user);
+                    item.setIsBought(isBought);
                     items.add(item);
                 }
             }
@@ -67,7 +69,7 @@ public class GroceryListService {
         }
     }
 
-    public void removeGroceryItem(String userId, int itemId) {
+    public void deleteGroceryItem(String userId, int itemId) {
         final String sql = "DELETE FROM groceryList WHERE userId = ? AND itemId = ?";
 
         try (Connection conn = dataSource.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -84,5 +86,29 @@ public class GroceryListService {
         return (int) (System.currentTimeMillis() % Integer.MAX_VALUE);
     }
 
-}
+    public void markItemAsBought(String userId, int itemId) {
+        final String sql = "UPDATE groceryList SET isBought = TRUE WHERE userId = ? AND itemId = ?";
 
+        try (Connection conn = dataSource.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, userId);
+            pstmt.setInt(2, itemId);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Error marking grocery item as bought", e);
+        }
+    }
+
+    public void setItemBoughtStatus(String userId, int itemId, boolean isBought) {
+        final String sql = "UPDATE groceryList SET isBought = ? WHERE userId = ? AND itemId = ?";
+
+        try (Connection conn = dataSource.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setBoolean(1, isBought);
+            pstmt.setString(2, userId);
+            pstmt.setInt(3, itemId);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Error updating bought status", e);
+        }
+    }
+
+}

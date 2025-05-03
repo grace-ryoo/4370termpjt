@@ -36,7 +36,7 @@ create table if not exists recipe (
     cuisineId INT not null,
     dietId INT not null,
     cookingLevel VARCHAR(255) not null,
-    imageUrl VARCHAR(255) not null,
+    imageUrl VARCHAR(255) DEFAULT '/uploads/default.png',
     primary key (recipeId),
     FOREIGN KEY (userId) REFERENCES user(userId),
     FOREIGN KEY (categoryId) REFERENCES category(categoryId),
@@ -75,6 +75,7 @@ CREATE TABLE IF NOT EXISTS groceryList (
     userId INT NOT NULL,
     itemName VARCHAR(255) NOT NULL,
     itemQuantity INT NOT NULL,
+    isBought BOOLEAN default FALSE,
     PRIMARY KEY (itemId, userId),
     FOREIGN KEY (userId) REFERENCES user(userId)
 );
@@ -92,4 +93,14 @@ CREATE TABLE IF NOT EXISTS cuisine (
     cuisineDescription VARCHAR(255)
 );
 
+create table if not exists review (
+    reviewId INT NOT NULL auto_increment,
+    recipeId INT NOT NULL,
+    userId INT NOT NULL,
+    reviewText VARCHAR(1000) NOT NULL,
+    reviewDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (reviewId),
+    FOREIGN KEY (recipeId) REFERENCES recipe(recipeId) ON DELETE CASCADE,
+    FOREIGN KEY (userId) REFERENCES user(userId) ON DELETE CASCADE
+);
 

@@ -54,36 +54,6 @@ public class RecipeController {
         this.fileStorageService = fileStorageService;
     }
 
-    /**
-     * This function handles the /recipe/{recipeId} URL. This handlers serves the
-     * web page for a specific recipe. Note there is a path variable {recipeId}. An
-     * example URL handled by this function looks like below:
-     * http://localhost:8081/recipe/1 The above URL assigns 1 to recipeId.
-     *
-     * See notes from HomeController.java regardig error URL parameter.
-     */
-    @GetMapping("/{recipeId}")
-    public ModelAndView showRecipe(@PathVariable String recipeId) {
-        ModelAndView mv = new ModelAndView("recipe_detail");
-        try {
-            String userId = userService.isAuthenticated() ? userService.getLoggedInUser().getUserId() : null;
-            Recipe recipe = recipeService.getRecipeById(recipeId, userId);
-
-            if (recipe == null) {
-                return new ModelAndView("redirect:/recipe/recipes");
-            }
-            System.out.println("DEBUG: Found recipe with ID " + recipeId); // Debug log
-            mv.addObject("recipe", recipe);
-            if (userService.isAuthenticated()) {
-                mv.addObject("username", userService.getLoggedInUser().getFirstName());
-            }
-            return mv;
-
-        } catch (Exception e) {
-            return new ModelAndView("redirect:/recipe/recipes");
-        }
-    }
-
     @GetMapping("/view/{recipeId}")
     public ModelAndView viewRecipe(@PathVariable String recipeId) {
         ModelAndView mv = new ModelAndView("recipe_detail");
@@ -96,16 +66,22 @@ public class RecipeController {
             }
 
             mv.addObject("recipe", recipe);
+            mv.addObject("stars", List.of(5, 4, 3, 2, 1));
 
-            if (userService.isAuthenticated()) {
+            if (userId != null) {
                 mv.addObject("username", userService.getLoggedInUser().getFirstName());
+                mv.addObject("hasRated", recipeService.hasUserRated(userId, recipeId));
+                mv.addObject("userRating", recipeService.getUserRating(userId, recipeId));
             }
+
+            // Add reviews to the model
+            mv.addObject("reviews", reviewService.getReviewsForRecipe(recipeId));
 
             return mv;
         } catch (Exception e) {
-            System.err.println("Error viewing recipe: " + e.getMessage());
             e.printStackTrace();
-            return new ModelAndView("redirect:/recipes?error=Error viewing recipe");
+            return new ModelAndView("redirect:/recipes?error=" +
+                    URLEncoder.encode("Error viewing recipe: " + e.getMessage(), StandardCharsets.UTF_8));
         }
     }
 
@@ -139,11 +115,47 @@ public class RecipeController {
             } else {
                 recipeService.unBookmark(currUserId, recipeId);
             }
-            return "redirect:/recipe/" + recipeId;
+            // Update this line to use the correct view path
+            return "redirect:/recipe/view/" + recipeId;
         } catch (Exception e) {
             String message = URLEncoder.encode("Failed to update bookmark: " + e.getMessage(),
                     StandardCharsets.UTF_8);
-            return "redirect:/recipe/" + recipeId + "?error=" + message;
+            // Update this line to use the correct view path
+            return "redirect:/recipe/view/" + recipeId + "?error=" + message;
+        }
+    }
+
+    @PostMapping("/{recipeId}/rate")
+    public String rateRecipe(@PathVariable String recipeId, @RequestParam int rating) {
+        try {
+            if (!userService.isAuthenticated()) {
+                return "redirect:/login";
+            }
+
+            String userId = userService.getLoggedInUser().getUserId();
+            recipeService.addRating(userId, recipeId, rating);
+
+            return "redirect:/recipe/view/" + recipeId;
+        } catch (Exception e) {
+            return "redirect:/recipe/view/" + recipeId + "?error=" +
+                    URLEncoder.encode("Failed to rate recipe: " + e.getMessage(), StandardCharsets.UTF_8);
+        }
+    }
+
+    @PostMapping("/{recipeId}/review")
+    public String addReview(@PathVariable String recipeId, @RequestParam String comment) {
+        try {
+            if (!userService.isAuthenticated()) {
+                return "redirect:/login";
+            }
+
+            String userId = userService.getLoggedInUser().getUserId();
+            reviewService.addReview(userId, recipeId, comment);
+
+            return "redirect:/recipe/view/" + recipeId;
+        } catch (Exception e) {
+            return "redirect:/recipe/view/" + recipeId + "?error=" +
+                    URLEncoder.encode("Failed to add review: " + e.getMessage(), StandardCharsets.UTF_8);
         }
     }
 
@@ -257,4 +269,5 @@ public class RecipeController {
             return mv;
         }
     }
+
 }
