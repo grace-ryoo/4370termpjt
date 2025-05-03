@@ -16,23 +16,9 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
-document.querySelectorAll('.bookmark-btn').forEach(button => {
-    button.addEventListener('click', () => {
-        const currentStatus = parseInt(button.getAttribute('data-bookmark-status'));
-        
-        // Cycle through bookmark options
-        if (currentStatus === 1) {
-            button.textContent = "&#9733; Bookmarked (Option 1)";
-            button.setAttribute('data-bookmark-status', '2');
-        } else if (currentStatus === 2) {
-            button.textContent = "&#9734; Unbookmarked";
-            button.setAttribute('data-bookmark-status', '3');
-        } else {
-            button.textContent = "&#9734; Bookmark";
-            button.setAttribute('data-bookmark-status', '1');
-        }
-    });
-});
+
+
+
 
 // Rating functionality (basic)
 document.querySelectorAll('.rating-stars button').forEach(star => {
