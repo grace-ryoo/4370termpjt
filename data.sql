@@ -840,7 +840,10 @@ INSERT INTO recipe (recipeName, description, userId, prep_time, cook_time, servi
 ('Clam Chowder', 'Boil water. Cook pasta or rice. Sauté vegetables or meat. Mix all together with sauce. Garnish and serve.', 5, 21, 14, 5, 4, 7, 'Hard', 8),
 ('Baked Ziti', 'Beat eggs or mix batter. Pour onto hot pan. Flip or bake as needed. Add fillings if required. Serve warm.', 4, 30, 41, 5, 1, 9, 'Intermediate', 6),
 ('Cornbread', 'Soak grains or legumes if needed. Cook thoroughly. Prepare accompaniments. Mix and garnish with herbs.', 7, 13, 10, 5, 3, 9, 'Hard', 11),
-('Egg Fried Rice', 'Season the main ingredient with salt and pepper. Heat oil in a pan. Cook until golden brown. Add sauce and simmer. Serve with sides.', 1, 9, 31, 3, 1, 8, 'Easy', 8),
+('Egg Fried Rice', 'Season the main ingredient with salt and pepper. Heat oil in a pan. Cook until golden brown. Add sauce and simmer. Serve with sides.', 1, 9, 31, 3, 1, 8, 'Easy', 8);
+
+/* categoryID is not within 1-4 
+INSERT INTO recipe (recipeName, description, userId, prep_time, cook_time, servings, categoryId, dietId, cookingLevel, cuisineId) VALUES
 ('Lemon Garlic Salmon', 'Beat eggs or mix batter. Pour onto hot pan. Flip or bake as needed. Add fillings if required. Serve warm.', 2, 8, 19, 4, 3, 8, 'Intermediate', 10),
 ('Margherita Pizza', 'Roll out dough, spread tomato sauce, top with mozzarella and basil. Bake until golden.', 3, 15, 20, 4, 4, 1, 'Intermediate', 1),
 ('General Tso’s Chicken', 'Batter chicken, fry until crispy. Toss in sauce made with soy, vinegar, and sugar.', 5, 25, 20, 3, 4, 9, 'Advanced', 2),
@@ -1043,6 +1046,4 @@ INSERT INTO recipe (recipeName, description, userId, prep_time, cook_time, servi
 ('Marmite on Toast', 'Spread Marmite on buttered toast.', 4, 5, 0, 1, 3, 9, 'Easy', 15),
 ('Gochujang Pasta', 'Boil rigatoni pasta in water. Mix heavy cream, cheese, gochujang, and milk in a pan. Stir-in pasta and serve.', 4, 5, 0, 1, 3, 9, 'Easy', 10),
 ('Beef and Onion Pie', 'Bake pastry filled with beef and onion.', 5, 20, 50, 4, 3, 9, 'Intermediate', 15);
-
-
-
+*/
