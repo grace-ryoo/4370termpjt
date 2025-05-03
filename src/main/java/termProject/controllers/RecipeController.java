@@ -137,7 +137,7 @@ public class RecipeController {
             if (isAdd) {
                 recipeService.bookmark(currUserId, recipeId, bookmarkType);
             } else {
-                recipeService.unBookmark(currUserId, recipeId, bookmarkType);
+                recipeService.unBookmark(currUserId, recipeId);
             }
             return "redirect:/recipe/" + recipeId;
         } catch (Exception e) {

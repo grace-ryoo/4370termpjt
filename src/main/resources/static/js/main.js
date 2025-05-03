@@ -18,21 +18,69 @@ document.addEventListener('DOMContentLoaded', function () {
 
 document.querySelectorAll('.bookmark-btn').forEach(button => {
     button.addEventListener('click', () => {
-        const currentStatus = parseInt(button.getAttribute('data-bookmark-status'));
+        let recipeId = button.getAttribute('data-recipe-id');
+        let currentStatus = parseInt(button.getAttribute('data-bookmark-status'));
         
-        // Cycle through bookmark options
-        if (currentStatus === 1) {
-            button.textContent = "&#9733; Bookmarked (Option 1)";
-            button.setAttribute('data-bookmark-status', '2');
-        } else if (currentStatus === 2) {
-            button.textContent = "&#9734; Unbookmarked";
-            button.setAttribute('data-bookmark-status', '3');
-        } else {
-            button.textContent = "&#9734; Bookmark";
-            button.setAttribute('data-bookmark-status', '1');
+        let newStatus;
+        let newType;
+
+        // Cycle through: 0 -> 1 -> 2 -> 0
+        if (currentStatus === 0) {
+            newStatus = 1;  // PAST
+            newType = 'PAST';
+        } else if (currentStatus === 1) {
+            newStatus = 2;  // FUTURE
+            newType = 'FUTURE';
+        } else if (currentStatus === 3) {
+            newStatus = 0;  // UNBOOKMARK
+            newType = null; // No type needed for unbookmark
         }
+
+        // Build the correct URL for your backend
+        let url;
+        if (newStatus === 0) {
+            // Unbookmark request
+            url = `/recipe/${recipeId}/bookmark/false`;
+        } else {
+            // Bookmark request
+            url = `/recipe/${recipeId}/bookmark/true/${newType}`;
+        }
+
+        // Send AJAX request
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                // Update button classes based on new state
+                button.classList.remove('past-bookmark', 'future-bookmark', 'not-bookmarked');
+                button.classList.remove('fa-solid', 'fa-regular');
+
+                if (newStatus === 1) {
+                    button.classList.add('past-bookmark', 'fa-solid');
+                } else if (newStatus === 2) {
+                    button.classList.add('future-bookmark', 'fa-solid');
+                } else if (newStatus === 0) {
+                    button.classList.add('not-bookmarked', 'fa-regular');
+                }
+
+                // Update the data attribute counter
+                button.setAttribute('data-bookmark-status', newStatus);
+            } else {
+                console.error('Error toggling bookmark');
+            }
+        })
+        .catch(error => {
+            console.error('Request failed', error);
+        });
     });
 });
+
+
+
 
 // Rating functionality (basic)
 document.querySelectorAll('.rating-stars button').forEach(star => {

@@ -45,7 +45,7 @@ public class ProfileService {
                 "GROUP BY r.recipeId ";
     
         try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
     
             stmt.setString(1, userId);
             ResultSet rs = stmt.executeQuery();

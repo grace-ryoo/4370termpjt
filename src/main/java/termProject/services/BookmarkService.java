@@ -9,7 +9,6 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -17,9 +16,7 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import termProject.models.Category;
 import termProject.models.Recipe;
-import termProject.models.User;
 
 @Service
 public class BookmarkService {
@@ -53,48 +50,11 @@ public class BookmarkService {
             pstmt.setString(1, userId); 
             pstmt.setString(2, type); 
 
-            try (ResultSet rs = pstmt.executeQuery()) {
-                while (rs.next()) {
-                    User user = new User(
-                        rs.getString("userId"), 
-                        rs.getString("username"), 
-                        rs.getString("firstName"),
-                        rs.getString("lastName")
-                    );
-
-                    Category category = new Category(
-                        rs.getString("categoryId"),
-                        rs.getString("categoryName"),
-                        rs.getString("categoryImageUrl")
-                    );
-
-                    int avgRating = (int) Math.round(rs.getDouble("averageRating"));
-                    int numRatings = rs.getInt("countRatings");
-                    String recipeId = rs.getString("recipeId");
-                    List<String> ingredients = recipeService.getIngredientsForRecipe(recipeId);
-
-                    Recipe recipe = new Recipe(
-                            rs.getString("recipeId"),
-                            rs.getString("recipeName"),
-                            rs.getString("description"),
-                            rs.getString("userId"),
-                            rs.getString(
-                                    "categoryId"),
-                            rs.getString("dietId"),
-                            rs.getInt("prep_time"),
-                            rs.getInt("cook_time"),
-                            rs.getInt("servings"),
-                            rs.getString("cookingLevel"),
-                            rs.getInt("cuisineId"),
-                            Arrays.asList(rs.getString("ingredients").split(",")),
-                                    rs.getString("imageUrl")
-                    // avgRating,
-                    // numRatings
-                    );
-                    recipes.add(recipe);
-                    
-                }
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                recipes.add(recipeService.mapRecipeFromResultSet(rs));
             }
+            
         } catch(SQLException e) {
             throw new RuntimeException("Error fetching posts", e);
         }
