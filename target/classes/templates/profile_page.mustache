@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+{{> fragments/header}}
+<body>
+    {{> fragments/navbar}}
+
+    <div class="recipe-grid">
+        {{#recipes}}
+            {{> fragments/recipe_card}}
+        {{/recipes}}
+    </div>
+
+    {{^recipes}}
+        <div class="no-recipes">
+            <p>No recipes created yet. Explore recipes!</p>
+            <a href="/" class="explore-link">Explore Recipes</a>
+        </div>
+    {{/recipes}}
+</body>
+</html>

@@ -1,0 +1,44 @@
+<a href="/recipe/view/{{recipeId}}" class="recipe-link">
+    <div class="recipe-card">
+        <div class="recipe-image">
+            {{#imageUrl}}
+                <img src="{{imageUrl}}" alt="{{recipeName}}" class="recipe-img">
+            {{/imageUrl}}
+        </div>
+        <div class="recipe-details">
+            <h3 class="recipe-title">{{recipeName}}</h3>
+            <p class="recipe-meta">
+                <span class="cooking-level">{{cookingLevel}}</span>
+                <span class="meta-divider">•</span>
+                <span class="prep-time">{{prepTime}} min prep</span>
+            </p>
+            <div class="recipe-rating">
+                <span class="stars">{{{stars}}}</span>
+                <span class="rating-count">({{ratingCount}})</span>
+            </div>
+
+            <div class="bookmark-buttons">
+                <!-- Past button -->
+                <form method="post" action="/recipe/{{recipeId}}/bookmark/{{#isPastBookmarked}}false{{/isPastBookmarked}}{{^isPastBookmarked}}true{{/isPastBookmarked}}/PAST">
+                    <button type="submit"
+                        class="bookmark-btn past-bookmark-btn
+                            {{#isPastBookmarked}}fa-solid{{/isPastBookmarked}}{{^isPastBookmarked}}fa-regular{{/isPastBookmarked}} fa-bookmark
+                            {{#isFutureBookmarked}}disabled{{/isFutureBookmarked}}"
+                        title="{{#isPastBookmarked}}Remove Past Bookmark{{/isPastBookmarked}}{{^isPastBookmarked}}Bookmark as Past{{/isPastBookmarked}}">
+                    </button>
+                </form>
+
+
+                <!-- Future button -->
+                <form method="post" action="/recipe/{{recipeId}}/bookmark/{{#isFutureBookmarked}}false{{/isFutureBookmarked}}{{^isFutureBookmarked}}true{{/isFutureBookmarked}}/FUTURE">
+                    <button type="submit"
+                        class="bookmark-btn future-bookmark-btn
+                            {{#isFutureBookmarked}}fa-solid{{/isFutureBookmarked}}{{^isFutureBookmarked}}fa-regular{{/isFutureBookmarked}} fa-bookmark
+                            {{#isPastBookmarked}}disabled{{/isPastBookmarked}}"
+                        title="{{#isFutureBookmarked}}Remove Future Bookmark{{/isFutureBookmarked}}{{^isFutureBookmarked}}Bookmark as Future{{/isFutureBookmarked}}">
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</a>

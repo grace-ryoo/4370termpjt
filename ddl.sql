@@ -33,9 +33,10 @@ create table if not exists recipe (
     prep_time INT not null,
     cook_time INT not null,
     servings INT not null,
-    cuisineId VARCHAR(255) not null,
+    cuisineId INT not null,
     dietId INT not null,
     cookingLevel VARCHAR(255) not null,
+    imageUrl VARCHAR(255) DEFAULT '/uploads/default.png',
     primary key (recipeId),
     FOREIGN KEY (userId) REFERENCES user(userId),
     FOREIGN KEY (categoryId) REFERENCES category(categoryId),
@@ -74,6 +75,7 @@ CREATE TABLE IF NOT EXISTS groceryList (
     userId INT NOT NULL,
     itemName VARCHAR(255) NOT NULL,
     itemQuantity INT NOT NULL,
+    isBought BOOLEAN default FALSE,
     PRIMARY KEY (itemId, userId),
     FOREIGN KEY (userId) REFERENCES user(userId)
 );
@@ -85,5 +87,31 @@ CREATE TABLE IF NOT EXISTS diet (
     dietDescription VARCHAR(255)
 );
 
+CREATE TABLE IF NOT EXISTS cuisine (
+    cuisineId INT AUTO_INCREMENT PRIMARY KEY,
+    cuisineName VARCHAR(50) NOT NULL UNIQUE,
+    cuisineDescription VARCHAR(255)
+);
+
+create table if not exists review (
+    reviewId INT NOT NULL auto_increment,
+    recipeId INT NOT NULL,
+    userId INT NOT NULL,
+    reviewText VARCHAR(1000) NOT NULL,
+    reviewDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (reviewId),
+    FOREIGN KEY (recipeId) REFERENCES recipe(recipeId) ON DELETE CASCADE,
+    FOREIGN KEY (userId) REFERENCES user(userId) ON DELETE CASCADE
+);
+
+-- Add after all table creation statements
+
+-- Index 1: Optimize bookmark queries
+-- This improves performance of queries filtering bookmarks by user and type
+CREATE INDEX idx_bookmark_lookup ON bookmark(userId, bookmark_type);
+
+-- Index 2: Optimize recipe rating lookups
+-- This improves performance of queries that calculate average ratings
+CREATE INDEX idx_rating_lookup ON rating(recipeId, stars);
 
 

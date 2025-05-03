@@ -14,3 +14,22 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
+
+
+
+
+
+
+// Rating functionality (basic)
+document.querySelectorAll('.rating-stars button').forEach(star => {
+    star.addEventListener('click', () => {
+        const rating = parseInt(star.getAttribute('data-rating'));
+        alert('Rated ' + rating + ' stars!');
+        
+        // Set all stars up to the clicked one to filled (change color or add filled class)
+        const allStars = star.parentElement.querySelectorAll('button');
+        allStars.forEach((s, index) => {
+            s.style.color = index < rating ? '#f39c12' : '#ccc'; // Yellow for filled stars
+        });
+    });
+});

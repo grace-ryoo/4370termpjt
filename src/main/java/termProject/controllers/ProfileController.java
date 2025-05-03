@@ -7,7 +7,8 @@ package termProject.controllers;
  import org.springframework.web.bind.annotation.GetMapping;
  import org.springframework.web.bind.annotation.PathVariable;
  import org.springframework.web.bind.annotation.RequestMapping;
- import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
  
  import termProject.models.Recipe;
  import termProject.services.ProfileService;
@@ -38,7 +39,7 @@ package termProject.controllers;
       * This serves the webpage that shows recipe of the logged in user.
       */
      @GetMapping
-     public ModelAndView profileOfLoggedInUser() {
+     public ModelAndView profileOfLoggedInUser(@RequestParam(name = "error", required = false) String error) {
          System.out.println("User is attempting to view profile of the logged in user.");
          return profileOfSpecificUser(userService.getLoggedInUser().getUserId());
      }
@@ -54,7 +55,7 @@ package termProject.controllers;
          System.out.println("User is attempting to view profile: " + userId);
          
          // See notes on ModelAndView in BookmarksController.java.
-         ModelAndView mv = new ModelAndView("recipe_page");
+         ModelAndView mv = new ModelAndView("profile_page");
          
  
          // Following line populates sample data.

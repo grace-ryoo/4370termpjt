@@ -1,24 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Miso Hungry</title>
-    <link rel="stylesheet" href="/css/style.css">
-</head>
+{{> fragments/header}}
 <body>
-    <!-- Navigation Bar -->
-    <nav class="nav-bar">
-        <div class="logo">Miso Hungry</div>
-        <div class="nav-right">
-            {{#username}}
-                <a href="/recipe/new" class="btn-add-recipe">Add Recipe</a>
-                <span class="username">Hello, {{username}}</span>
-            {{/username}}
-            {{^username}}
-                <a href="/login" class="btn-login">Login</a>
-            {{/username}}
-        </div>
-    </nav>
+    {{> fragments/navbar}}
 
     <!-- Hero Section -->
     <section class="hero-section">
@@ -33,16 +17,16 @@
     <!-- Recipe Categories -->
     <section class="recipe-category">
         <div class="section-header">
-            <h2>Recipe category</h2>
+            <h2>Categories</h2>
         </div>
         <div class="category-icons">
             {{#categories}}
-            <div class="category-item">
+            <a href="/recipe/recipes?categoryId={{categoryId}}" class="category-item">
                 <div class="category-icon">
                     <img src="{{categoryImageUrl}}" alt="{{categoryName}}">
                 </div>
                 <span>{{categoryName}}</span>
-            </div>
+            </a>
             {{/categories}}
         </div>
     </section>
@@ -50,21 +34,14 @@
     <!-- Popular Recipes -->
     <section class="popular-recipes">
         <div class="section-header">
-            <h2>Popular Recipes</h2>
+            <h2>Top Rated Recipes</h2>
         </div>
         <div class="recipe-grid">
             {{#trendingRecipes}}
-            <div class="recipe-card">
-                <img src="{{imageUrl}}" alt="{{title}}">
-                <div class="recipe-details">
-                    <h3>{{title}}</h3>
-                    <div class="rating">
-                        <span class="stars">★★★★★</span>
-                        <span class="price">${{price}}</span>
-                    </div>
-                    <button class="btn-add">+</button>
-                </div>
-            </div>
+                {{> fragments/recipe_card}}
+            {{/trendingRecipes}}
+            {{^trendingRecipes}}
+                <p class="no-recipes">No rated recipes available yet.</p>
             {{/trendingRecipes}}
         </div>
     </section>

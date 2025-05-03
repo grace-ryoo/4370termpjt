@@ -1,6 +1,8 @@
 package termProject.models;
 
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 public class Recipe {
     private String recipeId;
@@ -12,8 +14,11 @@ public class Recipe {
     private int prepTime;
     private int cookTime;
     private int servings;
+    private int cuisineId;
     private String cookingLevel;
     private List<String> ingredients;
+    private String imageUrl;
+    private Map<String, String> properties = new HashMap<>();
 
     // Default constructor needed for form binding
     public Recipe() {
@@ -23,7 +28,8 @@ public class Recipe {
     public Recipe(String recipeId, String recipeName, String description,
             String userId, String categoryId, String dietId,
             int prepTime, int cookTime, int servings,
-            String cookingLevel, List<String> ingredients) {
+            String cookingLevel, int cuisineId, List<String> ingredients,
+            String imageUrl) {
         this.recipeId = recipeId;
         this.recipeName = recipeName;
         this.description = description;
@@ -34,7 +40,9 @@ public class Recipe {
         this.cookTime = cookTime;
         this.servings = servings;
         this.cookingLevel = cookingLevel;
+        this.cuisineId = cuisineId;
         this.ingredients = ingredients;
+        this.imageUrl = imageUrl;
     }
 
     // Getters and Setters
@@ -118,11 +126,39 @@ public class Recipe {
         this.cookingLevel = cookingLevel;
     }
 
+    public int getCuisineId() {
+        return cuisineId;
+    }
+
+    public void setCuisineId(int cuisineId) {
+        this.cuisineId = cuisineId;
+    }
+
     public List<String> getIngredients() {
         return ingredients;
     }
 
     public void setIngredients(List<String> ingredients) {
         this.ingredients = ingredients;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public void setProperty(String key, String value) {
+        properties.put(key, value);
+    }
+
+    public String getStars() {
+        return properties.get("stars");
+    }
+
+    public String getRatingCount() {
+        return properties.get("ratingCount");
     }
 }

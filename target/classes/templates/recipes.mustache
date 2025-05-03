@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>All Recipes - Miso Hungry</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="https://kit.fontawesome.com/96759c1f70.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    {{> fragments/navbar}}
+    
+    <div class="container">
+        <h1>All Recipes</h1>
+        
+        <div class="filter-section">
+            <form class="filter-form" method="GET" action="/recipe/recipes">
+                <!-- Category dropdown -->
+                <div class="filter-group">
+                    <label for="categoryId">Category</label>
+                    <select name="categoryId" id="categoryId">
+                        <option value="">All Categories</option>
+                        {{#categories}}
+                        <option value="{{categoryId}}" {{#selected}}selected{{/selected}}>
+                            {{categoryName}}
+                        </option>
+                        {{/categories}}
+                    </select>
+                </div>
+
+                <!-- Diet dropdown -->
+                <div class="filter-group">
+                    <label for="dietId">Diet</label>
+                    <select name="dietId" id="dietId">
+                        <option value="">All Diets</option>
+                        {{#diets}}
+                        <option value="{{dietId}}" {{#selected}}selected{{/selected}}>
+                            {{dietName}}
+                        </option>
+                        {{/diets}}
+                    </select>
+                </div>
+
+                <!-- Cuisine dropdown -->
+                <div class="filter-group">
+                    <label for="cuisineId">Cuisine</label>
+                    <select name="cuisineId" id="cuisineId">
+                        <option value="">All Cuisines</option>
+                        {{#cuisines}}
+                        <option value="{{cuisineId}}" {{#selected}}selected{{/selected}}>
+                            {{cuisineName}}
+                        </option>
+                        {{/cuisines}}
+                    </select>
+                </div>
+
+                <!-- Cooking Level dropdown -->
+                <div class="filter-group">
+                    <label for="cookingLevel">Cooking Level</label>
+                    <select name="cookingLevel" id="cookingLevel">
+                        <option value="">All Levels</option>
+                        {{#isEasy}}
+                            <option value="easy" selected>Easy</option>
+                        {{/isEasy}}
+                        {{^isEasy}}
+                            <option value="easy">Easy</option>
+                        {{/isEasy}}
+                        
+                        {{#isMedium}}
+                            <option value="medium" selected>Medium</option>
+                        {{/isMedium}}
+                        {{^isMedium}}
+                            <option value="medium">Medium</option>
+                        {{/isMedium}}
+                        
+                        {{#isHard}}
+                            <option value="hard" selected>Hard</option>
+                        {{/isHard}}
+                        {{^isHard}}
+                            <option value="hard">Hard</option>
+                        {{/isHard}}
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-filter">Apply Filters</button>
+            </form>
+        </div>
+
+        <div class="recipe-grid">
+            {{#recipes}}
+                {{> fragments/recipe_card}}
+            {{/recipes}}
+        </div>
+    </div>
+</body>
+</html>

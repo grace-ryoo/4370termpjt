@@ -14,9 +14,9 @@
         </div>
 
         <!-- Recipe Image -->
-        <div class="recipe-image">
+        <!-- <div class="recipe-image">
             <img src="{{imageUrl}}" alt="{{title}}" class="w-full h-64 object-cover rounded-md mt-4">
-        </div>
+        </div> -->
         
         <!-- Recipe Content (Description) -->
         <div class="recipe-content mt-4">
@@ -53,31 +53,20 @@
             <span class="rating-text">({{ratingCount}} votes)</span>
         </div>
 
-        <!-- Recipe Actions (Bookmarking) -->
-        <div class="recipe-actions mt-4 flex gap-2">
-            <!-- If already bookmarked, show the type -->
-            {{#bookmarkType}}
-                <form method="post" action="/recipe/{{recipeId}}/unbookmark">
-                    <button class="px-3 py-1 bg-red-200 text-red-800 rounded text-sm">
-                        Remove {{bookmarkType}}
-                    </button>
-                </form>
-            {{/bookmarkType}}
+        <!-- Bookmarking functionality -->
+        {{#isBookmarked}}
+            <!-- If the recipe is already bookmarked, it needs to send "false" for unbookmark and the bookmark type -->
+            <form method="get" action="/recipe/{{recipeId}}/bookmark/false/{{bookmark_type}}">
+                <button class="fa fa-bookmark" type="submit"></button>
+            </form>
+        {{/isBookmarked}}
 
-            <!-- If not bookmarked, allow choosing a type -->
-            {{^bookmarkType}}
-                <form method="post" action="/chroniclesToCook/recipe/{{recipeId}}/bookmark">
-                    <input type="hidden" name="type" value="TRY">
-                    <button class="far fa-bookmark"></button>
-                </form>
-
-                <form method="post" action="/cookedChronicles/recipe/{{recipeId}}/bookmark">
-                    <input type="hidden" name="type" value="PAST">
-                    <button class="fa fa-bookmark"></button>
-                </form>
-
-            {{/bookmarkType}}
-        </div>
+        {{^isBookmarked}}
+            <!-- If the recipe is not bookmarked, it needs to send "true" for bookmark and the bookmark type -->
+            <form method="get" action="/recipe/{{recipeId}}/bookmark/true/{{bookmark_type}}">
+                <button class="far fa-bookmark" type="submit"></button>
+            </form>
+        {{/isBookmarked}}
 
     </div>
 </div>

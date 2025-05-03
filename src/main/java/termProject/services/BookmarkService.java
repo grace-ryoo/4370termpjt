@@ -16,78 +16,47 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import termProject.models.Category;
 import termProject.models.Recipe;
-import termProject.models.User;
 
 @Service
 public class BookmarkService {
     @Autowired
     private DataSource dataSource;
 
-    public BookmarkService(DataSource dataSource) {
+    private RecipeService recipeService;
+
+    public BookmarkService(DataSource dataSource, RecipeService recipeService) {
         this.dataSource = dataSource;
+        this.recipeService = recipeService;
     }
 
     public List<Recipe> getBookmarkedRecipesByType(String userId, String type) {
         List<Recipe> recipes = new ArrayList<>();
 
-        final String sql =  "SELECT r.*, u.firstName, u.lastName, c.categoryId, c.categoryName, c.categoryImageUrl, " +
+        final String sql =  "SELECT r.*, u.username, u.firstName, u.lastName, c.categoryId, c.categoryName, c.categoryImageUrl, " +
             "COALESCE(AVG(rt.stars), 0) AS averageRating, " +
-            "COUNT(rt.userId) AS countRatings " +
-            "FROM bookmarks b " +
-            "JOIN recipes r ON b.recipe_id = r.recipe_id " +
-            "JOIN users u ON r.user_id = u.user_id " +
-            "JOIN categories c ON r.category_id = c.category_id " +
-            "LEFT JOIN rating rt ON r.recipe_id = rt.recipe_id " +
-            "WHERE b.user_id = ? AND b.bookmark_type = ? " +
-            "GROUP BY r.recipe_id, u.user_id, u.firstName, u.lastName, c.categoryId, c.categoryName, c.categoryImageUrl";
+            "COUNT(rt.userId) AS countRatings, " +
+            "b.bookmark_type " +
+            "FROM bookmark b " +
+            "JOIN recipe r ON b.recipeId = r.recipeId " +
+            "JOIN user u ON r.userId = u.userId " +
+            "JOIN category c ON r.categoryId = c.categoryId " +
+            "LEFT JOIN rating rt ON r.recipeId = rt.recipeId " +
+            "WHERE b.userId = ? AND b.bookmark_type = ? " +
+            "GROUP BY r.recipeId, u.userId, u.username, u.firstName, u.lastName, c.categoryId, c.categoryName, c.categoryImageUrl, b.bookmark_type";
+
 
         try (Connection conn = dataSource.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setString(1, userId); // For is_hearted check
-            pstmt.setString(2, userId); // For user's bookmarks
+            pstmt.setString(1, userId); 
+            pstmt.setString(2, type); 
 
-            try (ResultSet rs = pstmt.executeQuery()) {
-                while (rs.next()) {
-                    User user = new User(
-                        rs.getString("userId"), 
-                        rs.getString("userName"), 
-                        rs.getString("firstName"),
-                        rs.getString("lastName")
-                    );
-
-                    Category category = new Category(
-                        rs.getString("categoryId"),
-                        rs.getString("categoryName"),
-                        rs.getString("categoryImageUrl")
-                    );
-
-                    int avgRating = (int) Math.round(rs.getDouble("averageRating"));
-                    int numRatings = rs.getInt("countRatings");
-
-                    Recipe recipe = new Recipe(
-                        rs.getString("recipeId"),
-                        rs.getString("recipeName"),
-                        rs.getString("description"),
-                        convertUTCtoEST(rs.getString("recipeCreateDate")),
-                        user,
-                        category,
-                        rs.getInt("prep_time"),
-                        rs.getInt("cook_time"),
-                        rs.getInt("servings"),
-                        rs.getString("cuisineId"),
-                        rs.getString("dietId"),
-                        rs.getString("cookingLevel"),
-                        new ArrayList<>(List.of(rs.getString("ingredients").split(","))),
-                        avgRating,
-                        numRatings
-                    );
-                    recipes.add(recipe);
-                    
-                }
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                recipes.add(recipeService.mapRecipeFromResultSet(rs));
             }
+            
         } catch(SQLException e) {
             throw new RuntimeException("Error fetching posts", e);
         }
@@ -101,6 +70,26 @@ public class BookmarkService {
 
     public List<Recipe> getFutureRecipes(String userId) {
         return getBookmarkedRecipesByType(userId, "FUTURE");
+    }
+
+    public String getBookmarkType(String recipeId) {
+        String bookmarkType = null;
+        String query = "SELECT bookmark_type FROM bookmark WHERE recipeId = ?";
+
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setString(1, recipeId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                bookmarkType = resultSet.getString("bookmark_type");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();  // Log the exception as needed
+        }
+
+        return bookmarkType;
     }
 
     private String convertUTCtoEST(String utcTimestamp) {
