@@ -12,6 +12,41 @@
         <div class="recipe-detail">
             <h1 class="recipe-title">{{recipe.recipeName}}</h1>
             
+            <!-- Add rating section after title -->
+            <div class="recipe-rating-section">
+                <div class="current-rating">
+                    <span class="stars">{{recipe.stars}}</span>
+                    <span class="rating-count">({{recipe.ratingCount}} ratings)</span>
+                </div>
+                
+                {{#username}}
+                    {{#hasRated}}
+                        <div class="user-rating">
+                            <p>Your rating: <span class="stars">{{userRating}} ★</span></p>
+                        </div>
+                    {{/hasRated}}
+                    {{^hasRated}}
+                        <div class="rate-recipe">
+                            <form action="/recipe/{{recipe.recipeId}}/rate" method="POST" class="rating-form">
+                                <div class="star-rating">
+                                    {{#stars}}
+                                        <input type="radio" id="star{{.}}" name="rating" value="{{.}}">
+                                        <label for="star{{.}}" title="{{.}} stars">★</label>
+                                    {{/stars}}
+                                </div>
+                                <button type="submit" class="btn-rate">Rate Recipe</button>
+                            </form>
+                        </div>
+                    {{/hasRated}}
+                {{/username}}
+                
+                {{^username}}
+                <p class="login-to-rate">
+                    <a href="/login">Login to rate this recipe</a>
+                </p>
+                {{/username}}
+            </div>
+            
             {{#recipe.imageUrl}}
             <div class="recipe-detail-image">
                 <img src="{{recipe.imageUrl}}" alt="{{recipe.recipeName}}">
@@ -25,11 +60,6 @@
                 <span>Level: {{recipe.cookingLevel}}</span>
             </div>
             
-            <div class="recipe-description">
-                <h2>Description</h2>
-                <p>{{recipe.description}}</p>
-            </div>
-            
             <div class="recipe-ingredients">
                 <h2>Ingredients</h2>
                 <ul>
@@ -37,6 +67,45 @@
                     <li>{{.}}</li>
                     {{/recipe.ingredients}}
                 </ul>
+            </div>
+
+            <div class="recipe-description">
+                <h2>Description</h2>
+                <p>{{recipe.description}}</p>
+            </div>
+
+            <div class="recipe-reviews">
+                <h2>Reviews</h2>
+                
+                {{#username}}
+                <div class="review-form">
+                    <form action="/recipe/{{recipe.recipeId}}/review" method="POST">
+                        <div class="form-group">
+                            <label for="comment">Write a Review</label>
+                            <textarea id="comment" name="comment" rows="3" required></textarea>
+                        </div>
+                        <button type="submit" class="btn-submit">Post Review</button>
+                    </form>
+                </div>
+                {{/username}}
+                
+                {{^username}}
+                <p class="login-to-review">
+                    <a href="/login">Login to write a review</a>
+                </p>
+                {{/username}}
+                
+                <div class="reviews-list">
+                    {{#reviews}}
+                    <div class="review">
+                        <div class="review-header">
+                            <span class="review-author">{{user.firstName}}</span>
+                            <span class="review-date">{{reviewDate}}</span>
+                        </div>
+                        <p class="review-content">{{comment}}</p>
+                    </div>
+                    {{/reviews}}
+                </div>
             </div>
         </div>
     </div>

@@ -93,4 +93,14 @@ CREATE TABLE IF NOT EXISTS cuisine (
     cuisineDescription VARCHAR(255)
 );
 
+create table if not exists review (
+    reviewId INT NOT NULL auto_increment,
+    recipeId INT NOT NULL,
+    userId INT NOT NULL,
+    reviewText VARCHAR(1000) NOT NULL,
+    reviewDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (reviewId),
+    FOREIGN KEY (recipeId) REFERENCES recipe(recipeId) ON DELETE CASCADE,
+    FOREIGN KEY (userId) REFERENCES user(userId) ON DELETE CASCADE
+);
 

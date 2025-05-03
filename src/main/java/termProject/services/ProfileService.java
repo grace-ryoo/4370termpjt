@@ -9,7 +9,6 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -17,9 +16,7 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import termProject.models.Category;
 import termProject.models.Recipe;
-import termProject.models.User;
 
 @Service
 public class ProfileService {
@@ -27,11 +24,17 @@ public class ProfileService {
     @Autowired
     private DataSource dataSource;
 
+    private RecipeService recipeService;
+
+    public ProfileService(DataSource dataSource, RecipeService recipeService) {
+        this.dataSource = dataSource;
+        this.recipeService = recipeService;
+    }
+
     public List<Recipe> getRecipeBySpecificUser(String userId) {
         List<Recipe> recipesByUser = new ArrayList<>();
-
-        String sql = "SELECT r.*, u.userId, u.firstName, u.lastName, " +
-                "c.categoryId, c.categoryName, c.categoryImageUrl, " +
+    
+        String sql = "SELECT r.*, u.*, c.*, " +
                 "COALESCE(AVG(rt.stars), 0) AS averageRating, " +
                 "COUNT(rt.userId) AS countRatings " +
                 "FROM user u " +
@@ -39,49 +42,24 @@ public class ProfileService {
                 "JOIN category c ON r.categoryId = c.categoryId " +
                 "LEFT JOIN rating rt ON r.recipeId = rt.recipeId " +
                 "WHERE u.userId = ? " +
-                "GROUP BY r.recipeId, u.userId, c.categoryId ";
-
+                "GROUP BY r.recipeId ";
+    
         try (Connection conn = dataSource.getConnection();
-                PreparedStatement stmt = conn.prepareStatement(sql)) {
-
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+    
             stmt.setString(1, userId);
             ResultSet rs = stmt.executeQuery();
-
+    
             while (rs.next()) {
-                User user = new User(
-                        rs.getString("userId"),
-                        null,
-                        rs.getString("firstName"),
-                        rs.getString("lastName"));
-
-                Category category = new Category(
-                        rs.getString("categoryId"),
-                        rs.getString("categoryName"),
-                        rs.getString("categoryImageUrl"));
-
-                Recipe recipe = new Recipe(
-                        rs.getString("recipeId"),
-                        rs.getString("recipeName"),
-                        rs.getString("description"),
-                        rs.getString("userId"),
-                        rs.getString("categoryId"),
-                        rs.getString("dietId"),
-                        rs.getInt("prep_time"),
-                        rs.getInt("cook_time"),
-                        rs.getInt("servings"),
-                        rs.getString("cookingLevel"),
-                        rs.getInt("cuisineId"),
-                        Arrays.asList(rs.getString("ingredients").split(",")),
-                        rs.getString("imageUrl"));
-
-                recipesByUser.add(recipe);
+                recipesByUser.add(recipeService.mapRecipeFromResultSet(rs));
             }
         } catch (SQLException e) {
             throw new RuntimeException("Error fetching recipes by user ID", e);
         }
-
+    
         return recipesByUser;
     }
+    
 
     private String convertUTCtoEST(String utcTimestamp) {
         DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
