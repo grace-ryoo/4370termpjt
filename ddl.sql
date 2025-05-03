@@ -104,3 +104,32 @@ create table if not exists review (
     FOREIGN KEY (userId) REFERENCES user(userId) ON DELETE CASCADE
 );
 
+-- Add after all table creation statements
+
+-- Index 1: Optimize bookmark queries
+-- This improves performance of queries filtering bookmarks by user and type
+CREATE INDEX idx_bookmark_lookup ON bookmark(userId, bookmark_type);
+
+-- Index 2: Optimize recipe rating lookups
+-- This improves performance of queries that calculate average ratings
+CREATE INDEX idx_rating_lookup ON rating(recipeId, stars);
+
+/* Explanation:
+
+1. idx_bookmark_lookup will optimize:
+   - BookmarkService queries that filter by userId and bookmark_type
+   - Bookmark retrieval for user's past/future recipes
+   - Performance impact on query:
+     SELECT r.*, u.username, ... 
+     FROM bookmark b 
+     WHERE b.userId = ? AND b.bookmark_type = ?
+
+2. idx_rating_lookup will optimize:
+   - Queries calculating average ratings (used in multiple services)
+   - Rating aggregation operations
+   - Performance impact on:
+     COALESCE(AVG(rt.stars), 0) AS averageRating,
+     COUNT(rt.userId) AS countRatings
+     ...LEFT JOIN rating rt ON r.recipeId = rt.recipeId
+*/
+
