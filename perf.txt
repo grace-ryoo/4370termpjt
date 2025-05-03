@@ -1,0 +1,73 @@
+sql query in getBookmarkedRecipesByType() in BookmarkService.java optimized by index idx_bookmark_lookup.
+CREATE INDEX idx_bookmark_lookup ON bookmark(userId, bookmark_type);
+
+final String sql =  "SELECT r.*, u.username, u.firstName, u.lastName, c.categoryId, c.categoryName, c.categoryImageUrl, " +
+            "COALESCE(AVG(rt.stars), 0) AS averageRating, " +
+            "COUNT(rt.userId) AS countRatings, " +
+            "b.bookmark_type " +
+            "FROM bookmark b " +
+            "JOIN recipe r ON b.recipeId = r.recipeId " +
+            "JOIN user u ON r.userId = u.userId " +
+            "JOIN category c ON r.categoryId = c.categoryId " +
+            "LEFT JOIN rating rt ON r.recipeId = rt.recipeId " +
+            "WHERE b.userId = ? AND b.bookmark_type = ? " +
+            "GROUP BY r.recipeId, u.userId, u.username, u.firstName, u.lastName, c.categoryId, c.categoryName, c.categoryImageUrl, b.bookmark_type";
+
+Time consumption before index: 0.04 sec
+Time consumption after index: 0.01 sec
+
+sql queries in getRecipeById(), getBookmarkedRecipesByType(), getAllRecipes(), and getTrendingRecipes() were optimized by index idx_rating_lookup.
+CREATE INDEX idx_rating_lookup ON rating(recipeId, stars);
+
+final String sql = "SELECT r.*, u.*, c.*, " +
+                "COALESCE(AVG(rt.stars), 0) as averageRating, " +
+                "COUNT(rt.userId) as countRatings " +
+                "FROM recipe r " +
+                "JOIN user u ON r.userId = u.userId " +
+                "JOIN category c ON r.categoryId = c.categoryId " +
+                "LEFT JOIN rating rt ON r.recipeId = rt.recipeId " +
+                "WHERE r.recipeId = ? " +
+                "GROUP BY r.recipeId, u.userId, c.categoryId";
+
+Time consumption before index: sec
+Time consumption after index: sec
+
+final String sql =  "SELECT r.*, u.username, u.firstName, u.lastName, c.categoryId, c.categoryName, c.categoryImageUrl, " +
+            "COALESCE(AVG(rt.stars), 0) AS averageRating, " +
+            "COUNT(rt.userId) AS countRatings, " +
+            "b.bookmark_type " +
+            "FROM bookmark b " +
+            "JOIN recipe r ON b.recipeId = r.recipeId " +
+            "JOIN user u ON r.userId = u.userId " +
+            "JOIN category c ON r.categoryId = c.categoryId " +
+            "LEFT JOIN rating rt ON r.recipeId = rt.recipeId " +
+            "WHERE b.userId = ? AND b.bookmark_type = ? " +
+            "GROUP BY r.recipeId, u.userId, u.username, u.firstName, u.lastName, c.categoryId, c.categoryName, c.categoryImageUrl, b.bookmark_type";
+
+Time consumption before index: sec
+Time consumption after index: sec
+
+String sql = "SELECT r.*, u.*, c.*, " +
+                "COALESCE(AVG(rt.stars), 0) AS averageRating, " +
+                "COUNT(rt.userId) AS countRatings " +
+                "FROM user u " +
+                "JOIN recipe r ON u.userId = r.userId " +
+                "JOIN category c ON r.categoryId = c.categoryId " +
+                "LEFT JOIN rating rt ON r.recipeId = rt.recipeId " +
+                "WHERE u.userId = ? " +
+                "GROUP BY r.recipeId ";
+
+Time consumption before index: sec
+Time consumption after index: sec
+
+final String sql = "SELECT r.*, u.*, c.*, " +
+                "COALESCE(AVG(rt.stars), 0) AS averageRating, " +
+                "COUNT(rt.userId) AS countRatings " +
+                "FROM recipe r " +
+                "JOIN user u ON r.userId = u.userId " +
+                "JOIN category c ON r.categoryId = c.categoryId " +
+                "LEFT JOIN rating rt ON r.recipeId = rt.recipeId " +
+                "GROUP BY r.recipeId ORDER BY COUNT(rt.userId) DESC LIMIT 10";
+
+Time consumption before index: sec
+Time consumption after index: sec
