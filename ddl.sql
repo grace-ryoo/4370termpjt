@@ -36,7 +36,7 @@ create table if not exists recipe (
     cuisineId INT not null,
     dietId INT not null,
     cookingLevel VARCHAR(255) not null,
-    imageUrl VARCHAR(255) DEFAULT '/uploads/9ba5558d-9ae0-4a05-b33b-d8390f419705-Screenshot 2025-05-02 at 1.42.22?PM.png',
+    imageUrl VARCHAR(255) DEFAULT '/uploads/default.png',
     primary key (recipeId),
     FOREIGN KEY (userId) REFERENCES user(userId),
     FOREIGN KEY (categoryId) REFERENCES category(categoryId),
