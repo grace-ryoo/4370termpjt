@@ -74,6 +74,9 @@ public class RecipeController {
                 mv.addObject("userRating", recipeService.getUserRating(userId, recipeId));
             }
 
+            // Add reviews to the model
+            mv.addObject("reviews", reviewService.getReviewsForRecipe(recipeId));
+
             return mv;
         } catch (Exception e) {
             e.printStackTrace();
@@ -136,6 +139,23 @@ public class RecipeController {
         } catch (Exception e) {
             return "redirect:/recipe/view/" + recipeId + "?error=" +
                     URLEncoder.encode("Failed to rate recipe: " + e.getMessage(), StandardCharsets.UTF_8);
+        }
+    }
+
+    @PostMapping("/{recipeId}/review")
+    public String addReview(@PathVariable String recipeId, @RequestParam String comment) {
+        try {
+            if (!userService.isAuthenticated()) {
+                return "redirect:/login";
+            }
+
+            String userId = userService.getLoggedInUser().getUserId();
+            reviewService.addReview(userId, recipeId, comment);
+
+            return "redirect:/recipe/view/" + recipeId;
+        } catch (Exception e) {
+            return "redirect:/recipe/view/" + recipeId + "?error=" +
+                    URLEncoder.encode("Failed to add review: " + e.getMessage(), StandardCharsets.UTF_8);
         }
     }
 

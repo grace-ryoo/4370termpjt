@@ -73,6 +73,40 @@
                 <h2>Description</h2>
                 <p>{{recipe.description}}</p>
             </div>
+
+            <div class="recipe-reviews">
+                <h2>Reviews</h2>
+                
+                {{#username}}
+                <div class="review-form">
+                    <form action="/recipe/{{recipe.recipeId}}/review" method="POST">
+                        <div class="form-group">
+                            <label for="comment">Write a Review</label>
+                            <textarea id="comment" name="comment" rows="3" required></textarea>
+                        </div>
+                        <button type="submit" class="btn-submit">Post Review</button>
+                    </form>
+                </div>
+                {{/username}}
+                
+                {{^username}}
+                <p class="login-to-review">
+                    <a href="/login">Login to write a review</a>
+                </p>
+                {{/username}}
+                
+                <div class="reviews-list">
+                    {{#reviews}}
+                    <div class="review">
+                        <div class="review-header">
+                            <span class="review-author">{{user.firstName}}</span>
+                            <span class="review-date">{{reviewDate}}</span>
+                        </div>
+                        <p class="review-content">{{comment}}</p>
+                    </div>
+                    {{/reviews}}
+                </div>
+            </div>
         </div>
     </div>
 </body>
