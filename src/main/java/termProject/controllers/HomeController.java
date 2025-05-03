@@ -46,10 +46,10 @@ public class HomeController {
 
         // Get recipe categories
         List<Category> categories = categoryService.getAllCategories();
-        mv.addObject("categories", categories); 
+        mv.addObject("categories", categories);
 
-        // Get trending recipes
-        List<Recipe> trendingRecipes = recipeService.getTrendingRecipes();
+        // Get top 10 trending recipes by review rating
+        List<Recipe> trendingRecipes = recipeService.getTopRatedRecipes(8);
         mv.addObject("trendingRecipes", trendingRecipes);
 
         // Get all recipes
@@ -67,44 +67,46 @@ public class HomeController {
 
     // @PostMapping("/createRecipe")
     // public String createRecipe(
-    //         @RequestParam("recipeName") String recipeName,
-    //         @RequestParam("description") String description,
-    //         @RequestParam("cuisineId") String category,
-    //         @RequestParam("ingredients") List<String> ingredients,
-    //         @RequestParam("prepTime") int prepTime,
-    //         @RequestParam("cookTime") int cookTime,
-    //         @RequestParam("servings") int servings,
-    //         @RequestParam("dietId") String dietId,
-    //         @RequestParam("cookingLevel") String cookLevel) {
+    // @RequestParam("recipeName") String recipeName,
+    // @RequestParam("description") String description,
+    // @RequestParam("cuisineId") String category,
+    // @RequestParam("ingredients") List<String> ingredients,
+    // @RequestParam("prepTime") int prepTime,
+    // @RequestParam("cookTime") int cookTime,
+    // @RequestParam("servings") int servings,
+    // @RequestParam("dietId") String dietId,
+    // @RequestParam("cookingLevel") String cookLevel) {
 
-    //     String currentUserId = userService.getLoggedInUser().getUserId();
+    // String currentUserId = userService.getLoggedInUser().getUserId();
 
-    //     // Validation
-    //     if (recipeName == null || recipeName.trim().isEmpty()
-    //             || description == null || description.trim().isEmpty() || currentUserId == null
-    //             || currentUserId.isEmpty()
-    //             || category == null || category.isEmpty() || prepTime <= 0 || cookTime <= 0 || servings <= 0
-    //             || dietId == null || dietId.isEmpty()
-    //             || cookLevel == null || cookLevel.trim().isEmpty()) {
-    //         return "redirect:/?error=Recipe details cannot be empty";
-    //     }
+    // // Validation
+    // if (recipeName == null || recipeName.trim().isEmpty()
+    // || description == null || description.trim().isEmpty() || currentUserId ==
+    // null
+    // || currentUserId.isEmpty()
+    // || category == null || category.isEmpty() || prepTime <= 0 || cookTime <= 0
+    // || servings <= 0
+    // || dietId == null || dietId.isEmpty()
+    // || cookLevel == null || cookLevel.trim().isEmpty()) {
+    // return "redirect:/?error=Recipe details cannot be empty";
+    // }
 
-    //     boolean success = recipeService.createRecipe(
-    //             recipeName,
-    //             description,
-    //             currentUserId,
-    //             ingredients,
-    //             prepTime,
-    //             cookTime,
-    //             servings,
-    //             category,
-    //             dietId,
-    //             cookLevel);
+    // boolean success = recipeService.createRecipe(
+    // recipeName,
+    // description,
+    // currentUserId,
+    // ingredients,
+    // prepTime,
+    // cookTime,
+    // servings,
+    // category,
+    // dietId,
+    // cookLevel);
 
-    //     if (!success) {
-    //         return "redirect:/?error=Failed to create the recipe. Please try again.";
-    //     }
+    // if (!success) {
+    // return "redirect:/?error=Failed to create the recipe. Please try again.";
+    // }
 
-    //     return "redirect:/";
+    // return "redirect:/";
     // }
 }

@@ -25,6 +25,8 @@ import termProject.services.FileStorageService;
 import termProject.services.RecipeService;
 import termProject.services.ReviewService;
 import termProject.services.UserService;
+import termProject.models.User;
+import termProject.services.BookmarkService;
 
 @Controller
 @RequestMapping("/recipe")
@@ -36,6 +38,7 @@ public class RecipeController {
     private final DietService dietService;
     private final CuisineService cuisineService;
     private final FileStorageService fileStorageService;
+    private final BookmarkService bookmarkService;
 
     @Autowired
     public RecipeController(RecipeService recipeService,
@@ -44,7 +47,8 @@ public class RecipeController {
             CategoryService categoryService,
             DietService dietService,
             CuisineService cuisineService,
-            FileStorageService fileStorageService) {
+            FileStorageService fileStorageService,
+                    BookmarkService bookmarkService) {
         this.recipeService = recipeService;
         this.userService = userService;
         this.reviewService = reviewService;
@@ -52,37 +56,40 @@ public class RecipeController {
         this.dietService = dietService;
         this.cuisineService = cuisineService;
         this.fileStorageService = fileStorageService;
+        this.bookmarkService = bookmarkService;
     }
 
-    @GetMapping("/view/{recipeId}")
-    public ModelAndView viewRecipe(@PathVariable String recipeId) {
+    @GetMapping("/view/{id}")
+    public ModelAndView viewRecipe(@PathVariable("id") String recipeId) {
         ModelAndView mv = new ModelAndView("recipe_detail");
-        try {
-            String userId = userService.isAuthenticated() ? userService.getLoggedInUser().getUserId() : null;
-            Recipe recipe = recipeService.getRecipeById(recipeId, userId);
 
-            if (recipe == null) {
-                return new ModelAndView("redirect:/recipes?error=Recipe not found");
-            }
-
-            mv.addObject("recipe", recipe);
-            mv.addObject("stars", List.of(5, 4, 3, 2, 1));
-
-            if (userId != null) {
-                mv.addObject("username", userService.getLoggedInUser().getFirstName());
-                mv.addObject("hasRated", recipeService.hasUserRated(userId, recipeId));
-                mv.addObject("userRating", recipeService.getUserRating(userId, recipeId));
-            }
-
-            // Add reviews to the model
-            mv.addObject("reviews", reviewService.getReviewsForRecipe(recipeId));
-
-            return mv;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ModelAndView("redirect:/recipes?error=" +
-                    URLEncoder.encode("Error viewing recipe: " + e.getMessage(), StandardCharsets.UTF_8));
+        // Check if user is logged in
+        if (userService.isAuthenticated()) {
+            User loggedInUser = userService.getLoggedInUser();
+            mv.addObject("username", loggedInUser.getFirstName());
         }
+
+        // Check if user is logged in
+        User loggedInUser = userService.getLoggedInUser();
+        if (loggedInUser != null) {
+            String userId = loggedInUser.getUserId();
+            mv.addObject("username", loggedInUser.getFirstName());
+            
+        // Get recipe details
+        Recipe recipe = recipeService.getRecipeById(recipeId, userId);
+        mv.addObject("recipe", recipe);
+
+        
+
+            // Get bookmark status
+            String bookmarkType = bookmarkService.getUserBookmarkType(userId, recipeId);
+            mv.addObject("isPastBookmarked", "PAST".equals(bookmarkType));
+            mv.addObject("isFutureBookmarked", "FUTURE".equals(bookmarkType));
+
+            // Rest of your existing code
+        }
+
+        return mv;
     }
 
     @GetMapping("/new")

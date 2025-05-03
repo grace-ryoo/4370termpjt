@@ -14,6 +14,7 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import termProject.models.Category;
@@ -27,11 +28,14 @@ public class RecipeService {
     private DataSource dataSource;
     private UserService userService;
     private ReviewService reviewService;
+    private JdbcTemplate jdbcTemplate;
 
-    public RecipeService(DataSource dataSource, UserService userService, ReviewService reviewService) {
+    public RecipeService(DataSource dataSource, UserService userService, ReviewService reviewService,
+            JdbcTemplate jdbcTemplate) {
         this.dataSource = dataSource;
         this.userService = userService;
         this.reviewService = reviewService;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     public void bookmark(String userId, String recipeId, String bookmark_type) {
@@ -438,6 +442,32 @@ public class RecipeService {
             }
         } catch (SQLException e) {
             throw new RuntimeException("Error fetching filtered recipes", e);
+        }
+        return recipes;
+    }
+
+    public List<Recipe> getTopRatedRecipes(int limit) {
+        List<Recipe> recipes = new ArrayList<>();
+        final String sql = "SELECT r.*, u.*, c.*, " +
+                "COALESCE(AVG(rt.stars), 0) as averageRating, " +
+                "COUNT(rt.userId) as countRatings " +
+                "FROM recipe r " +
+                "JOIN user u ON r.userId = u.userId " +
+                "JOIN category c ON r.categoryId = c.categoryId " +
+                "LEFT JOIN rating rt ON r.recipeId = rt.recipeId " +
+                "GROUP BY r.recipeId, u.userId, c.categoryId " +
+                "ORDER BY averageRating DESC, countRatings DESC " +
+                "LIMIT ?";
+
+        try (Connection conn = dataSource.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, limit);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                recipes.add(mapRecipeFromResultSet(rs));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error fetching top rated recipes", e);
         }
         return recipes;
     }

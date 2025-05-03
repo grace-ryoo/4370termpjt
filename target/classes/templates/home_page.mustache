@@ -34,12 +34,15 @@
     <!-- Popular Recipes -->
     <section class="popular-recipes">
         <div class="section-header">
-            <h2>Popular Recipes</h2>
+            <h2>Top Rated Recipes</h2>
         </div>
         <div class="recipe-grid">
-            {{#recipes}}
+            {{#trendingRecipes}}
                 {{> fragments/recipe_card}}
-            {{/recipes}}
+            {{/trendingRecipes}}
+            {{^trendingRecipes}}
+                <p class="no-recipes">No rated recipes available yet.</p>
+            {{/trendingRecipes}}
         </div>
     </section>
 </body>

@@ -13,6 +13,34 @@
         <div class="recipe-detail">
             <h1 class="recipe-title">{{recipe.recipeName}}</h1>
             
+            <!-- Add bookmark buttons after title -->
+            {{#username}}
+            <div class="detail-bookmark-buttons">
+                <!-- Past bookmark button -->
+                <form method="post" action="/recipe/{{recipe.recipeId}}/bookmark/{{#isPastBookmarked}}false{{/isPastBookmarked}}{{^isPastBookmarked}}true{{/isPastBookmarked}}/PAST">
+                    <button type="submit" 
+                        class="bookmark-btn past-bookmark-btn {{#isPastBookmarked}}fa-solid{{/isPastBookmarked}}{{^isPastBookmarked}}fa-regular{{/isPastBookmarked}} fa-bookmark {{#isFutureBookmarked}}disabled{{/isFutureBookmarked}}"
+                        {{#isFutureBookmarked}}disabled{{/isFutureBookmarked}}
+                        title="{{#isPastBookmarked}}Remove from Cooked Chronicles{{/isPastBookmarked}}{{^isPastBookmarked}}Add to Cooked Chronicles{{/isPastBookmarked}}">
+                    </button>
+                </form>
+
+                <!-- Future bookmark button -->
+                <form method="post" action="/recipe/{{recipe.recipeId}}/bookmark/{{#isFutureBookmarked}}false{{/isFutureBookmarked}}{{^isFutureBookmarked}}true{{/isFutureBookmarked}}/FUTURE">
+                    <button type="submit" 
+                        class="bookmark-btn future-bookmark-btn {{#isFutureBookmarked}}fa-solid{{/isFutureBookmarked}}{{^isFutureBookmarked}}fa-regular{{/isFutureBookmarked}} fa-bookmark {{#isPastBookmarked}}disabled{{/isPastBookmarked}}"
+                        {{#isPastBookmarked}}disabled{{/isPastBookmarked}}
+                        title="{{#isFutureBookmarked}}Remove from Chronicles to Cook{{/isFutureBookmarked}}{{^isFutureBookmarked}}Add to Chronicles to Cook{{/isFutureBookmarked}}">
+                    </button>
+                </form>
+                
+                <div class="bookmark-labels">
+                    <span class="past-label">Cooked</span>
+                    <span class="future-label">To Cook</span>
+                </div>
+            </div>
+            {{/username}}
+            
             <!-- Add rating section after title -->
             <div class="recipe-rating-section">
                 <div class="current-rating">
