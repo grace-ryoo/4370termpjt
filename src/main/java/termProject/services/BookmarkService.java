@@ -35,14 +35,16 @@ public class BookmarkService {
 
         final String sql =  "SELECT r.*, u.username, u.firstName, u.lastName, c.categoryId, c.categoryName, c.categoryImageUrl, " +
             "COALESCE(AVG(rt.stars), 0) AS averageRating, " +
-            "COUNT(rt.userId) AS countRatings " +
+            "COUNT(rt.userId) AS countRatings, " +
+            "b.bookmark_type " +
             "FROM bookmark b " +
             "JOIN recipe r ON b.recipeId = r.recipeId " +
             "JOIN user u ON r.userId = u.userId " +
             "JOIN category c ON r.categoryId = c.categoryId " +
             "LEFT JOIN rating rt ON r.recipeId = rt.recipeId " +
             "WHERE b.userId = ? AND b.bookmark_type = ? " +
-            "GROUP BY r.recipeId, u.userId, u.username, u.firstName, u.lastName, c.categoryId, c.categoryName, c.categoryImageUrl";
+            "GROUP BY r.recipeId, u.userId, u.username, u.firstName, u.lastName, c.categoryId, c.categoryName, c.categoryImageUrl, b.bookmark_type";
+
 
         try (Connection conn = dataSource.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -68,6 +70,26 @@ public class BookmarkService {
 
     public List<Recipe> getFutureRecipes(String userId) {
         return getBookmarkedRecipesByType(userId, "FUTURE");
+    }
+
+    public String getBookmarkType(String recipeId) {
+        String bookmarkType = null;
+        String query = "SELECT bookmark_type FROM bookmark WHERE recipeId = ?";
+
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setString(1, recipeId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                bookmarkType = resultSet.getString("bookmark_type");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();  // Log the exception as needed
+        }
+
+        return bookmarkType;
     }
 
     private String convertUTCtoEST(String utcTimestamp) {

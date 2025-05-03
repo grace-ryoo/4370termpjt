@@ -168,6 +168,7 @@ body {
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     overflow: hidden;
     transition: transform 0.2s ease;
+    position: relative;
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -722,30 +723,70 @@ body {
     object-fit: cover;
 }
 
-.bookmark-icon {
+/* Bookmark Buttons */
+.bookmark-buttons {
     position: absolute;
-    top: 10px;
+    bottom: 10px;
     right: 10px;
-    font-size: 24px;
+    display: flex;
+    gap: 10px; /* optional: space between buttons */
+}
+
+/* Common styles for both bookmark buttons */
+.bookmark-btn {
+    font-size: 20px;
     cursor: pointer;
     transition: transform 0.2s ease, color 0.2s ease;
-}
-
-.not-bookmarked {
-    color: white;
-    font-weight: normal;
     border: 2px solid black;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.future-bookmark {
-    color: #f1e5a6;
+.bookmark-btn.disabled {
+    opacity: 0.5;
+    pointer-events: none; /* Prevent click */
+}
+
+/* Default unbookmarked state */
+.past-bookmark-btn.fa-regular {
+    background-color: #90af7b;
+    color: black;
+}
+.future-bookmark-btn.fa-regular {
+    background-color: #f1e5a6;
+    color: black;
+}
+
+/* Past bookmark active */
+.past-bookmark-btn.fa-solid {
+    background-color: #90af7b; /* greenish */
+    color: white;
     font-weight: bold;
 }
 
-.past-bookmark {
-    color: #90af7b;
+/* Future bookmark active */
+.future-bookmark-btn.fa-solid {
+    background-color: #f1e5a6; /* yellowish */
+    color: black;
     font-weight: bold;
 }
+
+/* Optional: hover effects for a nice touch */
+.bookmark-btn:hover {
+    transform: scale(1.1);
+}
+
+
+
+.bookmark-btn:hover::after {
+    opacity: 1;
+}
+
+
 /* Recipe Rating Section */
 .recipe-rating-section {
     margin: 1rem 0;
