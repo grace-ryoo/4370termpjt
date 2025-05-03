@@ -46,8 +46,21 @@ public class FutureBookmarksController {
         String loggedInUserId = loggedInUser.getUserId();
         mv.addObject("username", loggedInUser.getFirstName());
         mv.addObject("bookmark_type", "FUTURE");
+        mv.addObject("isAdd", true);
         try {
             List<Recipe> recipes = bookmarkService.getFutureRecipes(loggedInUserId);
+
+            for (Recipe recipe : recipes) {
+                String bookmarkType = bookmarkService.getBookmarkType(recipe.getRecipeId());
+
+                boolean isPastBookmarked = "PAST".equals(bookmarkType);
+                boolean isFutureBookmarked = "FUTURE".equals(bookmarkType);
+                    
+                // Add boolean flags to the model
+                mv.addObject("isPastBookmarked_" + recipe.getRecipeId(), isPastBookmarked);
+                mv.addObject("isFutureBookmarked_" + recipe.getRecipeId(), isFutureBookmarked);
+            }
+
             if (recipes.isEmpty()) {
                 // Enable the following line if you want to show no content message.
                 // Do that if your content list is empty.
@@ -62,20 +75,6 @@ public class FutureBookmarksController {
             return mv;
         }
         
-        
-
-        // Following line populates sample data.
-        // You should replace it with actual data from the database.
-        // List<Post> posts = Utility.createSamplePostsListWithoutComments();
-        // mv.addObject("posts", posts);
-
-        // If an error occured, you can set the following property with the
-        // error message to show the error message to the user.
-        
-        
-
-        
-
         return mv;
     }
 

@@ -51,7 +51,7 @@ public class GroceryController {
                 mv.addObject("items", items);
             }
         } catch (Exception e) {
-            String errorMessage = "An error occurred while fetching future recipes.";
+            String errorMessage = "An error occurred while fetching grocery list items.";
             e.printStackTrace();
             mv.addObject("errorMessage", errorMessage);
             return mv;
