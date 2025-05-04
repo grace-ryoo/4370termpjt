@@ -29,7 +29,7 @@ final String sql = "SELECT r.*, u.*, c.*, " +
                 "WHERE r.recipeId = ? " +
                 "GROUP BY r.recipeId, u.userId, c.categoryId";
 
-Time consumption before index: sec
+Time consumption before index: 0.02 sec
 Time consumption after index: sec
 
 final String sql =  "SELECT r.*, u.username, u.firstName, u.lastName, c.categoryId, c.categoryName, c.categoryImageUrl, " +
@@ -44,7 +44,7 @@ final String sql =  "SELECT r.*, u.username, u.firstName, u.lastName, c.category
             "WHERE b.userId = ? AND b.bookmark_type = ? " +
             "GROUP BY r.recipeId, u.userId, u.username, u.firstName, u.lastName, c.categoryId, c.categoryName, c.categoryImageUrl, b.bookmark_type";
 
-Time consumption before index: sec
+Time consumption before index: 0.02 sec
 Time consumption after index: sec
 
 String sql = "SELECT r.*, u.*, c.*, " +
@@ -57,7 +57,7 @@ String sql = "SELECT r.*, u.*, c.*, " +
                 "WHERE u.userId = ? " +
                 "GROUP BY r.recipeId ";
 
-Time consumption before index: sec
+Time consumption before index: 0.01 sec
 Time consumption after index: sec
 
 final String sql = "SELECT r.*, u.*, c.*, " +
@@ -69,5 +69,5 @@ final String sql = "SELECT r.*, u.*, c.*, " +
                 "LEFT JOIN rating rt ON r.recipeId = rt.recipeId " +
                 "GROUP BY r.recipeId ORDER BY COUNT(rt.userId) DESC LIMIT 10";
 
-Time consumption before index: sec
+Time consumption before index: 0.03 sec
 Time consumption after index: sec
