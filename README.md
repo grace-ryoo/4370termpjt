@@ -8,7 +8,7 @@ Khushi Bhatamrekar:
 
 Aditi Chiluguri:
 
-Catherine Chu: 
+Catherine Chu: Worked on GroceryListService, GroceryItem, GroceryController, data.sql, ddl.sql, queries.sql, and datasource.txt 
 
 Grace Ryoo:
 
