@@ -363,7 +363,7 @@ INSERT INTO recipe (recipeName, description, userId, prep_time, cook_time, servi
 ('Shepherd’s Pie', 'Preheat the oven. Prepare and combine ingredients. Cook as required. Let rest before serving.', 10, 16, 29, 3, 3, 3, 'Intermediate', 14),
 ('Lasagna', 'Prepare all ingredients. Heat a pan over medium. Cook in stages as required. Season to taste and serve.', 9, 24, 27, 3, 2, 1, 'Easy', 2),
 ('Clam Chowder', 'Chop and prep all vegetables. Stir-fry or roast depending on dish. Add spices. Combine and serve.', 5, 9, 34, 3, 2, 8, 'Hard', 13),
-('Caesar Salad', 'Boil water. Cook pasta or rice. Sauté vegetables or meat. Mix all together with sauce. Garnish and serve.', 1, 18, 14, 1, 1, 7, 'Intermediate', 12),
+('Caesar Salad', ' water. Cook pasta or rice. Sauté vegetables or meat. Mix all together with sauBoilce. Garnish and serve.', 1, 18, 14, 1, 1, 7, 'Intermediate', 12),
 ('Roast Turkey', 'Marinate meat or tofu. Stir-fry vegetables. Add sauce and protein. Cook until done. Serve hot.', 7, 15, 27, 1, 2, 6, 'Intermediate', 14),
 ('Korean Bibimbap', 'Prepare all ingredients. Heat a pan over medium. Cook in stages as required. Season to taste and serve.', 5, 28, 10, 3, 4, 5, 'Hard', 1),
 ('Tempura', 'Mix ingredients in a bowl. Transfer to a baking dish. Bake at specified temperature. Cool and serve.', 9, 18, 24, 6, 3, 9, 'Easy', 14),
