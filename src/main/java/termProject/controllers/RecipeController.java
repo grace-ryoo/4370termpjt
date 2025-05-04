@@ -31,32 +31,32 @@ import termProject.services.BookmarkService;
 @Controller
 @RequestMapping("/recipe")
 public class RecipeController {
-    private final RecipeService recipeService;
+    @Autowired
+    private RecipeService recipeService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private BookmarkService bookmarkService;
+
     private final ReviewService reviewService;
-    private final UserService userService;
     private final CategoryService categoryService;
     private final DietService dietService;
     private final CuisineService cuisineService;
     private final FileStorageService fileStorageService;
-    private final BookmarkService bookmarkService;
 
     @Autowired
-    public RecipeController(RecipeService recipeService,
-            UserService userService,
-            ReviewService reviewService,
+    public RecipeController(ReviewService reviewService,
             CategoryService categoryService,
             DietService dietService,
             CuisineService cuisineService,
-            FileStorageService fileStorageService,
-                    BookmarkService bookmarkService) {
-        this.recipeService = recipeService;
-        this.userService = userService;
+            FileStorageService fileStorageService) {
         this.reviewService = reviewService;
         this.categoryService = categoryService;
         this.dietService = dietService;
         this.cuisineService = cuisineService;
         this.fileStorageService = fileStorageService;
-        this.bookmarkService = bookmarkService;
     }
 
     @GetMapping("/view/{id}")
@@ -64,29 +64,39 @@ public class RecipeController {
         ModelAndView mv = new ModelAndView("recipe_detail");
 
         // Check if user is logged in
-        if (userService.isAuthenticated()) {
-            User loggedInUser = userService.getLoggedInUser();
-            mv.addObject("username", loggedInUser.getFirstName());
-        }
-
-        // Check if user is logged in
         User loggedInUser = userService.getLoggedInUser();
         if (loggedInUser != null) {
             String userId = loggedInUser.getUserId();
             mv.addObject("username", loggedInUser.getFirstName());
-            
-        // Get recipe details
-        Recipe recipe = recipeService.getRecipeById(recipeId, userId);
-        mv.addObject("recipe", recipe);
 
-        
+            // Get recipe details - this is crucial
+            Recipe recipe = recipeService.getRecipeById(recipeId, userId);
+            if (recipe == null) {
+                // Handle recipe not found
+                return new ModelAndView("redirect:/?error=Recipe+not+found");
+            }
+
+            // Add recipe object to the model
+            mv.addObject("recipe", recipe);
 
             // Get bookmark status
             String bookmarkType = bookmarkService.getUserBookmarkType(userId, recipeId);
             mv.addObject("isPastBookmarked", "PAST".equals(bookmarkType));
             mv.addObject("isFutureBookmarked", "FUTURE".equals(bookmarkType));
 
-            // Rest of your existing code
+            // Get user's rating for this recipe
+            Integer userRating = recipeService.getUserRating(userId, recipeId);
+            if (userRating != null) {
+                mv.addObject("userHasRated", true);
+                mv.addObject("userRating", userRating); // Add the actual rating number
+
+                // Set individual rating flags for checked state
+                for (int i = 1; i <= 5; i++) {
+                    mv.addObject("userRating" + i, userRating == i);
+                }
+            } else {
+                mv.addObject("userHasRated", false);
+            }
         }
 
         return mv;
@@ -98,7 +108,7 @@ public class RecipeController {
 
         // Add required data for dropdowns
         mv.addObject("categories", categoryService.getAllCategories());
-        mv.addObject("cuisines", cuisineService.getAllCuisines()); // Add this line
+        mv.addObject("cuisines", cuisineService.getAllCuisines());
         mv.addObject("diets", dietService.getAllDiets());
         if (userService.isAuthenticated()) {
             mv.addObject("username", userService.getLoggedInUser().getFirstName());
@@ -122,12 +132,10 @@ public class RecipeController {
             } else {
                 recipeService.unBookmark(currUserId, recipeId);
             }
-            // Update this line to use the correct view path
             return "redirect:/recipe/view/" + recipeId;
         } catch (Exception e) {
             String message = URLEncoder.encode("Failed to update bookmark: " + e.getMessage(),
                     StandardCharsets.UTF_8);
-            // Update this line to use the correct view path
             return "redirect:/recipe/view/" + recipeId + "?error=" + message;
         }
     }
