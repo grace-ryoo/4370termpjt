@@ -10,9 +10,9 @@ Aditi Chiluguri:
 
 Catherine Chu: Worked on GroceryListService, GroceryItem, GroceryController, data.sql, ddl.sql, queries.sql, and datasource.txt 
 
-Grace Ryoo: Worked on BookmarkService, FutureBookmarksController, PastBookmarksController, ProfileController, ProfileService, RecipeService, mustaches, style.css, data.sql, ddl.sql, perf.txt
+Grace Ryoo: Worked on BookmarkService, FutureBookmarksController, PastBookmarksController, ProfileController, ProfileService, RecipeService, mustaches, style.css, data.sql, ddl.sql, perf.txt, prelim.pdf
 
-Technologies used: Java, Springboot, Maven, HTML, CSS, JS, Python, Docker, mySQL
+Technologies used: Java, Springboot, Maven, HTML, CSS, JS, Python, Docker, mySQL, Git
 
 Database Name: cs4370_miso_hungry
 
