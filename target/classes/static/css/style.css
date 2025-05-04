@@ -856,8 +856,8 @@ body {
 }
 
 .star-rating label:hover,
-.star-rating label:hover ~ label,
-.star-rating input:checked ~ label {
+.star-rating label:hover~label,
+.star-rating input:checked~label {
     color: #000;
 }
 
