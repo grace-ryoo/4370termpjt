@@ -1,0 +1,48 @@
+To generate our 1,000 rows of data for the recipe table, we wrote a custom Python script that randomly combines lists of recipe names, descriptions and the other fields. 
+This allowed us to generate recipes that had attribute fields recipe name, preparation, and cooking times, serviing size, cooking level, category, diet, and cusine ids.
+We then hand edited some of the recipes to add variation and wrote some recipes by hand. 
+No external datasets were used.
+
+Here is what our python script looks like. 
+
+import random
+
+recipe_names = [
+    "Spicy Chicken Stir Fry", "Lemon Herb Salmon", "Garlic Tofu Bowl", "Beef Teriyaki",
+    "Creamy Tomato Pasta", "Avocado Sushi Roll", "Thai Green Curry", "Vegetable Biryani",
+    "Honey Glazed Carrots", "Classic Cheesecake"
+]
+descriptions = [
+    "Mix all ingredients and simmer until tender.", "Grill until golden and serve hot.",
+    "Blend spices and marinate overnight before cooking.", "Stir-fry over high heat.",
+    "Bake until bubbly and golden brown.", "Serve with rice or naan.",
+    "Top with herbs and a drizzle of olive oil.", "Garnish with sesame seeds and serve."
+]
+cooking_levels = ["Easy", "Intermediate", "Advanced"]
+
+def generate_recipe(id):
+    name = random.choice(recipe_names) + f" {id}"
+    description = random.choice(descriptions)
+    user_id = random.randint(1, 11)
+    prep_time = random.randint(5, 30)
+    cook_time = random.randint(0, 60)
+    servings = random.randint(1, 6)
+    category_id = random.randint(1, 4)
+    diet_id = random.randint(1, 9)
+    level = random.choice(cooking_levels)
+    cuisine_id = random.randint(1, 14)
+
+    return f"('{name}', '{description}', {user_id}, {prep_time}, {cook_time}, {servings}, {category_id}, {diet_id}, '{level}', {cuisine_id})"
+
+def generate_sql_insert(num_rows):
+    values = [generate_recipe(i) for i in range(1, num_rows + 1)]
+    statement = "INSERT INTO recipe (recipeName, description, userId, prep_time, cook_time, servings, categoryId, dietId, cookingLevel, cuisineId) VALUES\n"
+    statement += ",\n".join(values) + ";"
+    return statement
+
+# Generate 1000 recipes
+if __name__ == "__main__":
+    sql_output = generate_sql_insert(1000)
+    with open("recipes.sql", "w") as file:
+        file.write(sql_output)
+    print("SQL file is created.")
