@@ -6,7 +6,7 @@ Contributions:
 
 Khushi Bhatamrekar:
 
-Aditi Chiluguri:
+Aditi Chiluguri: Worked on login page, registration page, home page, security.txt, db_design.pdf
 
 Catherine Chu: Worked on GroceryListService, GroceryItem, GroceryController, data.sql, ddl.sql, queries.sql, and datasource.txt 
 

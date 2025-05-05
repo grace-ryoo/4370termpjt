@@ -1,0 +1,11 @@
+The approach we used to securely store and validate user passwords and handle user authentication was hashing 
+our passwords. We do not store the passwords in plaintext and instead, we use the BCrypt hashing algorithm to hash the 
+passwords before storing them in our database. This algorithm is used via Spring Security's 'BCryptPasswordEncoder'.
+
+The specific line of code that ensures this security method is the following line in UserService.java:
+    this.passwordEncoder = new BCryptPasswordEncoder();
+
+When the user registers, the password is hashed using BCrypt and stored in the database. Then, for login, the password
+entered is compared to the hashed passwords stored using the following line:
+    passwordEncoder.matches(password, storedPasswordHash)
+Therefore, raw passwords are never entered in the database or stored in any way for attackers to access.
