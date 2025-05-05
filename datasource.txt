@@ -3,7 +3,7 @@ This allowed us to generate recipes that had attribute fields recipe name, prepa
 We then hand edited some of the recipes to add variation and wrote some recipes by hand. 
 No external datasets were used.
 
-Here is what our python script looks like. 
+Here is what our python script looks like. The python script is called recipe.py and the data is ou7tputted in recipes.sql. 
 
 import random
 
@@ -47,7 +47,7 @@ descriptions = [
 cooking_levels = ["Easy", "Intermediate", "Advanced"]
 
 def generate_recipe(id):
-    name = random.choice(recipe_names) + f" {id}"
+    name = random.choice(recipe_names)
     description = random.choice(descriptions)
     user_id = random.randint(1, 11)
     prep_time = random.randint(5, 30)
