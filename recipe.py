@@ -1,10 +1,3 @@
-To generate our 1,000 rows of data for the recipe table, we wrote a custom Python script that randomly combines lists of recipe names, descriptions and the other fields. 
-This allowed us to generate recipes that had attribute fields recipe name, preparation, and cooking times, serviing size, cooking level, category, diet, and cusine ids.
-We then hand edited some of the recipes to add variation and wrote some recipes by hand. 
-No external datasets were used.
-
-Here is what our python script looks like. 
-
 import random
 
 recipe_names = [
@@ -47,7 +40,7 @@ descriptions = [
 cooking_levels = ["Easy", "Intermediate", "Advanced"]
 
 def generate_recipe(id):
-    name = random.choice(recipe_names) + f" {id}"
+    name = random.choice(recipe_names)
     description = random.choice(descriptions)
     user_id = random.randint(1, 11)
     prep_time = random.randint(5, 30)
