@@ -4,8 +4,7 @@ Group: 4 Members: Khushi Bhatamrekar, Aditi Chiluguri, Catherine Chu, Grace Ryoo
 
 Contributions:
 
-Khushi Bhatamrekar: HomePageController, RecipeController, ReviewController, RecipeService, ReviewService, rating feature, DietService, CuisineService,
- FileStorageService, styles.css
+Khushi Bhatamrekar: HomePageController, RecipeController, ReviewController, RecipeService, ReviewService, rating feature, DietService, CuisineService, FileStorageService, styles.css
 Aditi Chiluguri: Worked on login page, registration page, home page, security.txt, db_design.pdf
 
 Catherine Chu: Worked on GroceryListService, GroceryItem, GroceryController, data.sql, ddl.sql, queries.sql, and datasource.txt 
@@ -16,18 +15,14 @@ Technologies used: Java, Springboot, Maven, HTML, CSS, JS, Python, Docker, mySQL
 
 Database Name: cs4370_miso_hungry
 
-Database Username:
+Test Username #1: gracie1
 
-Database Password:
+Test Password #1: 123
 
-Test Username #1:
+Test Username #2: sally2
 
-Test Password #1:
+Test Password #2: 123
 
-Test Username #2:
+Test Username #3: steve3
 
-Test Password #2:
-
-Test Username #3:
-
-Test Password #3:
+Test Password #3: 123
