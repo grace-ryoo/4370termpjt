@@ -21,9 +21,6 @@ package termProject.controllers;
  @RequestMapping("/login")
  
  public class LoginController {
-     
- 
- // fix plagiarism to this website
  
      // UserService has user login and registration related functions.
      private final UserService userService;
