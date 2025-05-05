@@ -58,7 +58,7 @@ public class GroceryListService {
 
         try (Connection conn = dataSource.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            int itemId = generateItemId(); // Implement this method to generate unique item IDs
+            int itemId = generateItemId(); 
             pstmt.setInt(1, itemId);
             pstmt.setString(2, userId);
             pstmt.setString(3, itemName);

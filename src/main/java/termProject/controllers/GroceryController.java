@@ -44,8 +44,6 @@ public class GroceryController {
             List<GroceryItem> items = groceryListService.getGroceryList(userId);
 
             if (items.isEmpty()) {
-                // Enable the following line if you want to show no content message.
-                // Do that if your content list is empty.
                 mv.addObject("isNoContent", true);
             } else {
                 mv.addObject("items", items);
