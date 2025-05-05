@@ -46,7 +46,10 @@ INSERT INTO user (userId, username, password, firstName, lastName, email) VALUES
 (8, 'user8', '$2b$12$rr6WeY6vK5uzkae.A6/Egejaw/zIULgqwiOSihTYjdpsT58S4jqYC', 'Alyssa', 'Brown', 'user8@example.com'),
 (9, 'user9', '$2b$12$z2nxZbUN42Z/FgUo8VZlC.vlbq8Sf2owywjdi//5Ifah0M4B5pBKO', 'Yvonne', 'Pierce', 'user9@example.com'),
 (10, 'user10', '$2b$12$G2xgnG6DMaYYdt1F.2mFE.v7urXeoZrm5E8Ln1fNRlWTUTK5o8COW', 'Julie', 'Wright', 'user10@example.com'),
-(11, 'user11', '$2b$12$MZRK0nKLf4sxRVcYzxjl/OcrX4e1SrRdwDTZgpxKrHLgg5bHceCVi', 'Nancy', 'Bentley', 'user11@example.com');
+(11, 'user11', '$2b$12$MZRK0nKLf4sxRVcYzxjl/OcrX4e1SrRdwDTZgpxKrHLgg5bHceCVi', 'Nancy', 'Bentley', 'user11@example.com'),
+(12, 'gracie1', '123', 'Grace', 'Lee', 'test@example.com'),
+(13, 'sally2', '123', 'Sally', 'Test', 'test@example.com'),
+(14, 'steve3', '123', 'Steve', 'Test', 'test@example.com');
 
 
 -- Insert into recipe
