@@ -18,6 +18,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import termProject.models.Recipe;
+import termProject.models.User;
+import termProject.services.BookmarkService;
 import termProject.services.CategoryService;
 import termProject.services.CuisineService;
 import termProject.services.DietService;
@@ -25,8 +27,6 @@ import termProject.services.FileStorageService;
 import termProject.services.RecipeService;
 import termProject.services.ReviewService;
 import termProject.services.UserService;
-import termProject.models.User;
-import termProject.services.BookmarkService;
 
 @Controller
 @RequestMapping("/recipe")
@@ -78,6 +78,9 @@ public class RecipeController {
 
             // Add recipe object to the model
             mv.addObject("recipe", recipe);
+
+            // reviews
+             mv.addObject("reviews", reviewService.getReviewsForRecipe(recipeId));
 
             // Get bookmark status
             String bookmarkType = bookmarkService.getUserBookmarkType(userId, recipeId);
